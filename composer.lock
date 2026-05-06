@@ -332,12 +332,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/valkyrjaio/valkyrja-php.git",
-                "reference": "59d94729f32fca0ac5ef7b4fab197ec42c046367"
+                "reference": "6125890311e2f46279f2b5e023af4ebaae831b25"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/valkyrjaio/valkyrja-php/zipball/59d94729f32fca0ac5ef7b4fab197ec42c046367",
-                "reference": "59d94729f32fca0ac5ef7b4fab197ec42c046367",
+                "url": "https://api.github.com/repos/valkyrjaio/valkyrja-php/zipball/6125890311e2f46279f2b5e023af4ebaae831b25",
+                "reference": "6125890311e2f46279f2b5e023af4ebaae831b25",
                 "shasum": ""
             },
             "require": {
@@ -354,7 +354,7 @@
                 "guzzlehttp/guzzle": "<7.10.0",
                 "league/flysystem": "<3.33.0",
                 "league/flysystem-aws-s3-v3": "<3.32.0",
-                "mailgun/mailgun-php": "<4.4.0",
+                "mailgun/mailgun-php": "<4.5.0",
                 "monolog/monolog": "<3.10.0",
                 "phpmailer/phpmailer": "<7.0.2",
                 "predis/predis": "<3.4.2",
@@ -368,7 +368,7 @@
                 "guzzlehttp/guzzle": "^7.10.0",
                 "league/flysystem": "^3.33.0",
                 "league/flysystem-aws-s3-v3": "^3.32.0",
-                "mailgun/mailgun-php": "^4.4.0",
+                "mailgun/mailgun-php": "^4.5.0",
                 "monolog/monolog": "^3.10.0",
                 "phpmailer/phpmailer": "^7.0.2",
                 "predis/predis": "^3.4.2",
@@ -386,7 +386,7 @@
                 "guzzlehttp/guzzle": "Required to use the default Client adapter (^7.10.0).",
                 "league/flysystem": "Required to use the default Filesystem adapter (^3.33.0).",
                 "league/flysystem-aws-s3-v3": "Required to use the s3 Filesystem adapter (^3.32.0)",
-                "mailgun/mailgun-php": "Required to use the Mailgun Mail adapter (^4.4.0).",
+                "mailgun/mailgun-php": "Required to use the Mailgun Mail adapter (^4.5.0).",
                 "monolog/monolog": "Required to use the default Log adapter (^3.10.0).",
                 "phpmailer/phpmailer": "Required to use the default Mail adapter (^7.0.2).",
                 "predis/predis": "Required to use the Redis Cache store (^3.4.2).",
@@ -421,7 +421,7 @@
                 "issues": "https://github.com/valkyrjaio/valkyrja-php/issues",
                 "source": "https://github.com/valkyrjaio/valkyrja-php/tree/26.x"
             },
-            "time": "2026-04-28T17:23:10+00:00"
+            "time": "2026-05-05T22:08:08+00:00"
         }
     ],
     "packages-dev": [],
