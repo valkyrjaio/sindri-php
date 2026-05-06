@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "4c48aacdf0adbfdf7c9c52ce1ffef998",
+    "content-hash": "2f39b77ca53ff6dff81dd60344754248",
     "packages": [
         {
             "name": "nikic/php-parser",
@@ -328,16 +328,16 @@
         },
         {
             "name": "valkyrja/valkyrja",
-            "version": "26.x-dev",
+            "version": "v26.1.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/valkyrjaio/valkyrja-php.git",
-                "reference": "331f7df78d65afb7664b8181401f0b075e5a2f3d"
+                "reference": "e5308ee455e6b5c1bf2e876747f14d15abb43f7a"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/valkyrjaio/valkyrja-php/zipball/331f7df78d65afb7664b8181401f0b075e5a2f3d",
-                "reference": "331f7df78d65afb7664b8181401f0b075e5a2f3d",
+                "url": "https://api.github.com/repos/valkyrjaio/valkyrja-php/zipball/e5308ee455e6b5c1bf2e876747f14d15abb43f7a",
+                "reference": "e5308ee455e6b5c1bf2e876747f14d15abb43f7a",
                 "shasum": ""
             },
             "require": {
@@ -394,7 +394,6 @@
                 "twig/twig": "Required to use the Twig View engine (^3.24.0).",
                 "vonage/client-core": "Required to use the default SMS adapter (^4.13.0)."
             },
-            "default-branch": true,
             "type": "project",
             "autoload": {
                 "psr-4": {
@@ -419,17 +418,15 @@
             ],
             "support": {
                 "issues": "https://github.com/valkyrjaio/valkyrja-php/issues",
-                "source": "https://github.com/valkyrjaio/valkyrja-php/tree/26.x"
+                "source": "https://github.com/valkyrjaio/valkyrja-php/tree/v26.1.0"
             },
-            "time": "2026-05-06T00:43:32+00:00"
+            "time": "2026-05-05T23:13:44+00:00"
         }
     ],
     "packages-dev": [],
     "aliases": [],
     "minimum-stability": "dev",
-    "stability-flags": {
-        "valkyrja/valkyrja": 20
-    },
+    "stability-flags": {},
     "prefer-stable": true,
     "prefer-lowest": false,
     "platform": {
