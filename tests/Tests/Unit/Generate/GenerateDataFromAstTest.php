@@ -29,6 +29,7 @@ use Sindri\Tests\Classes\Provider\Sub\TestServiceProviderClass;
 use Sindri\Tests\Unit\Abstract\TestCase;
 use Valkyrja\Cli\Interaction\Output\Contract\OutputContract;
 use Valkyrja\Cli\Interaction\Output\Factory\Contract\OutputFactoryContract;
+use Valkyrja\Cli\Routing\Data\Contract\RouteContract;
 
 final class GenerateDataFromAstTest extends TestCase
 {
@@ -580,7 +581,7 @@ final class GenerateDataFromAstTest extends TestCase
 
     private function makeWalker(OutputFactoryContract $outputFactory): object
     {
-        return new class($outputFactory) extends GenerateDataFromAst {
+        return new class($outputFactory, self::createStub(RouteContract::class)) extends GenerateDataFromAst {
             private array $sharedVisitedMap = [];
 
             #[Override]
