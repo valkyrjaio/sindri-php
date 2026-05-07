@@ -71,6 +71,7 @@ class GenerateDataFromConfigCommand extends GenerateDataFromAst
     ) {
         parent::__construct(
             outputFactory: $outputFactory,
+            route: $route,
             title: 'Generating Component Data From Config',
             configReader: $configReader,
             componentProviderReader: $componentProviderReader,
