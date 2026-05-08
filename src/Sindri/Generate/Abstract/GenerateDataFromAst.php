@@ -33,6 +33,7 @@ use Sindri\Ast\Result\ComponentProviderResult;
 use Sindri\Ast\Result\ConfigResult;
 use Sindri\Ast\RouteProviderReader;
 use Sindri\Ast\ServiceProviderReader;
+use Sindri\Constant\SindriInfo;
 use Sindri\Generator\Ast\Cli\AstCliDataFileGenerator;
 use Sindri\Generator\Ast\Container\AstContainerDataFileGenerator;
 use Sindri\Generator\Ast\Event\AstEventDataFileGenerator;
@@ -46,10 +47,12 @@ use Valkyrja\Cli\Interaction\Formatter\ErrorFormatter;
 use Valkyrja\Cli\Interaction\Formatter\HighlightedTextFormatter;
 use Valkyrja\Cli\Interaction\Formatter\SuccessFormatter;
 use Valkyrja\Cli\Interaction\Formatter\WarningFormatter;
+use Valkyrja\Cli\Interaction\Message\Header;
 use Valkyrja\Cli\Interaction\Message\Message;
 use Valkyrja\Cli\Interaction\Message\NewLine;
 use Valkyrja\Cli\Interaction\Output\Contract\OutputContract;
 use Valkyrja\Cli\Interaction\Output\Factory\Contract\OutputFactoryContract;
+use Valkyrja\Cli\Routing\Data\Contract\RouteContract;
 
 use function strlen;
 
@@ -57,6 +60,7 @@ abstract class GenerateDataFromAst
 {
     public function __construct(
         protected OutputFactoryContract $outputFactory,
+        protected RouteContract $route,
         protected string $title = 'Generating Data',
         protected ConfigReaderContract $configReader = new ConfigReader(),
         protected ComponentProviderReaderContract $componentProviderReader = new ComponentProviderReader(),
@@ -99,6 +103,8 @@ abstract class GenerateDataFromAst
         return $this->outputFactory
             ->createOutput()
             ->withAddedMessages(
+                new Header('Sindri', SindriInfo::VERSION, $this->route, SindriInfo::ICON),
+                new NewLine(),
                 new NewLine(),
                 new Message("$this->title:", new HighlightedTextFormatter()),
                 new NewLine(),

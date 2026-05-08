@@ -22,6 +22,7 @@ use Sindri\Tests\Classes\Provider\TestFirstComponentProviderClass;
 use Sindri\Tests\Classes\Provider\TestSecondComponentProviderClass;
 use Sindri\Tests\Unit\Abstract\TestCase;
 use Valkyrja\Cli\Interaction\Output\Factory\Contract\OutputFactoryContract;
+use Valkyrja\Cli\Routing\Data\Contract\RouteContract;
 
 final class WalkComponentProvidersTest extends TestCase
 {
@@ -46,7 +47,14 @@ final class WalkComponentProvidersTest extends TestCase
             ],
         );
 
-        $walker = new class($this->createStub(OutputFactoryContract::class)) extends GenerateDataFromAst {
+        $outputFactory = $this->createMock(OutputFactoryContract::class);
+        $outputFactory->expects($this->never())->method('createOutput');
+
+        $route = $this->createMock(RouteContract::class);
+        $route->expects($this->never())->method('getDescription');
+        $route->expects($this->never())->method('getName');
+
+        $walker = new class($outputFactory, $route) extends GenerateDataFromAst {
             #[Override]
             protected function getConfigFilePath(): string
             {
@@ -78,7 +86,14 @@ final class WalkComponentProvidersTest extends TestCase
             ],
         );
 
-        $walker = new class($this->createStub(OutputFactoryContract::class)) extends GenerateDataFromAst {
+        $outputFactory = $this->createMock(OutputFactoryContract::class);
+        $outputFactory->expects($this->never())->method('createOutput');
+
+        $route = $this->createMock(RouteContract::class);
+        $route->expects($this->never())->method('getDescription');
+        $route->expects($this->never())->method('getName');
+
+        $walker = new class($outputFactory, $route) extends GenerateDataFromAst {
             #[Override]
             protected function getConfigFilePath(): string
             {
