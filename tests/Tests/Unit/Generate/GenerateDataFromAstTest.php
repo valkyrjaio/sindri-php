@@ -149,12 +149,17 @@ final class GenerateDataFromAstTest extends TestCase
             providers: [],
         );
 
-        $walker = new class($config, $outputFactory) extends GenerateDataFromAst {
+        $route = $this->createMock(RouteContract::class);
+        $route->expects($this->once())->method('getDescription')->willReturn('Generate Data');
+        $route->expects($this->once())->method('getName')->willReturn('generate');
+
+        $walker = new class($config, $outputFactory, $route) extends GenerateDataFromAst {
             public function __construct(
                 private readonly ConfigResult $staticConfig,
                 OutputFactoryContract $outputFactory,
+                RouteContract $route,
             ) {
-                parent::__construct(outputFactory: $outputFactory);
+                parent::__construct(outputFactory: $outputFactory, route: $route);
             }
 
             #[Override]
@@ -581,7 +586,11 @@ final class GenerateDataFromAstTest extends TestCase
 
     private function makeWalker(OutputFactoryContract $outputFactory): object
     {
-        return new class($outputFactory, self::createStub(RouteContract::class)) extends GenerateDataFromAst {
+        $route = $this->createMock(RouteContract::class);
+        $route->expects($this->never())->method('getDescription');
+        $route->expects($this->never())->method('getName');
+
+        return new class($outputFactory, $route) extends GenerateDataFromAst {
             private array $sharedVisitedMap = [];
 
             #[Override]
