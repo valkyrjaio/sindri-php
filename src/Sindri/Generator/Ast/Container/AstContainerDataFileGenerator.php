@@ -50,7 +50,7 @@ class AstContainerDataFileGenerator extends AstFileGenerator implements Containe
     public function generateClassContents(array $publishers): string
     {
         $dataNamespace    = ContainerData::class;
-        $callbacks = $this->getCallbackContent($publishers);
+        $callbacks        = $this->getCallbackContent($publishers);
 
         // phpcs:disable
         return <<<PHP
@@ -71,7 +71,7 @@ class AstContainerDataFileGenerator extends AstFileGenerator implements Containe
     protected function generateFileContents(string $namespace, string $className, array $publishers): string
     {
         $containerData    = ContainerData::class;
-        $callbacks = $this->getCallbackContent($publishers);
+        $callbacks        = $this->getCallbackContent($publishers);
 
         return <<<PHP
             <?php
