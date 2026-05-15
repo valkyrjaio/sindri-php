@@ -25,7 +25,7 @@ final class TestConfigClass extends CliConfig
             dir: __DIR__ . '/../..',
             dataPath: 'Classes/Config/Data',
             dataNamespace: 'Sindri\\Tests\\Classes\\Config\\Data',
-            providers: [TestComponentProviderClass::class],
+            providers: [new TestComponentProviderClass()],
         );
     }
 }

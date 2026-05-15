@@ -195,7 +195,8 @@ abstract class AstReader
                 continue;
             }
 
-            $resolved = $this->classConstFetchToFqn($item->value, $useMap, $namespace);
+            $resolved = $this->classConstFetchToFqn($item->value, $useMap, $namespace)
+                ?? $this->newExprToFqn($item->value, $useMap, $namespace);
 
             if ($resolved !== null) {
                 $classes[] = $resolved;
@@ -294,6 +295,29 @@ abstract class AstReader
         }
 
         return $this->resolveClassName($shortName, $useMap, $namespace);
+    }
+
+    /**
+     * Attempt to convert a New_ expression to a fully-qualified class name.
+     *
+     * Returns null when the expression is not a `new ClassName()` instantiation.
+     *
+     * @param array<string, string> $useMap
+     *
+     * @return class-string|null
+     */
+    protected function newExprToFqn(Node|null $expr, array $useMap, string $namespace): string|null
+    {
+        if (! $expr instanceof New_ || ! $expr->class instanceof Name) {
+            return null;
+        }
+
+        if ($expr->class instanceof FullyQualified) {
+            /** @var class-string */
+            return $expr->class->toString();
+        }
+
+        return $this->resolveClassName($expr->class->toString(), $useMap, $namespace);
     }
 
     /**
@@ -465,6 +489,11 @@ abstract class AstReader
             }
 
             return $this->nameToFqn($expr->class, $useMap, $namespace) . '::' . $caseName;
+        }
+
+        if ($expr instanceof New_ && $expr->class instanceof Name) {
+            /** @var class-string */
+            return $this->nameToFqn($expr->class, $useMap, $namespace);
         }
 
         if ($expr instanceof Array_) {

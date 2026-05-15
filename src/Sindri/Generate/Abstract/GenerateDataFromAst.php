@@ -195,7 +195,7 @@ abstract class GenerateDataFromAst
      * Generate the container data file.
      *
      * Reads each service provider's publishers() map via AST, merges all maps together,
-     * and writes a ContainerData subclass containing only deferredCallback with ::class syntax.
+     * and writes a ContainerData subclass containing only callbacks with ::class syntax.
      *
      * @param class-string[] $serviceProviders
      */
