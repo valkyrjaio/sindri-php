@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "026c16dcc7d419d215501fc22f2931a8",
+    "content-hash": "cf98cabdcee9d89ad9559829dcf53287",
     "packages": [
         {
             "name": "nikic/php-parser",
@@ -328,16 +328,16 @@
         },
         {
             "name": "valkyrja/valkyrja",
-            "version": "v26.2.0",
+            "version": "v26.3.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/valkyrjaio/valkyrja-php.git",
-                "reference": "63daf963a2c6672101649efc63e52645f1d5cbe9"
+                "reference": "9ac7d0a83d40de0dacb7c8447b0517264f5a605a"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/valkyrjaio/valkyrja-php/zipball/63daf963a2c6672101649efc63e52645f1d5cbe9",
-                "reference": "63daf963a2c6672101649efc63e52645f1d5cbe9",
+                "url": "https://api.github.com/repos/valkyrjaio/valkyrja-php/zipball/9ac7d0a83d40de0dacb7c8447b0517264f5a605a",
+                "reference": "9ac7d0a83d40de0dacb7c8447b0517264f5a605a",
                 "shasum": ""
             },
             "require": {
@@ -352,11 +352,11 @@
                 "filp/whoops": "<2.18.4",
                 "firebase/php-jwt": "<7.0.5",
                 "guzzlehttp/guzzle": "<7.10.0",
-                "league/flysystem": "<3.33.0",
-                "league/flysystem-aws-s3-v3": "<3.32.0",
+                "league/flysystem": "<3.34.0",
+                "league/flysystem-aws-s3-v3": "<3.34.0",
                 "mailgun/mailgun-php": "<4.5.0",
                 "monolog/monolog": "<3.10.0",
-                "phpmailer/phpmailer": "<7.0.2",
+                "phpmailer/phpmailer": "<7.1.0",
                 "predis/predis": "<3.4.2",
                 "pusher/pusher-php-server": "<7.2.7",
                 "twig/twig": "<3.24.0",
@@ -366,11 +366,11 @@
                 "filp/whoops": "^2.18.4",
                 "firebase/php-jwt": "^7.0.5",
                 "guzzlehttp/guzzle": "^7.10.0",
-                "league/flysystem": "^3.33.0",
-                "league/flysystem-aws-s3-v3": "^3.32.0",
+                "league/flysystem": "^3.34.0",
+                "league/flysystem-aws-s3-v3": "^3.34.0",
                 "mailgun/mailgun-php": "^4.5.0",
                 "monolog/monolog": "^3.10.0",
-                "phpmailer/phpmailer": "^7.0.2",
+                "phpmailer/phpmailer": "^7.1.0",
                 "predis/predis": "^3.4.2",
                 "pusher/pusher-php-server": "^7.2.7",
                 "twig/twig": "^3.24.0",
@@ -384,11 +384,11 @@
                 "filp/whoops": "Required to use the default Throwable handler (^2.18.4)",
                 "firebase/php-jwt": "Required to use the default Jwt adapter (^7.0.5)",
                 "guzzlehttp/guzzle": "Required to use the default Client adapter (^7.10.0).",
-                "league/flysystem": "Required to use the default Filesystem adapter (^3.33.0).",
-                "league/flysystem-aws-s3-v3": "Required to use the s3 Filesystem adapter (^3.32.0)",
+                "league/flysystem": "Required to use the default Filesystem adapter (^3.34.0).",
+                "league/flysystem-aws-s3-v3": "Required to use the s3 Filesystem adapter (^3.34.0)",
                 "mailgun/mailgun-php": "Required to use the Mailgun Mail adapter (^4.5.0).",
                 "monolog/monolog": "Required to use the default Log adapter (^3.10.0).",
-                "phpmailer/phpmailer": "Required to use the default Mail adapter (^7.0.2).",
+                "phpmailer/phpmailer": "Required to use the default Mail adapter (^7.1.0).",
                 "predis/predis": "Required to use the Redis Cache store (^3.4.2).",
                 "pusher/pusher-php-server": "Required to use the Pusher Broadcast adapter (^7.2.7).",
                 "twig/twig": "Required to use the Twig View engine (^3.24.0).",
@@ -418,9 +418,9 @@
             ],
             "support": {
                 "issues": "https://github.com/valkyrjaio/valkyrja-php/issues",
-                "source": "https://github.com/valkyrjaio/valkyrja-php/tree/v26.2.0"
+                "source": "https://github.com/valkyrjaio/valkyrja-php/tree/v26.3.0"
             },
-            "time": "2026-05-07T21:44:34+00:00"
+            "time": "2026-05-15T20:30:15+00:00"
         }
     ],
     "packages-dev": [],
