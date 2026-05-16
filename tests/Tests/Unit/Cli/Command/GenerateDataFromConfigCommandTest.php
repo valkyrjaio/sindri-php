@@ -15,7 +15,7 @@ namespace Sindri\Tests\Unit\Cli\Command;
 
 use Override;
 use Sindri\Ast\Contract\ConfigReaderContract;
-use Sindri\Ast\Result\ConfigResult;
+use Sindri\Ast\Data\Result\ConfigResult;
 use Sindri\Cli\Command\GenerateDataFromConfigCommand;
 use Sindri\Tests\Unit\Abstract\TestCase;
 use Valkyrja\Cli\Interaction\Message\Message;

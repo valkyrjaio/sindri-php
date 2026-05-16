@@ -28,7 +28,7 @@ use PhpParser\Node\Stmt\ClassMethod;
 use PhpParser\Node\Stmt\Expression;
 use Sindri\Ast\Abstract\AstReader;
 use Sindri\Ast\Contract\ConfigReaderContract;
-use Sindri\Ast\Result\ConfigResult;
+use Sindri\Ast\Data\Result\ConfigResult;
 
 use function count;
 use function dirname;

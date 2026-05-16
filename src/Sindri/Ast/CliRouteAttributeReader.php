@@ -21,7 +21,7 @@ use Sindri\Ast\Abstract\RouteAttributeReader;
 use Sindri\Ast\Contract\CliRouteAttributeReaderContract;
 use Sindri\Ast\Contract\CliRouteParameterReaderContract;
 use Sindri\Ast\Data\CliRouteData;
-use Sindri\Ast\Result\CliRouteAttributeResult;
+use Sindri\Ast\Data\Result\CliRouteAttributeResult;
 use Valkyrja\Cli\Middleware\Contract\ExitedMiddlewareContract;
 use Valkyrja\Cli\Middleware\Contract\RouteDispatchedMiddlewareContract;
 use Valkyrja\Cli\Middleware\Contract\RouteMatchedMiddlewareContract;

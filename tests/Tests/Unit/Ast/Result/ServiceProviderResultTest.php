@@ -13,7 +13,7 @@ declare(strict_types=1);
 
 namespace Sindri\Tests\Unit\Ast\Result;
 
-use Sindri\Ast\Result\ServiceProviderResult;
+use Sindri\Ast\Data\Result\ServiceProviderResult;
 use Sindri\Tests\Unit\Abstract\TestCase;
 
 final class ServiceProviderResultTest extends TestCase

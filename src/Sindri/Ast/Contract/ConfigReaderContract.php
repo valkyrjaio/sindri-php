@@ -13,7 +13,7 @@ declare(strict_types=1);
 
 namespace Sindri\Ast\Contract;
 
-use Sindri\Ast\Result\ConfigResult;
+use Sindri\Ast\Data\Result\ConfigResult;
 
 interface ConfigReaderContract
 {

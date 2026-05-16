@@ -13,7 +13,7 @@ declare(strict_types=1);
 
 namespace Sindri\Ast\Contract;
 
-use Sindri\Ast\Result\ServiceProviderResult;
+use Sindri\Ast\Data\Result\ServiceProviderResult;
 
 interface ServiceProviderReaderContract
 {

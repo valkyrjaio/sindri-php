@@ -14,7 +14,7 @@ declare(strict_types=1);
 namespace Sindri\Tests\Unit\Generate;
 
 use Override;
-use Sindri\Ast\Result\ConfigResult;
+use Sindri\Ast\Data\Result\ConfigResult;
 use Sindri\Generate\Abstract\GenerateDataFromAst;
 use Sindri\Tests\Classes\Provider\Sub\TestOtherServiceProviderClass;
 use Sindri\Tests\Classes\Provider\Sub\TestServiceProviderClass;

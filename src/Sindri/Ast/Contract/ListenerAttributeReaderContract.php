@@ -13,7 +13,7 @@ declare(strict_types=1);
 
 namespace Sindri\Ast\Contract;
 
-use Sindri\Ast\Result\ListenerAttributeResult;
+use Sindri\Ast\Data\Result\ListenerAttributeResult;
 
 /**
  * Reads #[Listener] and #[ListenerHandler] attributes from a listener class file.

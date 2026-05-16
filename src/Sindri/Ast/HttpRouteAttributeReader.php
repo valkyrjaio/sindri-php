@@ -24,7 +24,7 @@ use Sindri\Ast\Contract\HttpRouteMiddlewareReaderContract;
 use Sindri\Ast\Contract\HttpRouteParameterReaderContract;
 use Sindri\Ast\Data\HttpParameterData;
 use Sindri\Ast\Data\HttpRouteData;
-use Sindri\Ast\Result\HttpRouteAttributeResult;
+use Sindri\Ast\Data\Result\HttpRouteAttributeResult;
 use Valkyrja\Http\Routing\Attribute\DynamicRoute;
 use Valkyrja\Http\Routing\Attribute\Route;
 use Valkyrja\Http\Routing\Attribute\Route\Name;

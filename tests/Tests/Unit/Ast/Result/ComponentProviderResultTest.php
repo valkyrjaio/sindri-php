@@ -13,7 +13,7 @@ declare(strict_types=1);
 
 namespace Sindri\Tests\Unit\Ast\Result;
 
-use Sindri\Ast\Result\ComponentProviderResult;
+use Sindri\Ast\Data\Result\ComponentProviderResult;
 use Sindri\Tests\Unit\Abstract\TestCase;
 
 final class ComponentProviderResultTest extends TestCase

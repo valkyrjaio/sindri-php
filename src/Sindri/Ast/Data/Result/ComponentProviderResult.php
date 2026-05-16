@@ -11,7 +11,7 @@ declare(strict_types=1);
  * file that was distributed with this source code.
  */
 
-namespace Sindri\Ast\Result;
+namespace Sindri\Ast\Data\Result;
 
 /**
  * Provider lists extracted from a single ComponentProviderContract source file.

@@ -19,7 +19,7 @@ use PhpParser\Node\Expr\Array_;
 use PhpParser\Node\Stmt\ClassMethod;
 use Sindri\Ast\Abstract\AstReader;
 use Sindri\Ast\Contract\ServiceProviderReaderContract;
-use Sindri\Ast\Result\ServiceProviderResult;
+use Sindri\Ast\Data\Result\ServiceProviderResult;
 
 /**
  * Reads a single ServiceProviderContract source file and extracts the class

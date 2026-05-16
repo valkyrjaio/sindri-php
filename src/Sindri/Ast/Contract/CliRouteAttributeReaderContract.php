@@ -13,7 +13,7 @@ declare(strict_types=1);
 
 namespace Sindri\Ast\Contract;
 
-use Sindri\Ast\Result\CliRouteAttributeResult;
+use Sindri\Ast\Data\Result\CliRouteAttributeResult;
 
 /**
  * Reads #[Route] and related CLI routing attributes from a controller class file.

@@ -15,8 +15,8 @@ namespace Sindri\Tests\Unit\Generate;
 
 use Override;
 use Sindri\Ast\ConfigReader;
-use Sindri\Ast\Result\ComponentProviderResult;
-use Sindri\Ast\Result\ConfigResult;
+use Sindri\Ast\Data\Result\ComponentProviderResult;
+use Sindri\Ast\Data\Result\ConfigResult;
 use Sindri\Generate\Abstract\GenerateDataFromAst;
 use Sindri\Generator\Enum\GenerateStatus;
 use Sindri\Tests\Classes\Cli\Provider\TestMissingControllerProviderClass;
