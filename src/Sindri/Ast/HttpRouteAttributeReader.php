@@ -45,8 +45,8 @@ use function is_string;
 class HttpRouteAttributeReader extends RouteAttributeReader implements HttpRouteAttributeReaderContract
 {
     public function __construct(
-        private readonly HttpRouteParameterReaderContract $parameterReader = new HttpRouteParameterReader(),
-        private readonly HttpRouteMiddlewareReaderContract $middlewareReader = new HttpRouteMiddlewareReader(),
+        protected readonly HttpRouteParameterReaderContract $parameterReader = new HttpRouteParameterReader(),
+        protected readonly HttpRouteMiddlewareReaderContract $middlewareReader = new HttpRouteMiddlewareReader(),
     ) {
     }
 
