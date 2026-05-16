@@ -1,6 +1,10 @@
 # Release Notes for 26.x
 
-## [Unreleased](https://github.com/valkyrjaio/sindri/compare/v26.2.0...26.x)
+## [Unreleased](https://github.com/valkyrjaio/sindri/compare/v26.3.0...26.x)
+
+## [v26.3.0](https://github.com/valkyrjaio/sindri/compare/v26.2.0...v26.3.0) - 2026-05-16
+
+* [Ast] Move Result namespace into Data by [@MelechMizrachi](https://github.com/MelechMizrachi) in https://github.com/valkyrjaio/sindri-php/pull/60
 
 ## [v26.2.0](https://github.com/valkyrjaio/sindri/compare/v26.1.2...v26.2.0) - 2026-05-16
 
