@@ -45,7 +45,7 @@ use function is_string;
 class CliRouteAttributeReader extends RouteAttributeReader implements CliRouteAttributeReaderContract
 {
     public function __construct(
-        private readonly CliRouteParameterReaderContract $parameterReader = new CliRouteParameterReader(),
+        protected readonly CliRouteParameterReaderContract $parameterReader = new CliRouteParameterReader(),
     ) {
     }
 
