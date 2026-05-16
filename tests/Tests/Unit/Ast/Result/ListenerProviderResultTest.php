@@ -14,7 +14,7 @@ declare(strict_types=1);
 namespace Sindri\Tests\Unit\Ast\Result;
 
 use PhpParser\Node\Scalar\String_;
-use Sindri\Ast\Result\ListenerProviderResult;
+use Sindri\Ast\Data\Result\ListenerProviderResult;
 use Sindri\Tests\Unit\Abstract\TestCase;
 
 final class ListenerProviderResultTest extends TestCase

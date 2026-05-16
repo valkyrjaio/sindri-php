@@ -24,7 +24,7 @@ use Sindri\Ast\Abstract\AstReader;
 use Sindri\Ast\Contract\ListenerAttributeReaderContract;
 use Sindri\Ast\Data\HandlerData;
 use Sindri\Ast\Data\ListenerData;
-use Sindri\Ast\Result\ListenerAttributeResult;
+use Sindri\Ast\Data\Result\ListenerAttributeResult;
 use Valkyrja\Event\Attribute\Listener;
 use Valkyrja\Event\Attribute\ListenerHandler;
 use Valkyrja\Event\Data\Listener as ListenerModel;

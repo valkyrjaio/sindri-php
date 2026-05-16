@@ -13,7 +13,7 @@ declare(strict_types=1);
 
 namespace Sindri\Ast\Contract;
 
-use Sindri\Ast\Result\HttpRouteAttributeResult;
+use Sindri\Ast\Data\Result\HttpRouteAttributeResult;
 
 /**
  * Reads #[Route] / #[DynamicRoute] and related HTTP routing attributes from a controller class file.

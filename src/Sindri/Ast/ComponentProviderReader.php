@@ -16,7 +16,7 @@ namespace Sindri\Ast;
 use Override;
 use Sindri\Ast\Abstract\AstReader;
 use Sindri\Ast\Contract\ComponentProviderReaderContract;
-use Sindri\Ast\Result\ComponentProviderResult;
+use Sindri\Ast\Data\Result\ComponentProviderResult;
 
 /**
  * Reads a single ComponentProviderContract source file and extracts the class

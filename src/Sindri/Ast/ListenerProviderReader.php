@@ -17,7 +17,7 @@ use Override;
 use PhpParser\Node\Expr;
 use Sindri\Ast\Abstract\AstReader;
 use Sindri\Ast\Contract\ListenerProviderReaderContract;
-use Sindri\Ast\Result\ListenerProviderResult;
+use Sindri\Ast\Data\Result\ListenerProviderResult;
 
 /**
  * Reads a single ListenerProviderContract source file and extracts listener data.

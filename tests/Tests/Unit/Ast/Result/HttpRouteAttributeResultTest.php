@@ -13,7 +13,7 @@ declare(strict_types=1);
 
 namespace Sindri\Tests\Unit\Ast\Result;
 
-use Sindri\Ast\Result\HttpRouteAttributeResult;
+use Sindri\Ast\Data\Result\HttpRouteAttributeResult;
 use Sindri\Tests\Unit\Abstract\TestCase;
 
 final class HttpRouteAttributeResultTest extends TestCase

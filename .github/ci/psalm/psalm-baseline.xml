@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <files psalm-version="6.16.1@f1f5de594dc76faf8784e02d3dc4716c91c6f6ac">
-  <file src="../../../src/Sindri/Ast/Result/ConfigResult.php">
+  <file src="../../../src/Sindri/Ast/Data/Result/ConfigResult.php">
     <InvalidParamDefault>
       <code><![CDATA[non-empty-string]]></code>
       <code><![CDATA[non-empty-string]]></code>

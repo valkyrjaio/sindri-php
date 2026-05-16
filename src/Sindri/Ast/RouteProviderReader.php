@@ -17,7 +17,7 @@ use Override;
 use PhpParser\Node\Expr;
 use Sindri\Ast\Abstract\AstReader;
 use Sindri\Ast\Contract\RouteProviderReaderContract;
-use Sindri\Ast\Result\RouteProviderResult;
+use Sindri\Ast\Data\Result\RouteProviderResult;
 
 /**
  * Reads a single CliRouteProviderContract or HttpRouteProviderContract source file

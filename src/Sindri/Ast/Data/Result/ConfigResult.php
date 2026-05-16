@@ -11,7 +11,7 @@ declare(strict_types=1);
  * file that was distributed with this source code.
  */
 
-namespace Sindri\Ast\Result;
+namespace Sindri\Ast\Data\Result;
 
 /**
  * Config values extracted from an application config class file via AST.
