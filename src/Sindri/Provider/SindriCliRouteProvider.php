@@ -23,10 +23,18 @@ use Valkyrja\Container\Manager\Contract\ContainerContract;
 class SindriCliRouteProvider implements CliRouteProviderContract
 {
     /**
+     * Handler for the CliGenerateDataFromAstCommand command.
+     */
+    public static function cliGenerateDataHandler(ContainerContract $container, RouteContract $route): OutputContract
+    {
+        return $container->getSingleton(GenerateDataFromConfigCommand::class)->run();
+    }
+
+    /**
      * @inheritDoc
      */
     #[Override]
-    public static function getControllerClasses(): array
+    public function getControllerClasses(): array
     {
         return [
             GenerateDataFromConfigCommand::class,
@@ -37,16 +45,8 @@ class SindriCliRouteProvider implements CliRouteProviderContract
      * @inheritDoc
      */
     #[Override]
-    public static function getRoutes(): array
+    public function getRoutes(): array
     {
         return [];
-    }
-
-    /**
-     * Handler for the CliGenerateDataFromAstCommand command.
-     */
-    public static function cliGenerateDataHandler(ContainerContract $container, RouteContract $route): OutputContract
-    {
-        return $container->getSingleton(GenerateDataFromConfigCommand::class)->run();
     }
 }

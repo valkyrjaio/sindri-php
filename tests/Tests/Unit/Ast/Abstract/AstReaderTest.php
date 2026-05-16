@@ -18,6 +18,7 @@ use PhpParser\Node\Expr;
 use PhpParser\Node\Expr\Array_;
 use PhpParser\Node\Expr\ClassConstFetch;
 use PhpParser\Node\Expr\ConstFetch;
+use PhpParser\Node\Expr\New_;
 use PhpParser\Node\Expr\UnaryMinus;
 use PhpParser\Node\Expr\Variable;
 use PhpParser\Node\Identifier;
@@ -84,6 +85,11 @@ final class AstReaderTest extends TestCase
             public function callBuildEnumCaseExpr(string $fqnColonCase): Expr
             {
                 return $this->buildEnumCaseExpr($fqnColonCase);
+            }
+
+            public function callNewExprToFqn(mixed $expr, array $useMap, string $namespace): string|null
+            {
+                return $this->newExprToFqn($expr, $useMap, $namespace);
             }
         };
     }
@@ -446,5 +452,85 @@ final class AstReaderTest extends TestCase
 
         self::assertInstanceOf(String_::class, $result);
         self::assertSame('NoColonHere', $result->value);
+    }
+
+    // -------------------------------------------------------------------------
+    // newExprToFqn
+    // -------------------------------------------------------------------------
+
+    public function testNewExprToFqnReturnsNullForNonNewExpr(): void
+    {
+        $result = $this->reader->callNewExprToFqn(new Variable('x'), [], '');
+
+        self::assertNull($result);
+    }
+
+    public function testNewExprToFqnReturnsNullForNullExpr(): void
+    {
+        $result = $this->reader->callNewExprToFqn(null, [], '');
+
+        self::assertNull($result);
+    }
+
+    public function testNewExprToFqnReturnsFullyQualifiedNameDirectly(): void
+    {
+        $expr   = new New_(new FullyQualified('App\\Service'));
+        $result = $this->reader->callNewExprToFqn($expr, [], '');
+
+        self::assertSame('App\\Service', $result);
+    }
+
+    public function testNewExprToFqnResolvesShortNameViaUseMap(): void
+    {
+        $expr   = new New_(new Name('Service'));
+        $result = $this->reader->callNewExprToFqn($expr, ['Service' => 'App\\Service'], 'App');
+
+        self::assertSame('App\\Service', $result);
+    }
+
+    public function testNewExprToFqnPrependsNamespaceWhenNoAlias(): void
+    {
+        $expr   = new New_(new Name('Service'));
+        $result = $this->reader->callNewExprToFqn($expr, [], 'App\\Provider');
+
+        self::assertSame('App\\Provider\\Service', $result);
+    }
+
+    // -------------------------------------------------------------------------
+    // extractClassListFromValues — new X() items
+    // -------------------------------------------------------------------------
+
+    public function testExtractClassListFromValuesHandlesNewExprItems(): void
+    {
+        $method = new ClassMethod(new Identifier('getProviders'));
+        $item   = new ArrayItem(new New_(new FullyQualified('App\\Provider')));
+        $array  = new Array_([$item]);
+        $return = new Return_($array);
+
+        $method->stmts = [$return];
+
+        $result = $this->reader->callExtractClassListFromValues($method, [], 'App');
+
+        self::assertSame(['App\\Provider'], $result);
+    }
+
+    // -------------------------------------------------------------------------
+    // extractExprValue — new X() returns FQN string
+    // -------------------------------------------------------------------------
+
+    public function testExtractExprValueReturnsFqnForNewExpr(): void
+    {
+        $expr   = new New_(new FullyQualified('App\\Service'));
+        $result = $this->reader->callExtractExprValue($expr, [], '');
+
+        self::assertSame('App\\Service', $result);
+    }
+
+    public function testExtractExprValueReturnsFqnForNewExprWithUseMap(): void
+    {
+        $expr   = new New_(new Name('Service'));
+        $result = $this->reader->callExtractExprValue($expr, ['Service' => 'App\\Service'], 'App');
+
+        self::assertSame('App\\Service', $result);
     }
 }

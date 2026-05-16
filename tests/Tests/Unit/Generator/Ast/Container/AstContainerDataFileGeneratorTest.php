@@ -27,12 +27,12 @@ final class AstContainerDataFileGeneratorTest extends TestCase
         self::assertStringContainsString('ContainerData', $contents);
     }
 
-    public function testGenerateClassContentsWithEmptyPublishersContainsDeferredCallback(): void
+    public function testGenerateClassContentsWithEmptyPublishersContainsCallbacks(): void
     {
         $generator = new AstContainerDataFileGenerator();
         $contents  = $generator->generateClassContents([]);
 
-        self::assertStringContainsString('deferredCallback:', $contents);
+        self::assertStringContainsString('callbacks:', $contents);
     }
 
     public function testGenerateClassContentsWithPublishersContainsPublisherEntry(): void

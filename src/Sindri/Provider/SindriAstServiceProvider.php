@@ -49,31 +49,6 @@ use Valkyrja\Container\Provider\Contract\ServiceProviderContract;
 
 class SindriAstServiceProvider implements ServiceProviderContract
 {
-    /**
-     * @inheritDoc
-     */
-    #[Override]
-    public static function publishers(): array
-    {
-        return [
-            CliRouteAttributeReaderContract::class    => [self::class, 'publishCliRouteAttributeReader'],
-            ComponentProviderReaderContract::class    => [self::class, 'publishComponentProviderReader'],
-            ConfigReaderContract::class               => [self::class, 'publishConfigReader'],
-            CliRouteParameterReaderContract::class    => [self::class, 'publishCliRouteParameterReader'],
-            HttpRouteMiddlewareReaderContract::class  => [self::class, 'publishHttpRouteMiddlewareReader'],
-            HttpRouteParameterReaderContract::class   => [self::class, 'publishHttpRouteParameterReader'],
-            HttpRouteAttributeReaderContract::class   => [self::class, 'publishHttpRouteAttributeReader'],
-            ListenerAttributeReaderContract::class    => [self::class, 'publishListenerAttributeReader'],
-            ListenerProviderReaderContract::class     => [self::class, 'publishListenerProviderReader'],
-            RouteProviderReaderContract::class        => [self::class, 'publishRouteProviderReader'],
-            ServiceProviderReaderContract::class      => [self::class, 'publishServiceProviderReader'],
-            CliDataFileGeneratorContract::class       => [self::class, 'publishCliDataFileGenerator'],
-            ContainerDataFileGeneratorContract::class => [self::class, 'publishContainerDataFileGenerator'],
-            EventDataFileGeneratorContract::class     => [self::class, 'publishEventDataFileGenerator'],
-            HttpDataFileGeneratorContract::class      => [self::class, 'publishHttpDataFileGenerator'],
-        ];
-    }
-
     public static function publishCliRouteAttributeReader(ContainerContract $container): void
     {
         $container->setSingleton(
@@ -197,5 +172,30 @@ class SindriAstServiceProvider implements ServiceProviderContract
             HttpDataFileGeneratorContract::class,
             new AstHttpDataFileGenerator()
         );
+    }
+
+    /**
+     * @inheritDoc
+     */
+    #[Override]
+    public function publishers(): array
+    {
+        return [
+            CliRouteAttributeReaderContract::class    => [self::class, 'publishCliRouteAttributeReader'],
+            ComponentProviderReaderContract::class    => [self::class, 'publishComponentProviderReader'],
+            ConfigReaderContract::class               => [self::class, 'publishConfigReader'],
+            CliRouteParameterReaderContract::class    => [self::class, 'publishCliRouteParameterReader'],
+            HttpRouteMiddlewareReaderContract::class  => [self::class, 'publishHttpRouteMiddlewareReader'],
+            HttpRouteParameterReaderContract::class   => [self::class, 'publishHttpRouteParameterReader'],
+            HttpRouteAttributeReaderContract::class   => [self::class, 'publishHttpRouteAttributeReader'],
+            ListenerAttributeReaderContract::class    => [self::class, 'publishListenerAttributeReader'],
+            ListenerProviderReaderContract::class     => [self::class, 'publishListenerProviderReader'],
+            RouteProviderReaderContract::class        => [self::class, 'publishRouteProviderReader'],
+            ServiceProviderReaderContract::class      => [self::class, 'publishServiceProviderReader'],
+            CliDataFileGeneratorContract::class       => [self::class, 'publishCliDataFileGenerator'],
+            ContainerDataFileGeneratorContract::class => [self::class, 'publishContainerDataFileGenerator'],
+            EventDataFileGeneratorContract::class     => [self::class, 'publishEventDataFileGenerator'],
+            HttpDataFileGeneratorContract::class      => [self::class, 'publishHttpDataFileGenerator'],
+        ];
     }
 }

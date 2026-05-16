@@ -53,28 +53,28 @@ final class SindriAstServiceProviderTest extends ServiceProviderTestCase
 
     public function testExpectedPublishers(): void
     {
-        self::assertArrayHasKey(CliRouteAttributeReaderContract::class, SindriAstServiceProvider::publishers());
-        self::assertArrayHasKey(ComponentProviderReaderContract::class, SindriAstServiceProvider::publishers());
-        self::assertArrayHasKey(ConfigReaderContract::class, SindriAstServiceProvider::publishers());
-        self::assertArrayHasKey(CliRouteParameterReaderContract::class, SindriAstServiceProvider::publishers());
-        self::assertArrayHasKey(HttpRouteMiddlewareReaderContract::class, SindriAstServiceProvider::publishers());
-        self::assertArrayHasKey(HttpRouteParameterReaderContract::class, SindriAstServiceProvider::publishers());
-        self::assertArrayHasKey(HttpRouteAttributeReaderContract::class, SindriAstServiceProvider::publishers());
-        self::assertArrayHasKey(ListenerAttributeReaderContract::class, SindriAstServiceProvider::publishers());
-        self::assertArrayHasKey(ListenerProviderReaderContract::class, SindriAstServiceProvider::publishers());
-        self::assertArrayHasKey(RouteProviderReaderContract::class, SindriAstServiceProvider::publishers());
-        self::assertArrayHasKey(ServiceProviderReaderContract::class, SindriAstServiceProvider::publishers());
-        self::assertArrayHasKey(CliDataFileGeneratorContract::class, SindriAstServiceProvider::publishers());
-        self::assertArrayHasKey(ContainerDataFileGeneratorContract::class, SindriAstServiceProvider::publishers());
-        self::assertArrayHasKey(EventDataFileGeneratorContract::class, SindriAstServiceProvider::publishers());
-        self::assertArrayHasKey(HttpDataFileGeneratorContract::class, SindriAstServiceProvider::publishers());
+        self::assertArrayHasKey(CliRouteAttributeReaderContract::class, new SindriAstServiceProvider()->publishers());
+        self::assertArrayHasKey(ComponentProviderReaderContract::class, new SindriAstServiceProvider()->publishers());
+        self::assertArrayHasKey(ConfigReaderContract::class, new SindriAstServiceProvider()->publishers());
+        self::assertArrayHasKey(CliRouteParameterReaderContract::class, new SindriAstServiceProvider()->publishers());
+        self::assertArrayHasKey(HttpRouteMiddlewareReaderContract::class, new SindriAstServiceProvider()->publishers());
+        self::assertArrayHasKey(HttpRouteParameterReaderContract::class, new SindriAstServiceProvider()->publishers());
+        self::assertArrayHasKey(HttpRouteAttributeReaderContract::class, new SindriAstServiceProvider()->publishers());
+        self::assertArrayHasKey(ListenerAttributeReaderContract::class, new SindriAstServiceProvider()->publishers());
+        self::assertArrayHasKey(ListenerProviderReaderContract::class, new SindriAstServiceProvider()->publishers());
+        self::assertArrayHasKey(RouteProviderReaderContract::class, new SindriAstServiceProvider()->publishers());
+        self::assertArrayHasKey(ServiceProviderReaderContract::class, new SindriAstServiceProvider()->publishers());
+        self::assertArrayHasKey(CliDataFileGeneratorContract::class, new SindriAstServiceProvider()->publishers());
+        self::assertArrayHasKey(ContainerDataFileGeneratorContract::class, new SindriAstServiceProvider()->publishers());
+        self::assertArrayHasKey(EventDataFileGeneratorContract::class, new SindriAstServiceProvider()->publishers());
+        self::assertArrayHasKey(HttpDataFileGeneratorContract::class, new SindriAstServiceProvider()->publishers());
     }
 
     public function testPublishCliRouteAttributeReader(): void
     {
         $this->container->setSingleton(CliRouteParameterReaderContract::class, new CliRouteParameterReader());
 
-        $callback = SindriAstServiceProvider::publishers()[CliRouteAttributeReaderContract::class];
+        $callback = new SindriAstServiceProvider()->publishers()[CliRouteAttributeReaderContract::class];
         $callback($this->container);
 
         self::assertInstanceOf(CliRouteAttributeReader::class, $this->container->getSingleton(CliRouteAttributeReaderContract::class));
@@ -82,7 +82,7 @@ final class SindriAstServiceProviderTest extends ServiceProviderTestCase
 
     public function testPublishComponentProviderReader(): void
     {
-        $callback = SindriAstServiceProvider::publishers()[ComponentProviderReaderContract::class];
+        $callback = new SindriAstServiceProvider()->publishers()[ComponentProviderReaderContract::class];
         $callback($this->container);
 
         self::assertInstanceOf(ComponentProviderReader::class, $this->container->getSingleton(ComponentProviderReaderContract::class));
@@ -90,7 +90,7 @@ final class SindriAstServiceProviderTest extends ServiceProviderTestCase
 
     public function testPublishConfigReader(): void
     {
-        $callback = SindriAstServiceProvider::publishers()[ConfigReaderContract::class];
+        $callback = new SindriAstServiceProvider()->publishers()[ConfigReaderContract::class];
         $callback($this->container);
 
         self::assertInstanceOf(ConfigReader::class, $this->container->getSingleton(ConfigReaderContract::class));
@@ -98,7 +98,7 @@ final class SindriAstServiceProviderTest extends ServiceProviderTestCase
 
     public function testPublishCliRouteParameterReader(): void
     {
-        $callback = SindriAstServiceProvider::publishers()[CliRouteParameterReaderContract::class];
+        $callback = new SindriAstServiceProvider()->publishers()[CliRouteParameterReaderContract::class];
         $callback($this->container);
 
         self::assertInstanceOf(CliRouteParameterReader::class, $this->container->getSingleton(CliRouteParameterReaderContract::class));
@@ -106,7 +106,7 @@ final class SindriAstServiceProviderTest extends ServiceProviderTestCase
 
     public function testPublishHttpRouteMiddlewareReader(): void
     {
-        $callback = SindriAstServiceProvider::publishers()[HttpRouteMiddlewareReaderContract::class];
+        $callback = new SindriAstServiceProvider()->publishers()[HttpRouteMiddlewareReaderContract::class];
         $callback($this->container);
 
         self::assertInstanceOf(HttpRouteMiddlewareReader::class, $this->container->getSingleton(HttpRouteMiddlewareReaderContract::class));
@@ -114,7 +114,7 @@ final class SindriAstServiceProviderTest extends ServiceProviderTestCase
 
     public function testPublishHttpRouteParameterReader(): void
     {
-        $callback = SindriAstServiceProvider::publishers()[HttpRouteParameterReaderContract::class];
+        $callback = new SindriAstServiceProvider()->publishers()[HttpRouteParameterReaderContract::class];
         $callback($this->container);
 
         self::assertInstanceOf(HttpRouteParameterReader::class, $this->container->getSingleton(HttpRouteParameterReaderContract::class));
@@ -125,7 +125,7 @@ final class SindriAstServiceProviderTest extends ServiceProviderTestCase
         $this->container->setSingleton(HttpRouteParameterReaderContract::class, new HttpRouteParameterReader());
         $this->container->setSingleton(HttpRouteMiddlewareReaderContract::class, new HttpRouteMiddlewareReader());
 
-        $callback = SindriAstServiceProvider::publishers()[HttpRouteAttributeReaderContract::class];
+        $callback = new SindriAstServiceProvider()->publishers()[HttpRouteAttributeReaderContract::class];
         $callback($this->container);
 
         self::assertInstanceOf(HttpRouteAttributeReader::class, $this->container->getSingleton(HttpRouteAttributeReaderContract::class));
@@ -133,7 +133,7 @@ final class SindriAstServiceProviderTest extends ServiceProviderTestCase
 
     public function testPublishListenerAttributeReader(): void
     {
-        $callback = SindriAstServiceProvider::publishers()[ListenerAttributeReaderContract::class];
+        $callback = new SindriAstServiceProvider()->publishers()[ListenerAttributeReaderContract::class];
         $callback($this->container);
 
         self::assertInstanceOf(ListenerAttributeReader::class, $this->container->getSingleton(ListenerAttributeReaderContract::class));
@@ -141,7 +141,7 @@ final class SindriAstServiceProviderTest extends ServiceProviderTestCase
 
     public function testPublishListenerProviderReader(): void
     {
-        $callback = SindriAstServiceProvider::publishers()[ListenerProviderReaderContract::class];
+        $callback = new SindriAstServiceProvider()->publishers()[ListenerProviderReaderContract::class];
         $callback($this->container);
 
         self::assertInstanceOf(ListenerProviderReader::class, $this->container->getSingleton(ListenerProviderReaderContract::class));
@@ -149,7 +149,7 @@ final class SindriAstServiceProviderTest extends ServiceProviderTestCase
 
     public function testPublishRouteProviderReader(): void
     {
-        $callback = SindriAstServiceProvider::publishers()[RouteProviderReaderContract::class];
+        $callback = new SindriAstServiceProvider()->publishers()[RouteProviderReaderContract::class];
         $callback($this->container);
 
         self::assertInstanceOf(RouteProviderReader::class, $this->container->getSingleton(RouteProviderReaderContract::class));
@@ -157,7 +157,7 @@ final class SindriAstServiceProviderTest extends ServiceProviderTestCase
 
     public function testPublishServiceProviderReader(): void
     {
-        $callback = SindriAstServiceProvider::publishers()[ServiceProviderReaderContract::class];
+        $callback = new SindriAstServiceProvider()->publishers()[ServiceProviderReaderContract::class];
         $callback($this->container);
 
         self::assertInstanceOf(ServiceProviderReader::class, $this->container->getSingleton(ServiceProviderReaderContract::class));
@@ -165,7 +165,7 @@ final class SindriAstServiceProviderTest extends ServiceProviderTestCase
 
     public function testPublishCliDataFileGenerator(): void
     {
-        $callback = SindriAstServiceProvider::publishers()[CliDataFileGeneratorContract::class];
+        $callback = new SindriAstServiceProvider()->publishers()[CliDataFileGeneratorContract::class];
         $callback($this->container);
 
         self::assertInstanceOf(AstCliDataFileGenerator::class, $this->container->getSingleton(CliDataFileGeneratorContract::class));
@@ -173,7 +173,7 @@ final class SindriAstServiceProviderTest extends ServiceProviderTestCase
 
     public function testPublishContainerDataFileGenerator(): void
     {
-        $callback = SindriAstServiceProvider::publishers()[ContainerDataFileGeneratorContract::class];
+        $callback = new SindriAstServiceProvider()->publishers()[ContainerDataFileGeneratorContract::class];
         $callback($this->container);
 
         self::assertInstanceOf(AstContainerDataFileGenerator::class, $this->container->getSingleton(ContainerDataFileGeneratorContract::class));
@@ -181,7 +181,7 @@ final class SindriAstServiceProviderTest extends ServiceProviderTestCase
 
     public function testPublishEventDataFileGenerator(): void
     {
-        $callback = SindriAstServiceProvider::publishers()[EventDataFileGeneratorContract::class];
+        $callback = new SindriAstServiceProvider()->publishers()[EventDataFileGeneratorContract::class];
         $callback($this->container);
 
         self::assertInstanceOf(AstEventDataFileGenerator::class, $this->container->getSingleton(EventDataFileGeneratorContract::class));
@@ -189,7 +189,7 @@ final class SindriAstServiceProviderTest extends ServiceProviderTestCase
 
     public function testPublishHttpDataFileGenerator(): void
     {
-        $callback = SindriAstServiceProvider::publishers()[HttpDataFileGeneratorContract::class];
+        $callback = new SindriAstServiceProvider()->publishers()[HttpDataFileGeneratorContract::class];
         $callback($this->container);
 
         self::assertInstanceOf(AstHttpDataFileGenerator::class, $this->container->getSingleton(HttpDataFileGeneratorContract::class));

@@ -24,14 +24,14 @@ final class SindriCliRouteProviderTest extends TestCase
 {
     public function testGetControllerClassesReturnsGenerateDataFromConfigCommand(): void
     {
-        $classes = SindriCliRouteProvider::getControllerClasses();
+        $classes = new SindriCliRouteProvider()->getControllerClasses();
 
         self::assertSame([GenerateDataFromConfigCommand::class], $classes);
     }
 
     public function testGetRoutesReturnsEmptyArray(): void
     {
-        $routes = SindriCliRouteProvider::getRoutes();
+        $routes = new SindriCliRouteProvider()->getRoutes();
 
         self::assertSame([], $routes);
     }

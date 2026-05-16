@@ -34,17 +34,6 @@ use Valkyrja\Container\Provider\Contract\ServiceProviderContract;
 
 class SindriCommandServiceProvider implements ServiceProviderContract
 {
-    /**
-     * @inheritDoc
-     */
-    #[Override]
-    public static function publishers(): array
-    {
-        return [
-            GenerateDataFromConfigCommand::class => [self::class, 'publishGenerateDataFromConfigCommand'],
-        ];
-    }
-
     public static function publishGenerateDataFromConfigCommand(ContainerContract $container): void
     {
         $container->setSingleton(
@@ -66,5 +55,16 @@ class SindriCommandServiceProvider implements ServiceProviderContract
                 httpGenerator: $container->getSingleton(HttpDataFileGeneratorContract::class),
             )
         );
+    }
+
+    /**
+     * @inheritDoc
+     */
+    #[Override]
+    public function publishers(): array
+    {
+        return [
+            GenerateDataFromConfigCommand::class => [self::class, 'publishGenerateDataFromConfigCommand'],
+        ];
     }
 }

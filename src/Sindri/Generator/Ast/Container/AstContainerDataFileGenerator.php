@@ -26,9 +26,7 @@ use Valkyrja\Container\Data\ContainerData;
  * a ContainerData subclass using ::class syntax rather than string literals,
  * bypassing any runtime app boot.
  *
- * Only deferredCallback is populated; deferred and providers are left empty
- * because deferredCallback alone is sufficient for the container to resolve
- * deferred bindings, and the provider list is managed by the app config.
+ * Only callbacks is populated; the provider list is managed by the app config.
  */
 class AstContainerDataFileGenerator extends AstFileGenerator implements ContainerDataFileGeneratorContract
 {
@@ -52,12 +50,12 @@ class AstContainerDataFileGenerator extends AstFileGenerator implements Containe
     public function generateClassContents(array $publishers): string
     {
         $dataNamespace    = ContainerData::class;
-        $deferredCallback = $this->getDeferredCallbackContent($publishers);
+        $callbacks        = $this->getCallbackContent($publishers);
 
         // phpcs:disable
         return <<<PHP
             new \\$dataNamespace(
-                deferredCallback: $deferredCallback,
+                callbacks: $callbacks,
             )
             PHP;
         // phpcs:enable
@@ -73,7 +71,7 @@ class AstContainerDataFileGenerator extends AstFileGenerator implements Containe
     protected function generateFileContents(string $namespace, string $className, array $publishers): string
     {
         $containerData    = ContainerData::class;
-        $deferredCallback = $this->getDeferredCallbackContent($publishers);
+        $callbacks        = $this->getCallbackContent($publishers);
 
         return <<<PHP
             <?php
@@ -91,7 +89,7 @@ class AstContainerDataFileGenerator extends AstFileGenerator implements Containe
                 public function __construct()
                 {
                     parent::__construct(
-                        deferredCallback: $deferredCallback,
+                        callbacks: $callbacks,
                     );
                 }
             }
@@ -106,7 +104,7 @@ class AstContainerDataFileGenerator extends AstFileGenerator implements Containe
      *
      * @return non-empty-string
      */
-    protected function getDeferredCallbackContent(array $publishers): string
+    protected function getCallbackContent(array $publishers): string
     {
         $content = '';
 
