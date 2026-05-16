@@ -25,7 +25,7 @@ final class SindriComponentProviderTest extends TestCase
     public function testGetComponentProvidersReturnsEmptyArray(): void
     {
         $app    = self::createStub(ApplicationContract::class);
-        $result = SindriComponentProvider::getComponentProviders($app);
+        $result = (new SindriComponentProvider())->getComponentProviders($app);
 
         self::assertSame([], $result);
     }
@@ -33,15 +33,17 @@ final class SindriComponentProviderTest extends TestCase
     public function testGetContainerProvidersReturnsBothServiceProviders(): void
     {
         $app    = self::createStub(ApplicationContract::class);
-        $result = SindriComponentProvider::getContainerProviders($app);
+        $result = (new SindriComponentProvider())->getContainerProviders($app);
 
-        self::assertSame([SindriAstServiceProvider::class, SindriCommandServiceProvider::class], $result);
+        self::assertCount(2, $result);
+        self::assertInstanceOf(SindriAstServiceProvider::class, $result[0]);
+        self::assertInstanceOf(SindriCommandServiceProvider::class, $result[1]);
     }
 
     public function testGetEventProvidersReturnsEmptyArray(): void
     {
         $app    = self::createStub(ApplicationContract::class);
-        $result = SindriComponentProvider::getEventProviders($app);
+        $result = (new SindriComponentProvider())->getEventProviders($app);
 
         self::assertSame([], $result);
     }
@@ -49,15 +51,16 @@ final class SindriComponentProviderTest extends TestCase
     public function testGetCliProvidersReturnsSindriCliRouteProvider(): void
     {
         $app    = self::createStub(ApplicationContract::class);
-        $result = SindriComponentProvider::getCliProviders($app);
+        $result = (new SindriComponentProvider())->getCliProviders($app);
 
-        self::assertSame([SindriCliRouteProvider::class], $result);
+        self::assertCount(1, $result);
+        self::assertInstanceOf(SindriCliRouteProvider::class, $result[0]);
     }
 
     public function testGetHttpProvidersReturnsEmptyArray(): void
     {
         $app    = self::createStub(ApplicationContract::class);
-        $result = SindriComponentProvider::getHttpProviders($app);
+        $result = (new SindriComponentProvider())->getHttpProviders($app);
 
         self::assertSame([], $result);
     }

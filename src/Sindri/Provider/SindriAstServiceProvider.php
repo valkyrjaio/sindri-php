@@ -53,7 +53,7 @@ class SindriAstServiceProvider implements ServiceProviderContract
      * @inheritDoc
      */
     #[Override]
-    public static function publishers(): array
+    public function publishers(): array
     {
         return [
             CliRouteAttributeReaderContract::class    => [self::class, 'publishCliRouteAttributeReader'],
