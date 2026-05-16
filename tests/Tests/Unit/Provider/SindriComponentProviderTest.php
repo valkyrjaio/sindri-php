@@ -25,7 +25,7 @@ final class SindriComponentProviderTest extends TestCase
     public function testGetComponentProvidersReturnsEmptyArray(): void
     {
         $app    = self::createStub(ApplicationContract::class);
-        $result = (new SindriComponentProvider())->getComponentProviders($app);
+        $result = new SindriComponentProvider()->getComponentProviders($app);
 
         self::assertSame([], $result);
     }
@@ -33,7 +33,7 @@ final class SindriComponentProviderTest extends TestCase
     public function testGetContainerProvidersReturnsBothServiceProviders(): void
     {
         $app    = self::createStub(ApplicationContract::class);
-        $result = (new SindriComponentProvider())->getContainerProviders($app);
+        $result = new SindriComponentProvider()->getContainerProviders($app);
 
         self::assertCount(2, $result);
         self::assertInstanceOf(SindriAstServiceProvider::class, $result[0]);
@@ -43,7 +43,7 @@ final class SindriComponentProviderTest extends TestCase
     public function testGetEventProvidersReturnsEmptyArray(): void
     {
         $app    = self::createStub(ApplicationContract::class);
-        $result = (new SindriComponentProvider())->getEventProviders($app);
+        $result = new SindriComponentProvider()->getEventProviders($app);
 
         self::assertSame([], $result);
     }
@@ -51,7 +51,7 @@ final class SindriComponentProviderTest extends TestCase
     public function testGetCliProvidersReturnsSindriCliRouteProvider(): void
     {
         $app    = self::createStub(ApplicationContract::class);
-        $result = (new SindriComponentProvider())->getCliProviders($app);
+        $result = new SindriComponentProvider()->getCliProviders($app);
 
         self::assertCount(1, $result);
         self::assertInstanceOf(SindriCliRouteProvider::class, $result[0]);
@@ -60,7 +60,7 @@ final class SindriComponentProviderTest extends TestCase
     public function testGetHttpProvidersReturnsEmptyArray(): void
     {
         $app    = self::createStub(ApplicationContract::class);
-        $result = (new SindriComponentProvider())->getHttpProviders($app);
+        $result = new SindriComponentProvider()->getHttpProviders($app);
 
         self::assertSame([], $result);
     }

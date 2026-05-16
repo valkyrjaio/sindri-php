@@ -53,7 +53,7 @@ final class SindriCommandServiceProviderTest extends ServiceProviderTestCase
 
     public function testExpectedPublishers(): void
     {
-        self::assertArrayHasKey(GenerateDataFromConfigCommand::class, (new SindriCommandServiceProvider())->publishers());
+        self::assertArrayHasKey(GenerateDataFromConfigCommand::class, new SindriCommandServiceProvider()->publishers());
     }
 
     public function testPublishGenerateDataFromConfigCommand(): void
@@ -74,7 +74,7 @@ final class SindriCommandServiceProviderTest extends ServiceProviderTestCase
         $container->setSingleton(CliDataFileGeneratorContract::class, new AstCliDataFileGenerator());
         $container->setSingleton(HttpDataFileGeneratorContract::class, new AstHttpDataFileGenerator());
 
-        $callback = (new SindriCommandServiceProvider())->publishers()[GenerateDataFromConfigCommand::class];
+        $callback = new SindriCommandServiceProvider()->publishers()[GenerateDataFromConfigCommand::class];
         $callback($container);
 
         self::assertInstanceOf(GenerateDataFromConfigCommand::class, $container->getSingleton(GenerateDataFromConfigCommand::class));
