@@ -328,16 +328,16 @@
         },
         {
             "name": "valkyrja/valkyrja",
-            "version": "v26.3.0",
+            "version": "v26.4.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/valkyrjaio/valkyrja-php.git",
-                "reference": "9ac7d0a83d40de0dacb7c8447b0517264f5a605a"
+                "reference": "b4b322a87bb876be61c67aa5f5118e8ff9968563"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/valkyrjaio/valkyrja-php/zipball/9ac7d0a83d40de0dacb7c8447b0517264f5a605a",
-                "reference": "9ac7d0a83d40de0dacb7c8447b0517264f5a605a",
+                "url": "https://api.github.com/repos/valkyrjaio/valkyrja-php/zipball/b4b322a87bb876be61c67aa5f5118e8ff9968563",
+                "reference": "b4b322a87bb876be61c67aa5f5118e8ff9968563",
                 "shasum": ""
             },
             "require": {
@@ -350,30 +350,30 @@
             },
             "conflict": {
                 "filp/whoops": "<2.18.4",
-                "firebase/php-jwt": "<7.0.5",
-                "guzzlehttp/guzzle": "<7.10.0",
+                "firebase/php-jwt": "<7.1.0",
+                "guzzlehttp/guzzle": "<7.12.0",
                 "league/flysystem": "<3.34.0",
                 "league/flysystem-aws-s3-v3": "<3.34.0",
                 "mailgun/mailgun-php": "<4.5.0",
                 "monolog/monolog": "<3.10.0",
-                "phpmailer/phpmailer": "<7.1.0",
-                "predis/predis": "<3.4.2",
-                "pusher/pusher-php-server": "<7.2.7",
-                "twig/twig": "<3.24.0",
+                "phpmailer/phpmailer": "<7.1.1",
+                "predis/predis": "<3.5.1",
+                "pusher/pusher-php-server": "<7.2.8",
+                "twig/twig": "<3.27.1",
                 "vonage/client-core": "<4.13.0"
             },
             "require-dev": {
                 "filp/whoops": "^2.18.4",
-                "firebase/php-jwt": "^7.0.5",
-                "guzzlehttp/guzzle": "^7.10.0",
+                "firebase/php-jwt": "^7.1.0",
+                "guzzlehttp/guzzle": "^7.12.0",
                 "league/flysystem": "^3.34.0",
                 "league/flysystem-aws-s3-v3": "^3.34.0",
                 "mailgun/mailgun-php": "^4.5.0",
                 "monolog/monolog": "^3.10.0",
-                "phpmailer/phpmailer": "^7.1.0",
-                "predis/predis": "^3.4.2",
-                "pusher/pusher-php-server": "^7.2.7",
-                "twig/twig": "^3.24.0",
+                "phpmailer/phpmailer": "^7.1.1",
+                "predis/predis": "^3.5.1",
+                "pusher/pusher-php-server": "^7.2.8",
+                "twig/twig": "^3.27.1",
                 "vonage/client-core": "^4.13.0"
             },
             "suggest": {
@@ -382,16 +382,16 @@
                 "ext-redis": "Required to use the default Cache store (^4.0|^5.0).",
                 "ext-sodium": "Required to use the default Crypt adapters and/or JWT EdDSA Algorithm (*)",
                 "filp/whoops": "Required to use the default Throwable handler (^2.18.4)",
-                "firebase/php-jwt": "Required to use the default Jwt adapter (^7.0.5)",
-                "guzzlehttp/guzzle": "Required to use the default Client adapter (^7.10.0).",
+                "firebase/php-jwt": "Required to use the default Jwt adapter (^7.1.0)",
+                "guzzlehttp/guzzle": "Required to use the default Client adapter (^7.12.0).",
                 "league/flysystem": "Required to use the default Filesystem adapter (^3.34.0).",
                 "league/flysystem-aws-s3-v3": "Required to use the s3 Filesystem adapter (^3.34.0)",
                 "mailgun/mailgun-php": "Required to use the Mailgun Mail adapter (^4.5.0).",
                 "monolog/monolog": "Required to use the default Log adapter (^3.10.0).",
-                "phpmailer/phpmailer": "Required to use the default Mail adapter (^7.1.0).",
-                "predis/predis": "Required to use the Redis Cache store (^3.4.2).",
-                "pusher/pusher-php-server": "Required to use the Pusher Broadcast adapter (^7.2.7).",
-                "twig/twig": "Required to use the Twig View engine (^3.24.0).",
+                "phpmailer/phpmailer": "Required to use the default Mail adapter (^7.1.1).",
+                "predis/predis": "Required to use the Redis Cache store (^3.5.1).",
+                "pusher/pusher-php-server": "Required to use the Pusher Broadcast adapter (^7.2.8).",
+                "twig/twig": "Required to use the Twig View engine (^3.27.1).",
                 "vonage/client-core": "Required to use the default SMS adapter (^4.13.0)."
             },
             "type": "project",
@@ -418,9 +418,9 @@
             ],
             "support": {
                 "issues": "https://github.com/valkyrjaio/valkyrja-php/issues",
-                "source": "https://github.com/valkyrjaio/valkyrja-php/tree/v26.3.0"
+                "source": "https://github.com/valkyrjaio/valkyrja-php/tree/v26.4.0"
             },
-            "time": "2026-05-15T20:30:15+00:00"
+            "time": "2026-06-18T05:12:45+00:00"
         }
     ],
     "packages-dev": [],
