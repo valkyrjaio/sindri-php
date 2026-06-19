@@ -13,11 +13,11 @@ declare(strict_types=1);
 
 namespace Sindri\Tests\Unit\Ast\Abstract;
 
-use PhpParser\Node\Expr;
 use PhpParser\Node\Arg;
 use PhpParser\Node\ArrayItem;
 use PhpParser\Node\Attribute;
 use PhpParser\Node\AttributeGroup;
+use PhpParser\Node\Expr;
 use PhpParser\Node\Expr\Array_;
 use PhpParser\Node\Expr\ClassConstFetch;
 use PhpParser\Node\Identifier;

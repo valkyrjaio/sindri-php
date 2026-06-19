@@ -122,14 +122,6 @@ final class HttpRouteParameterReaderTest extends TestCase
         self::assertSame('[0-9]+', $result[0]->regex);
     }
 
-    private function parameterAttribute(string $name, string $regex): Attribute
-    {
-        return new Attribute(
-            new FullyQualified(Parameter::class),
-            [new Arg(new String_($name)), new Arg(new String_($regex))],
-        );
-    }
-
     // -------------------------------------------------------------------------
     // collectInlineParameters
     // -------------------------------------------------------------------------
@@ -347,5 +339,13 @@ final class HttpRouteParameterReaderTest extends TestCase
 
         self::assertInstanceOf(Array_::class, $result);
         self::assertCount(0, $result->items);
+    }
+
+    private function parameterAttribute(string $name, string $regex): Attribute
+    {
+        return new Attribute(
+            new FullyQualified(Parameter::class),
+            [new Arg(new String_($name)), new Arg(new String_($regex))],
+        );
     }
 }

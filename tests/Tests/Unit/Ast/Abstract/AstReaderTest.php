@@ -47,6 +47,9 @@ final class AstReaderTest extends TestCase
 {
     private AstReader $reader;
 
+    /** @var string[] */
+    private array $tempFiles = [];
+
     protected function setUp(): void
     {
         $this->reader = new class extends AstReader {
@@ -221,6 +224,17 @@ final class AstReaderTest extends TestCase
                 return $this->buildEnumCaseArrayExpr($enumCases);
             }
         };
+    }
+
+    protected function tearDown(): void
+    {
+        foreach ($this->tempFiles as $file) {
+            if (is_file($file)) {
+                unlink($file);
+            }
+        }
+
+        $this->tempFiles = [];
     }
 
     // -------------------------------------------------------------------------
@@ -669,8 +683,8 @@ final class AstReaderTest extends TestCase
 
     public function testUnwrapNamespaceReturnsNameAndInnerStatements(): void
     {
-        $inner   = new ClassMethod(new Identifier('foo'));
-        $ns      = new Namespace_(new Name('App\\Sub'), [$inner]);
+        $inner          = new ClassMethod(new Identifier('foo'));
+        $ns             = new Namespace_(new Name('App\\Sub'), [$inner]);
         [$name, $stmts] = $this->reader->callUnwrapNamespace([$ns]);
 
         self::assertSame('App\\Sub', $name);
@@ -995,19 +1009,5 @@ final class AstReaderTest extends TestCase
         $this->tempFiles[] = $path;
 
         return $path;
-    }
-
-    /** @var string[] */
-    private array $tempFiles = [];
-
-    protected function tearDown(): void
-    {
-        foreach ($this->tempFiles as $file) {
-            if (is_file($file)) {
-                unlink($file);
-            }
-        }
-
-        $this->tempFiles = [];
     }
 }

@@ -265,7 +265,15 @@ final class HttpRouteMiddlewareReaderTest extends TestCase
         ]);
 
         [$matched, $dispatched, $throwable, $sending, $terminated] = $this->reader->updateMiddleware(
-            $method, [], 'Test', 'Test\\TestClass', [], [], [], [], [],
+            $method,
+            [],
+            'Test',
+            'Test\\TestClass',
+            [],
+            [],
+            [],
+            [],
+            [],
         );
 
         self::assertContains(TestHttpMiddlewareClass::class, $matched);
@@ -282,7 +290,15 @@ final class HttpRouteMiddlewareReaderTest extends TestCase
         ]);
 
         [$matched] = $this->reader->updateMiddleware(
-            $method, [], 'Test', 'Test\\TestClass', [], [], [], [], [],
+            $method,
+            [],
+            'Test',
+            'Test\\TestClass',
+            [],
+            [],
+            [],
+            [],
+            [],
         );
 
         self::assertSame([], $matched);
