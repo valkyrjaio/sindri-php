@@ -13,6 +13,7 @@ declare(strict_types=1);
 
 namespace Sindri\Tests\Unit\Ast\Abstract;
 
+use PhpParser\Node\Expr;
 use PhpParser\Node\Arg;
 use PhpParser\Node\ArrayItem;
 use PhpParser\Node\Attribute;
@@ -110,7 +111,7 @@ final class RouteAttributeReaderTest extends TestCase
      * Build a ClassMethod named "myAction" carrying a single #[RouteHandler] attribute
      * whose first argument is the given expression.
      */
-    private function methodWithRouteHandlerArg(\PhpParser\Node\Expr $argExpr): ClassMethod
+    private function methodWithRouteHandlerArg(Expr $argExpr): ClassMethod
     {
         $attribute = new Attribute(new FullyQualified(RouteHandler::class), [new Arg($argExpr)]);
 
