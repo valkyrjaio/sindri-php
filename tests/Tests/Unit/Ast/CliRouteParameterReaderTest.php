@@ -14,12 +14,15 @@ declare(strict_types=1);
 namespace Sindri\Tests\Unit\Ast;
 
 use PhpParser\Node\Arg;
+use PhpParser\Node\Attribute;
+use PhpParser\Node\AttributeGroup;
 use PhpParser\Node\Expr;
 use PhpParser\Node\Expr\Array_;
 use PhpParser\Node\Expr\ClassConstFetch;
 use PhpParser\Node\Expr\ConstFetch;
 use PhpParser\Node\Expr\New_;
 use PhpParser\Node\Identifier;
+use PhpParser\Node\Name\FullyQualified;
 use PhpParser\Node\Scalar\String_;
 use PhpParser\Node\Stmt\ClassMethod;
 use Sindri\Ast\CliRouteParameterReader;
@@ -27,6 +30,8 @@ use Sindri\Ast\Data\CliArgumentParameterData;
 use Sindri\Ast\Data\CliOptionParameterData;
 use Sindri\Ast\Data\CliRouteData;
 use Sindri\Tests\Unit\Abstract\TestCase;
+use Valkyrja\Cli\Routing\Attribute\ArgumentParameter;
+use Valkyrja\Cli\Routing\Attribute\OptionParameter;
 
 final class CliRouteParameterReaderTest extends TestCase
 {
@@ -392,5 +397,47 @@ final class CliRouteParameterReaderTest extends TestCase
 
         self::assertInstanceOf(Array_::class, $result);
         self::assertCount(1, $result->items);
+    }
+
+    // -------------------------------------------------------------------------
+    // updateArguments / updateOptions
+    // -------------------------------------------------------------------------
+
+    public function testUpdateArgumentsCollectsArgumentParameterAttributes(): void
+    {
+        $method = $this->methodWithAttribute(ArgumentParameter::class, 'file', 'Input file');
+
+        $arguments = $this->reader->updateArguments($method, [], '', '');
+
+        self::assertCount(1, $arguments);
+        self::assertSame('file', $arguments[0]->name);
+        self::assertSame('Input file', $arguments[0]->description);
+    }
+
+    public function testUpdateOptionsCollectsOptionParameterAttributes(): void
+    {
+        $method = $this->methodWithAttribute(OptionParameter::class, '--format', 'Output format');
+
+        $options = $this->reader->updateOptions($method, [], '', '');
+
+        self::assertCount(1, $options);
+        self::assertSame('--format', $options[0]->name);
+        self::assertSame('Output format', $options[0]->description);
+    }
+
+    /**
+     * Build a ClassMethod carrying a single attribute with name + description string args.
+     */
+    private function methodWithAttribute(string $attributeFqn, string $name, string $description): ClassMethod
+    {
+        $attribute = new Attribute(
+            new FullyQualified($attributeFqn),
+            [new Arg(new String_($name)), new Arg(new String_($description))],
+        );
+
+        return new ClassMethod(
+            new Identifier('myCommand'),
+            ['attrGroups' => [new AttributeGroup([$attribute])]],
+        );
     }
 }
