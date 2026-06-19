@@ -14,6 +14,8 @@ declare(strict_types=1);
 namespace Sindri\Tests\Unit\Generator\Ast\Http;
 
 use LogicException;
+use PhpParser\Node\Expr\New_;
+use PhpParser\Node\Name\FullyQualified;
 use PhpParser\Node\Scalar\String_;
 use Sindri\Ast\Data\HttpParameterData;
 use Sindri\Ast\Data\HttpRouteData;
@@ -66,6 +68,26 @@ final class AstHttpDataFileGeneratorTest extends TestCase
 
         self::assertStringContainsString('\\Valkyrja\\Http\\Routing\\Constant\\RouteName::HOME', $contents);
         self::assertStringNotContainsString("'Valkyrja\\Http\\Routing\\Constant\\RouteName::HOME'", $contents);
+    }
+
+    public function testGenerateClassContentsAppendsComputedRegexForDynamicNewExprRoute(): void
+    {
+        $generator = new AstHttpDataFileGenerator();
+        $parameter = new HttpParameterData(name: 'id', regex: '[0-9]+');
+        $routeData = new HttpRouteData(
+            path: '/items/{id}',
+            name: 'items.show',
+            isDynamic: true,
+            parameters: [$parameter],
+        );
+        $routeExpr = new New_(new FullyQualified(Route::class), []);
+
+        $contents = $generator->generateClassContents(
+            ['items.show' => $routeExpr],
+            ['items.show' => $routeData],
+        );
+
+        self::assertStringContainsString('regex', $contents);
     }
 
     public function testGenerateFileWithConstantRouteNameUsesConstantReferenceInPathsMap(): void

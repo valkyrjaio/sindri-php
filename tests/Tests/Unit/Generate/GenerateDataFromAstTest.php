@@ -94,6 +94,39 @@ final class GenerateDataFromAstTest extends TestCase
         self::assertSame([], $result->componentProviders);
     }
 
+    public function testWalkProviderExpandsRealProviderAndSubProviders(): void
+    {
+        $walker = $this->makeWalker(self::createStub(OutputFactoryContract::class));
+
+        /** @var non-empty-string $dir */
+        $dir    = realpath(__DIR__ . '/../../Classes');
+        $config = new ConfigResult(namespace: 'Sindri\\Tests\\Classes', dir: $dir);
+
+        $result = $walker->callWalkProvider(
+            'Sindri\\Tests\\Classes\\Provider\\TestComponentProviderClass',
+            $config,
+        );
+
+        self::assertNotEmpty($result->serviceProviders);
+    }
+
+    public function testWalkComponentProvidersExpandsConfiguredProviders(): void
+    {
+        $walker = $this->makeWalker(self::createStub(OutputFactoryContract::class));
+
+        /** @var non-empty-string $dir */
+        $dir    = realpath(__DIR__ . '/../../Classes');
+        $config = new ConfigResult(
+            namespace: 'Sindri\\Tests\\Classes',
+            dir: $dir,
+            providers: ['Sindri\\Tests\\Classes\\Provider\\TestComponentProviderClass'],
+        );
+
+        $result = $walker->callWalkComponentProviders($config);
+
+        self::assertNotEmpty($result->serviceProviders);
+    }
+
     // -----------------------------------------------------------------------
     // addMessagesForGenerateStatus
     // -----------------------------------------------------------------------
@@ -617,6 +650,11 @@ final class GenerateDataFromAstTest extends TestCase
                 array $visited,
             ): ComponentProviderResult {
                 return $this->walkProvider($providerClass, $config, $visited);
+            }
+
+            public function callWalkComponentProviders(ConfigResult $config): ComponentProviderResult
+            {
+                return $this->walkComponentProviders($config);
             }
 
             public function callAddMessagesForGenerateStatus(

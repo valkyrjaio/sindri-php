@@ -15,18 +15,24 @@ namespace Sindri\Tests\Unit\Ast;
 
 use PhpParser\Node\Arg;
 use PhpParser\Node\ArrayItem;
+use PhpParser\Node\Attribute;
+use PhpParser\Node\AttributeGroup;
 use PhpParser\Node\Expr;
 use PhpParser\Node\Expr\Array_;
 use PhpParser\Node\Expr\ClassConstFetch;
 use PhpParser\Node\Expr\ConstFetch;
 use PhpParser\Node\Expr\New_;
+use PhpParser\Node\Expr\Variable;
 use PhpParser\Node\Identifier;
+use PhpParser\Node\Name\FullyQualified;
+use PhpParser\Node\Param;
 use PhpParser\Node\Scalar\String_;
 use PhpParser\Node\Stmt\ClassMethod;
 use PhpParser\Node\VariadicPlaceholder;
 use Sindri\Ast\Data\HttpParameterData;
 use Sindri\Ast\HttpRouteParameterReader;
 use Sindri\Tests\Unit\Abstract\TestCase;
+use Valkyrja\Http\Routing\Attribute\Parameter;
 
 final class HttpRouteParameterReaderTest extends TestCase
 {
@@ -77,6 +83,51 @@ final class HttpRouteParameterReaderTest extends TestCase
         $result = $this->reader->updateParameters([], $method, [], 'Test', 'Test\\TestClass');
 
         self::assertSame([], $result);
+    }
+
+    public function testUpdateParametersCollectsMethodLevelAndParamLevelAttributes(): void
+    {
+        $method = new ClassMethod(
+            new Identifier('show'),
+            [
+                'attrGroups' => [new AttributeGroup([$this->parameterAttribute('id', '[0-9]+')])],
+                'params'     => [
+                    new Param(
+                        var: new Variable('slug'),
+                        attrGroups: [new AttributeGroup([$this->parameterAttribute('slug', '[a-z]+')])],
+                    ),
+                ],
+            ],
+        );
+
+        $result = $this->reader->updateParameters([], $method, [], 'Test', 'Test\\TestClass');
+
+        self::assertCount(2, $result);
+        self::assertSame('id', $result[0]->name);
+        self::assertSame('slug', $result[1]->name);
+    }
+
+    public function testCollectInlineParametersBuildsParametersFromNewExprItems(): void
+    {
+        $newExpr = new New_(
+            new FullyQualified('Valkyrja\\Http\\Routing\\Attribute\\Parameter'),
+            [new Arg(new String_('id')), new Arg(new String_('[0-9]+'))],
+        );
+        $args = [new Arg(value: new Array_([new ArrayItem($newExpr)]), name: new Identifier('parameters'))];
+
+        $result = $this->proxy->callCollectInlineParameters($args, [], 'Test', 'Test\\TestClass');
+
+        self::assertCount(1, $result);
+        self::assertSame('id', $result[0]->name);
+        self::assertSame('[0-9]+', $result[0]->regex);
+    }
+
+    private function parameterAttribute(string $name, string $regex): Attribute
+    {
+        return new Attribute(
+            new FullyQualified(Parameter::class),
+            [new Arg(new String_($name)), new Arg(new String_($regex))],
+        );
     }
 
     // -------------------------------------------------------------------------
