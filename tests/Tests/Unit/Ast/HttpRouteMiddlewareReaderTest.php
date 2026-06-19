@@ -27,7 +27,7 @@ use Sindri\Ast\Data\HttpRouteData;
 use Sindri\Ast\HttpRouteMiddlewareReader;
 use Sindri\Tests\Classes\Http\Middleware\TestHttpMiddlewareClass;
 use Sindri\Tests\Unit\Abstract\TestCase;
-use Valkyrja\Http\Message\Enum\RequestMethod as RequestMethodEnum;
+use Valkyrja\Http\Message\Enum\RequestMethod;
 use Valkyrja\Http\Routing\Attribute\Route\Middleware;
 use Valkyrja\Http\Routing\Attribute\Route\RequestMethod as RequestMethodAttribute;
 use Valkyrja\Http\Routing\Attribute\Route\RequestStruct;
@@ -229,7 +229,7 @@ final class HttpRouteMiddlewareReaderTest extends TestCase
     public function testExtractInlineRequestMethodsReadsArrayArg(): void
     {
         $array = new Array_([
-            new ArrayItem(new ClassConstFetch(new FullyQualified(RequestMethodEnum::class), new Identifier('POST'))),
+            new ArrayItem(new ClassConstFetch(new FullyQualified(RequestMethod::class), new Identifier('POST'))),
         ]);
         $args = [new Arg(value: $array, name: new Identifier('requestMethods'))];
 
@@ -242,7 +242,7 @@ final class HttpRouteMiddlewareReaderTest extends TestCase
     public function testUpdateRequestMethodsReadsRequestMethodAttribute(): void
     {
         $method = $this->methodWithAttribute(RequestMethodAttribute::class, [
-            new Arg(new ClassConstFetch(new FullyQualified(RequestMethodEnum::class), new Identifier('POST'))),
+            new Arg(new ClassConstFetch(new FullyQualified(RequestMethod::class), new Identifier('POST'))),
         ]);
 
         $result = $this->reader->updateRequestMethods([], $method, [], 'Test', 'Test\\TestClass');
