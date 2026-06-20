@@ -18,6 +18,11 @@ use Sindri\Generator\Contract\FileGeneratorContract;
 use Sindri\Generator\Enum\GenerateStatus;
 use Throwable;
 
+use function file_get_contents;
+use function file_put_contents;
+use function is_file;
+use function rtrim;
+
 abstract class FileGenerator implements FileGeneratorContract
 {
     protected string $filePath;

@@ -13,6 +13,7 @@ declare(strict_types=1);
 
 namespace Sindri\Generator\Ast\Http;
 
+use Closure;
 use Override;
 use PhpParser\Node\Arg;
 use PhpParser\Node\ArrayItem;
@@ -38,6 +39,10 @@ use Valkyrja\Http\Routing\Processor\Processor;
 
 use function constant;
 use function defined;
+use function str_contains;
+use function strrpos;
+use function substr;
+use function trim;
 
 /**
  * AST-based HTTP routing data file generator.
@@ -252,7 +257,7 @@ class AstHttpDataFileGenerator extends AstFileGenerator implements HttpDataFileG
             name: $data->name !== '' ? $data->name : 'temp',
             regex: '',
             parameters: $parameters,
-            handler: static fn (): never => throw new GeneratorUnreachableException('unreachable'),
+            handler: $this->unreachableRouteHandler(),
         );
 
         $processed = $this->processor->route($route);
@@ -262,6 +267,19 @@ class AstHttpDataFileGenerator extends AstFileGenerator implements HttpDataFileG
         }
 
         return '';
+    }
+
+    /**
+     * Placeholder handler for the temporary route used only to compute a regex.
+     *
+     * The route is never dispatched, so this handler is never invoked in production;
+     * it exists solely to satisfy DynamicRoute::__construct().
+     *
+     * @return Closure(): never
+     */
+    protected function unreachableRouteHandler(): Closure
+    {
+        return static fn (): never => throw new GeneratorUnreachableException('unreachable');
     }
 
     /**

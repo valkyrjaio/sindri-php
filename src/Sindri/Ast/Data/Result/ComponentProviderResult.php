@@ -13,6 +13,9 @@ declare(strict_types=1);
 
 namespace Sindri\Ast\Data\Result;
 
+use function array_unique;
+use function array_values;
+
 /**
  * Provider lists extracted from a single ComponentProviderContract source file.
  *

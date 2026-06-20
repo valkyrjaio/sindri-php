@@ -14,6 +14,7 @@ declare(strict_types=1);
 namespace Sindri\Tests\Unit\Ast;
 
 use PhpParser\Node\Arg;
+use PhpParser\Node\Expr\BinaryOp\Concat;
 use PhpParser\Node\Expr\Variable;
 use PhpParser\Node\Identifier;
 use PhpParser\Node\Scalar\String_;
@@ -323,6 +324,54 @@ final class ConfigReaderTest extends TestCase
         };
 
         self::assertSame('/absolute/path', $reader->callResolvePathExpr(new String_('/absolute/path'), '/tmp'));
+    }
+
+    public function testResolvePathExprReturnsResolvedRealpathForExistingConcatPath(): void
+    {
+        $reader = new class extends ConfigReader {
+            public function callResolvePathExpr(mixed $expr, string $fileDir): string
+            {
+                return $this->resolvePathExpr($expr, $fileDir);
+            }
+        };
+
+        $dir  = dirname(self::$fixtureFile);
+        $expr = new Concat(new String_($dir), new String_('/.'));
+
+        // realpath() resolves the existing directory → the realpath-success ternary arm.
+        self::assertSame($dir, $reader->callResolvePathExpr($expr, '/tmp'));
+    }
+
+    public function testResolvePathExprReturnsRawPathWhenRealpathFails(): void
+    {
+        $reader = new class extends ConfigReader {
+            public function callResolvePathExpr(mixed $expr, string $fileDir): string
+            {
+                return $this->resolvePathExpr($expr, $fileDir);
+            }
+        };
+
+        $expr = new Concat(new String_('/sindri-nonexistent-'), new String_('xyz123/nope'));
+
+        // realpath() returns false for the missing path → the raw-path ternary arm.
+        self::assertSame('/sindri-nonexistent-xyz123/nope', $reader->callResolvePathExpr($expr, '/tmp'));
+    }
+
+    // -----------------------------------------------------------------------
+    // computeSrcDir — empty namespace treated as zero depth (line 236)
+    // -----------------------------------------------------------------------
+
+    public function testComputeSrcDirTreatsEmptyNamespacesAsZeroDepth(): void
+    {
+        $reader = new class extends ConfigReader {
+            public function callComputeSrcDir(string $fileDir, string $fileNamespace, string $baseNamespace): string
+            {
+                return $this->computeSrcDir($fileDir, $fileNamespace, $baseNamespace);
+            }
+        };
+
+        // Empty namespaces → depth 0 on both ternaries → levels 0 → srcDir unchanged.
+        self::assertSame('/tmp/app', $reader->callComputeSrcDir('/tmp/app', '', ''));
     }
 
     // -----------------------------------------------------------------------

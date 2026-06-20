@@ -21,6 +21,8 @@ use Sindri\Ast\Abstract\AstReader;
 use Sindri\Ast\Contract\ServiceProviderReaderContract;
 use Sindri\Ast\Data\Result\ServiceProviderResult;
 
+use function array_keys;
+
 /**
  * Reads a single ServiceProviderContract source file and extracts the class
  * names of every service it publishes.

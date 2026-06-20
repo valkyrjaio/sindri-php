@@ -32,6 +32,7 @@ use Valkyrja\Cli\Routing\Attribute\Route\Name;
 use Valkyrja\Cli\Routing\Attribute\Route\RouteHandler;
 use Valkyrja\Cli\Routing\Data\Route as RouteModel;
 
+use function array_push;
 use function is_a;
 use function is_string;
 

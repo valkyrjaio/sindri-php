@@ -15,6 +15,9 @@ namespace Sindri\Ast\Data\Result;
 
 use PhpParser\Node\Expr;
 
+use function array_unique;
+use function array_values;
+
 /**
  * Listeners extracted from a single ListenerProviderContract implementation.
  *

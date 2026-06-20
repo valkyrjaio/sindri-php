@@ -13,11 +13,21 @@ declare(strict_types=1);
 
 namespace Sindri\Tests\Unit\Ast;
 
+use PhpParser\Node\Arg;
+use PhpParser\Node\Attribute;
+use PhpParser\Node\AttributeGroup;
 use PhpParser\Node\Expr;
+use PhpParser\Node\Identifier;
+use PhpParser\Node\Name\FullyQualified;
+use PhpParser\Node\Scalar\String_;
+use PhpParser\Node\Stmt\Class_;
+use PhpParser\Node\Stmt\ClassMethod;
+use Sindri\Ast\Data\HandlerData;
 use Sindri\Ast\Data\ListenerData;
 use Sindri\Ast\ListenerAttributeReader;
 use Sindri\Tests\Classes\Event\TestListenerClass;
 use Sindri\Tests\Unit\Abstract\TestCase;
+use Valkyrja\Event\Attribute\ListenerHandler;
 
 final class ListenerAttributeReaderTest extends TestCase
 {
@@ -198,5 +208,34 @@ final class ListenerAttributeReaderTest extends TestCase
         $expr = $reader->callBuildListenerExpr($data);
 
         self::assertNotNull($expr);
+    }
+
+    public function testResolveListenerHandlerFallsThroughWhenAttributeValueIsNotHandlerData(): void
+    {
+        $reader = new class extends ListenerAttributeReader {
+            public function callResolveListenerHandler(
+                array $useMap,
+                string $namespace,
+                string $currentClass,
+                Class_ $class,
+                ClassMethod|null $method,
+            ): HandlerData {
+                return $this->resolveListenerHandler($useMap, $namespace, $currentClass, $class, $method);
+            }
+        };
+
+        // #[ListenerHandler('not-a-handler')] — value resolves to a string, not a HandlerData,
+        // so the foreach iterates, the `instanceof` is false, and resolution falls through
+        // to the method-name handler.
+        $attr   = new Attribute(new FullyQualified(ListenerHandler::class), [
+            new Arg(value: new String_('not-a-handler'), name: new Identifier('handler')),
+        ]);
+        $method = new ClassMethod(new Identifier('onEvent'), ['attrGroups' => [new AttributeGroup([$attr])]]);
+        $class  = new Class_(new Identifier('L'));
+
+        $result = $reader->callResolveListenerHandler([], 'Test', TestListenerClass::class, $class, $method);
+
+        self::assertSame('onEvent', $result->method);
+        self::assertSame(TestListenerClass::class, $result->class);
     }
 }

@@ -14,6 +14,7 @@ declare(strict_types=1);
 namespace Sindri\Tests\Unit\Generate;
 
 use Override;
+use ReflectionClass;
 use Sindri\Ast\ConfigReader;
 use Sindri\Ast\Data\Result\ComponentProviderResult;
 use Sindri\Ast\Data\Result\ConfigResult;
@@ -63,6 +64,17 @@ final class GenerateDataFromAstTest extends TestCase
         $result = $walker->callFqnToFilePath('NonExistent\\Class\\DoesNotExist', 'Other', '/var/www/src');
 
         self::assertSame('', $result);
+    }
+
+    public function testFqnToFilePathForOutOfNamespaceUserClassReturnsFileName(): void
+    {
+        $walker = $this->makeWalker(self::createStub(OutputFactoryContract::class));
+
+        // A real userland class outside the namespace → ReflectionClass::getFileName()
+        // returns its real path (the file-not-false ternary arm).
+        $result = $walker->callFqnToFilePath(self::class, 'Other', '/var/www/src');
+
+        self::assertSame((string) new ReflectionClass(self::class)->getFileName(), $result);
     }
 
     // -----------------------------------------------------------------------

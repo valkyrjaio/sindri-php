@@ -350,6 +350,26 @@ final class HttpRouteMiddlewareReaderTest extends TestCase
         self::assertNull($result);
     }
 
+    public function testUpdateRequestStructReturnsNullWhenStructValueIsEmpty(): void
+    {
+        $method = $this->methodWithAttribute(RequestStruct::class, [
+            new Arg(value: new String_(''), name: new Identifier('struct')),
+        ]);
+
+        // Attribute present but value resolves to '' → loop iterates, inner `if` is false → return null.
+        self::assertNull($this->reader->updateRequestStruct($method, [], 'Test', 'Test\\TestClass'));
+    }
+
+    public function testUpdateResponseStructReturnsNullWhenStructValueIsEmpty(): void
+    {
+        $method = $this->methodWithAttribute(ResponseStruct::class, [
+            new Arg(value: new String_(''), name: new Identifier('struct')),
+        ]);
+
+        // Attribute present but value resolves to '' → loop iterates, inner `if` is false → return null.
+        self::assertNull($this->reader->updateResponseStruct($method, [], 'Test', 'Test\\TestClass'));
+    }
+
     /**
      * Build a ClassMethod carrying a single attribute with the given arguments.
      *

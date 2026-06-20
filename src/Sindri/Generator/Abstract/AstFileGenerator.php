@@ -21,6 +21,13 @@ use PhpParser\Node\Scalar\String_;
 use Sindri\Generator\Enum\GenerateStatus;
 use Throwable;
 
+use function file_get_contents;
+use function file_put_contents;
+use function is_file;
+use function rtrim;
+use function strpos;
+use function substr;
+
 abstract class AstFileGenerator
 {
     /**
