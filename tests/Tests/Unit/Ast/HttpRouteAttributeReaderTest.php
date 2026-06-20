@@ -14,13 +14,20 @@ declare(strict_types=1);
 namespace Sindri\Tests\Unit\Ast;
 
 use PhpParser\Node\Arg;
+use PhpParser\Node\Attribute;
+use PhpParser\Node\AttributeGroup;
 use PhpParser\Node\Expr\Array_;
 use PhpParser\Node\Identifier;
+use PhpParser\Node\Name;
+use PhpParser\Node\Scalar\String_;
+use PhpParser\Node\Stmt\Class_;
 use PhpParser\Node\Stmt\ClassMethod;
 use Sindri\Ast\HttpRouteAttributeReader;
 use Sindri\Tests\Classes\Http\Controller\TestHttpControllerClass;
 use Sindri\Tests\Classes\Http\Middleware\TestHttpMiddlewareClass;
 use Sindri\Tests\Unit\Abstract\TestCase;
+use Valkyrja\Http\Routing\Attribute\Route\Name as RouteName;
+use Valkyrja\Http\Routing\Attribute\Route\Path;
 
 final class HttpRouteAttributeReaderTest extends TestCase
 {
@@ -410,5 +417,44 @@ final class HttpRouteAttributeReaderTest extends TestCase
         $result = $reader->callUpdateParameters($args, $method, [], 'Test', 'Test\\TestClass');
 
         self::assertSame([], $result);
+    }
+
+    // -----------------------------------------------------------------------
+    // Class-prefix foreach fall-through — attribute present but value empty
+    // (extractClassPathPrefix line 90, extractClassNamePrefix line 112)
+    // -----------------------------------------------------------------------
+
+    public function testExtractClassPathPrefixReturnsEmptyWhenAttributeValueIsEmpty(): void
+    {
+        $reader = new class extends HttpRouteAttributeReader {
+            /** @param array<string, string> $useMap */
+            public function callExtractClassPathPrefix(Class_ $class, array $useMap, string $namespace, string $currentClass): string
+            {
+                return $this->extractClassPathPrefix($class, $useMap, $namespace, $currentClass);
+            }
+        };
+
+        $attr  = new Attribute(new Name('Path'), [new Arg(new String_(''))]);
+        $class = new Class_(new Identifier('C'), ['attrGroups' => [new AttributeGroup([$attr])]]);
+
+        // Attribute present but value resolves to '' → loop iterates, inner `if` is false → return ''.
+        self::assertSame('', $reader->callExtractClassPathPrefix($class, ['Path' => Path::class], 'Test', 'Test\\C'));
+    }
+
+    public function testExtractClassNamePrefixReturnsEmptyWhenAttributeValueIsEmpty(): void
+    {
+        $reader = new class extends HttpRouteAttributeReader {
+            /** @param array<string, string> $useMap */
+            public function callExtractClassNamePrefix(Class_ $class, array $useMap, string $namespace, string $currentClass): string
+            {
+                return $this->extractClassNamePrefix($class, $useMap, $namespace, $currentClass);
+            }
+        };
+
+        $attr  = new Attribute(new Name('Name'), [new Arg(new String_(''))]);
+        $class = new Class_(new Identifier('C'), ['attrGroups' => [new AttributeGroup([$attr])]]);
+
+        // Attribute present but value resolves to '' → loop iterates, inner `if` is false → return ''.
+        self::assertSame('', $reader->callExtractClassNamePrefix($class, ['Name' => RouteName::class], 'Test', 'Test\\C'));
     }
 }

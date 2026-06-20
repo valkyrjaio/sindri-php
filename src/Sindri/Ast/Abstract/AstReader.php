@@ -42,11 +42,18 @@ use Sindri\Ast\Data\HandlerData;
 use Sindri\Ast\Throwable\Exception\AstFileReadException;
 
 use function count;
+use function file_get_contents;
 use function is_bool;
 use function is_float;
 use function is_int;
 use function is_string;
+use function str_contains;
 use function strlen;
+use function strpos;
+use function strrpos;
+use function strstr;
+use function strtolower;
+use function substr;
 
 /**
  * Shared AST parsing utilities for all provider reader implementations.

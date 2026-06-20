@@ -32,6 +32,11 @@ use Sindri\Ast\Data\Result\ConfigResult;
 
 use function count;
 use function dirname;
+use function explode;
+use function max;
+use function realpath;
+use function rtrim;
+use function str_starts_with;
 
 /**
  * Reads an application config class file via AST and extracts the values

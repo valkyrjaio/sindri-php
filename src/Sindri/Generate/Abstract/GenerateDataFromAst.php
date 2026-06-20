@@ -54,7 +54,12 @@ use Valkyrja\Cli\Interaction\Output\Contract\OutputContract;
 use Valkyrja\Cli\Interaction\Output\Factory\Contract\OutputFactoryContract;
 use Valkyrja\Cli\Routing\Data\Contract\RouteContract;
 
+use function is_file;
+use function rtrim;
+use function str_replace;
+use function str_starts_with;
 use function strlen;
+use function substr;
 
 abstract class GenerateDataFromAst
 {

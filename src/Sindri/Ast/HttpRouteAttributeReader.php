@@ -33,7 +33,11 @@ use Valkyrja\Http\Routing\Attribute\Route\RouteHandler;
 use Valkyrja\Http\Routing\Data\DynamicRoute as DynamicRouteModel;
 use Valkyrja\Http\Routing\Data\Route as RouteModel;
 
+use function array_push;
 use function is_string;
+use function ltrim;
+use function rtrim;
+use function str_contains;
 
 /**
  * Scans an HTTP controller class file for #[Route] / #[DynamicRoute] and related

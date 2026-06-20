@@ -13,6 +13,7 @@ declare(strict_types=1);
 
 namespace Sindri\Tests\Unit\Generator\Ast\Http;
 
+use Closure;
 use LogicException;
 use PhpParser\Node\Expr\New_;
 use PhpParser\Node\Name\FullyQualified;
@@ -21,8 +22,10 @@ use Sindri\Ast\Data\HttpParameterData;
 use Sindri\Ast\Data\HttpRouteData;
 use Sindri\Generator\Ast\Http\AstHttpDataFileGenerator;
 use Sindri\Generator\Enum\GenerateStatus;
+use Sindri\Generator\Throwable\Exception\GeneratorUnreachableException;
 use Sindri\Tests\Classes\Http\TestRegexConstantsClass;
 use Sindri\Tests\Unit\Abstract\TestCase;
+use Valkyrja\Http\Routing\Data\DynamicRoute;
 use Valkyrja\Http\Routing\Data\Parameter;
 use Valkyrja\Http\Routing\Data\Route;
 use Valkyrja\Http\Routing\Processor\Contract\ProcessorContract;
@@ -260,6 +263,73 @@ final class AstHttpDataFileGeneratorTest extends TestCase
         $result = $generator->callComputeRegex($routeData);
 
         self::assertSame('', $result);
+    }
+
+    public function testComputeRegexUsesFallbackPathAndNameWhenEmpty(): void
+    {
+        $mockProcessor = $this->createMock(ProcessorContract::class);
+        $mockProcessor->expects($this->once())
+            ->method('route')
+            ->with(self::callback(static function (DynamicRoute $route): bool {
+                // Empty path/name fall back to '/' and 'temp' (the ternary false arms).
+                return $route->getPath() === '/' && $route->getName() === 'temp';
+            }))
+            ->willReturn(new Route(
+                path: '/',
+                name: 'temp',
+                handler: static fn (): never => throw new LogicException('unreachable'),
+            ));
+
+        $generator = new class($mockProcessor) extends AstHttpDataFileGenerator {
+            public function __construct(ProcessorContract $processor)
+            {
+                parent::__construct(processor: $processor);
+            }
+
+            public function callComputeRegex(HttpRouteData $data): string
+            {
+                return $this->computeRegex($data);
+            }
+        };
+
+        $routeData = new HttpRouteData(path: '', name: '', isDynamic: true, parameters: []);
+
+        self::assertSame('', $generator->callComputeRegex($routeData));
+    }
+
+    public function testGenerateClassContentsAppendsEmptyRegexForDynamicRouteWithoutParameters(): void
+    {
+        $generator = new AstHttpDataFileGenerator();
+        $routeData = new HttpRouteData(
+            path: '/static',
+            name: 'static.route',
+            isDynamic: true,
+            parameters: [],
+        );
+        $routeExpr = new New_(new FullyQualified(Route::class), []);
+
+        $contents = $generator->generateClassContents(
+            ['static.route' => $routeExpr],
+            ['static.route' => $routeData],
+        );
+
+        // parameters === [] → computeRegex is skipped → an empty regex arg is appended.
+        self::assertStringContainsString("regex: ''", $contents);
+    }
+
+    public function testUnreachableRouteHandlerThrows(): void
+    {
+        $generator = new class extends AstHttpDataFileGenerator {
+            public function callUnreachableRouteHandler(): Closure
+            {
+                return $this->unreachableRouteHandler();
+            }
+        };
+
+        $this->expectException(GeneratorUnreachableException::class);
+        $this->expectExceptionMessage('unreachable');
+
+        ($generator->callUnreachableRouteHandler())();
     }
 
     // -----------------------------------------------------------------------

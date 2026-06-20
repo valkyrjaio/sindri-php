@@ -29,6 +29,11 @@ use Sindri\Ast\Data\HttpParameterData;
 use Valkyrja\Http\Routing\Attribute\Parameter;
 use Valkyrja\Http\Routing\Data\Parameter as ParameterModel;
 
+use function array_filter;
+use function array_merge;
+use function array_values;
+use function str_contains;
+
 /**
  * Reads and builds AST expressions for HTTP dynamic route parameters.
  *
