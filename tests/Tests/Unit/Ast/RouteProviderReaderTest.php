@@ -14,7 +14,7 @@ declare(strict_types=1);
 namespace Sindri\Tests\Unit\Ast;
 
 use Sindri\Ast\RouteProviderReader;
-use Sindri\Tests\Classes\Cli\Controller\TestCliControllerClass;
+use Sindri\Tests\Fixtures\Cli\Controller\TestCliControllerClass;
 use Sindri\Tests\Unit\Abstract\TestCase;
 
 final class RouteProviderReaderTest extends TestCase
@@ -28,12 +28,12 @@ final class RouteProviderReaderTest extends TestCase
     public static function setUpBeforeClass(): void
     {
         /** @var non-empty-string $path */
-        $path = realpath(__DIR__ . '/../../Classes/Cli/Provider/TestRouteProviderClass.php');
+        $path = realpath(__DIR__ . '/../../Fixtures/Cli/Provider/TestRouteProviderClass.php');
 
         self::$classFixtureFile = $path;
 
         /** @var non-empty-string $path */
-        $path = realpath(__DIR__ . '/../../Classes/Cli/Provider/RouteProviderClass.php');
+        $path = realpath(__DIR__ . '/../../Fixtures/Cli/Provider/RouteProviderClass.php');
 
         self::$stringFixtureFile = $path;
     }

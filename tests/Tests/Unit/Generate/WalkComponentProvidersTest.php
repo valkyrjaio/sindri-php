@@ -16,10 +16,10 @@ namespace Sindri\Tests\Unit\Generate;
 use Override;
 use Sindri\Ast\Data\Result\ConfigResult;
 use Sindri\Generate\Abstract\GenerateDataFromAst;
-use Sindri\Tests\Classes\Provider\Sub\TestOtherServiceProviderClass;
-use Sindri\Tests\Classes\Provider\Sub\TestServiceProviderClass;
-use Sindri\Tests\Classes\Provider\TestFirstComponentProviderClass;
-use Sindri\Tests\Classes\Provider\TestSecondComponentProviderClass;
+use Sindri\Tests\Fixtures\Provider\Sub\TestOtherServiceProviderClass;
+use Sindri\Tests\Fixtures\Provider\Sub\TestServiceProviderClass;
+use Sindri\Tests\Fixtures\Provider\TestFirstComponentProviderClass;
+use Sindri\Tests\Fixtures\Provider\TestSecondComponentProviderClass;
 use Sindri\Tests\Unit\Abstract\TestCase;
 use Valkyrja\Cli\Interaction\Output\Factory\Contract\OutputFactoryContract;
 use Valkyrja\Cli\Routing\Data\Contract\RouteContract;
@@ -31,7 +31,7 @@ final class WalkComponentProvidersTest extends TestCase
     public static function setUpBeforeClass(): void
     {
         /** @var non-empty-string $path */
-        $path = realpath(__DIR__ . '/../../Classes/Provider');
+        $path = realpath(__DIR__ . '/../../Fixtures/Provider');
 
         self::$providerFixtureDir = $path;
     }
@@ -39,7 +39,7 @@ final class WalkComponentProvidersTest extends TestCase
     public function testServiceProvidersFollowConfigDeclarationOrder(): void
     {
         $config = new ConfigResult(
-            namespace: 'Sindri\\Tests\\Classes\\Provider',
+            namespace: 'Sindri\\Tests\\Fixtures\\Provider',
             dir: self::$providerFixtureDir,
             providers: [
                 TestFirstComponentProviderClass::class,
@@ -78,7 +78,7 @@ final class WalkComponentProvidersTest extends TestCase
     public function testServiceProviderOrderIsReversedWhenConfigOrderIsReversed(): void
     {
         $config = new ConfigResult(
-            namespace: 'Sindri\\Tests\\Classes\\Provider',
+            namespace: 'Sindri\\Tests\\Fixtures\\Provider',
             dir: self::$providerFixtureDir,
             providers: [
                 TestSecondComponentProviderClass::class,

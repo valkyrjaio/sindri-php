@@ -19,7 +19,7 @@ use PhpParser\Node\Expr\Variable;
 use PhpParser\Node\Identifier;
 use PhpParser\Node\Scalar\String_;
 use Sindri\Ast\ConfigReader;
-use Sindri\Tests\Classes\Config\Provider\TestComponentProviderClass;
+use Sindri\Tests\Fixtures\Config\Provider\TestComponentProviderClass;
 use Sindri\Tests\Unit\Abstract\TestCase;
 
 use function dirname;
@@ -31,7 +31,7 @@ final class ConfigReaderTest extends TestCase
     public static function setUpBeforeClass(): void
     {
         /** @var non-empty-string $path */
-        $path = realpath(__DIR__ . '/../../Classes/Config/TestConfigClass.php');
+        $path = realpath(__DIR__ . '/../../Fixtures/Config/TestConfigClass.php');
 
         self::$fixtureFile = $path;
     }
@@ -44,7 +44,7 @@ final class ConfigReaderTest extends TestCase
     {
         $result = new ConfigReader()->readFile(self::$fixtureFile);
 
-        self::assertSame('Sindri\\Tests\\Classes', $result->namespace);
+        self::assertSame('Sindri\\Tests\\Fixtures', $result->namespace);
     }
 
     public function testReadFileExtractsDirAsPsr4Root(): void
@@ -61,7 +61,7 @@ final class ConfigReaderTest extends TestCase
     {
         $fixtureDir       = dirname(self::$fixtureFile);
         $appRoot          = dirname($fixtureDir, 2);
-        $expectedDataPath = $appRoot . '/Classes/Config/Data';
+        $expectedDataPath = $appRoot . '/Fixtures/Config/Data';
 
         $result = new ConfigReader()->readFile(self::$fixtureFile);
 
@@ -72,7 +72,7 @@ final class ConfigReaderTest extends TestCase
     {
         $result = new ConfigReader()->readFile(self::$fixtureFile);
 
-        self::assertSame('Sindri\\Tests\\Classes\\Config\\Data', $result->dataNamespace);
+        self::assertSame('Sindri\\Tests\\Fixtures\\Config\\Data', $result->dataNamespace);
     }
 
     public function testReadFileExtractsProviders(): void

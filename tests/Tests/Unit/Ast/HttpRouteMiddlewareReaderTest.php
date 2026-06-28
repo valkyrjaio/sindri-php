@@ -25,7 +25,7 @@ use PhpParser\Node\Scalar\String_;
 use PhpParser\Node\Stmt\ClassMethod;
 use Sindri\Ast\Data\HttpRouteData;
 use Sindri\Ast\HttpRouteMiddlewareReader;
-use Sindri\Tests\Classes\Http\Middleware\TestHttpMiddlewareClass;
+use Sindri\Tests\Fixtures\Http\Middleware\TestHttpMiddlewareClass;
 use Sindri\Tests\Unit\Abstract\TestCase;
 use Valkyrja\Http\Message\Enum\RequestMethod;
 use Valkyrja\Http\Routing\Attribute\Route\Middleware;

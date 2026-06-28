@@ -14,7 +14,7 @@ declare(strict_types=1);
 namespace Sindri\Tests\Unit\Ast;
 
 use Sindri\Ast\ListenerProviderReader;
-use Sindri\Tests\Classes\Event\TestListenerClass;
+use Sindri\Tests\Fixtures\Event\TestListenerClass;
 use Sindri\Tests\Unit\Abstract\TestCase;
 
 final class ListenerProviderReaderTest extends TestCase
@@ -24,7 +24,7 @@ final class ListenerProviderReaderTest extends TestCase
     public static function setUpBeforeClass(): void
     {
         /** @var non-empty-string $path */
-        $path = realpath(__DIR__ . '/../../Classes/Event/Provider/TestListenerProviderClass.php');
+        $path = realpath(__DIR__ . '/../../Fixtures/Event/Provider/TestListenerProviderClass.php');
 
         self::$fixtureFile = $path;
     }

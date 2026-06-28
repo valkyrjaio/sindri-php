@@ -14,8 +14,8 @@ declare(strict_types=1);
 namespace Sindri\Tests\Unit\Ast;
 
 use Sindri\Ast\ComponentProviderReader;
-use Sindri\Tests\Classes\Provider\Sub\TestServiceProviderClass;
-use Sindri\Tests\Classes\Provider\Sub\TestSubComponentProviderClass;
+use Sindri\Tests\Fixtures\Provider\Sub\TestServiceProviderClass;
+use Sindri\Tests\Fixtures\Provider\Sub\TestSubComponentProviderClass;
 use Sindri\Tests\Unit\Abstract\TestCase;
 
 final class ComponentProviderReaderTest extends TestCase
@@ -25,7 +25,7 @@ final class ComponentProviderReaderTest extends TestCase
     public static function setUpBeforeClass(): void
     {
         /** @var non-empty-string $path */
-        $path = realpath(__DIR__ . '/../../Classes/Provider/TestComponentProviderClass.php');
+        $path = realpath(__DIR__ . '/../../Fixtures/Provider/TestComponentProviderClass.php');
 
         self::$fixtureFile = $path;
     }

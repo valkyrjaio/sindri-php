@@ -18,10 +18,10 @@ use PhpParser\Node\Identifier;
 use PhpParser\Node\Stmt\ClassMethod;
 use PhpParser\Node\Stmt\Return_;
 use Sindri\Ast\ServiceProviderReader;
-use Sindri\Tests\Classes\Provider\Sub\TestOtherServiceClass;
-use Sindri\Tests\Classes\Provider\Sub\TestOtherServiceProviderClass;
-use Sindri\Tests\Classes\Provider\Sub\TestServiceClass;
-use Sindri\Tests\Classes\Provider\Sub\TestServiceProviderClass;
+use Sindri\Tests\Fixtures\Provider\Sub\TestOtherServiceClass;
+use Sindri\Tests\Fixtures\Provider\Sub\TestOtherServiceProviderClass;
+use Sindri\Tests\Fixtures\Provider\Sub\TestServiceClass;
+use Sindri\Tests\Fixtures\Provider\Sub\TestServiceProviderClass;
 use Sindri\Tests\Unit\Abstract\TestCase;
 
 final class ServiceProviderReaderTest extends TestCase
@@ -31,7 +31,7 @@ final class ServiceProviderReaderTest extends TestCase
     public static function setUpBeforeClass(): void
     {
         /** @var non-empty-string $path */
-        $path = realpath(__DIR__ . '/../../Classes/Provider/Sub/TestServiceProviderClass.php');
+        $path = realpath(__DIR__ . '/../../Fixtures/Provider/Sub/TestServiceProviderClass.php');
 
         self::$fixtureFile = $path;
     }
