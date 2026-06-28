@@ -21,10 +21,10 @@ final class TestConfigClass extends CliConfig
     public function __construct()
     {
         parent::__construct(
-            namespace: 'Sindri\\Tests\\Classes',
+            namespace: 'Sindri\\Tests\\Fixtures',
             dir: __DIR__ . '/../..',
-            dataPath: 'Classes/Config/Data',
-            dataNamespace: 'Sindri\\Tests\\Classes\\Config\\Data',
+            dataPath: 'Fixtures/Config/Data',
+            dataNamespace: 'Sindri\\Tests\\Fixtures\\Config\\Data',
             providers: [new TestComponentProviderClass()],
         );
     }

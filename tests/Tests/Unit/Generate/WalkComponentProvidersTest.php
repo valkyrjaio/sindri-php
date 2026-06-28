@@ -39,7 +39,7 @@ final class WalkComponentProvidersTest extends TestCase
     public function testServiceProvidersFollowConfigDeclarationOrder(): void
     {
         $config = new ConfigResult(
-            namespace: 'Sindri\\Tests\\Classes\\Provider',
+            namespace: 'Sindri\\Tests\\Fixtures\\Provider',
             dir: self::$providerFixtureDir,
             providers: [
                 TestFirstComponentProviderClass::class,
@@ -78,7 +78,7 @@ final class WalkComponentProvidersTest extends TestCase
     public function testServiceProviderOrderIsReversedWhenConfigOrderIsReversed(): void
     {
         $config = new ConfigResult(
-            namespace: 'Sindri\\Tests\\Classes\\Provider',
+            namespace: 'Sindri\\Tests\\Fixtures\\Provider',
             dir: self::$providerFixtureDir,
             providers: [
                 TestSecondComponentProviderClass::class,

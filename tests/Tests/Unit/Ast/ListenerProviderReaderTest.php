@@ -24,7 +24,7 @@ final class ListenerProviderReaderTest extends TestCase
     public static function setUpBeforeClass(): void
     {
         /** @var non-empty-string $path */
-        $path = realpath(__DIR__ . '/../../Classes/Event/Provider/TestListenerProviderClass.php');
+        $path = realpath(__DIR__ . '/../../Fixtures/Event/Provider/TestListenerProviderClass.php');
 
         self::$fixtureFile = $path;
     }

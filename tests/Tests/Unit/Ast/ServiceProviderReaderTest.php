@@ -31,7 +31,7 @@ final class ServiceProviderReaderTest extends TestCase
     public static function setUpBeforeClass(): void
     {
         /** @var non-empty-string $path */
-        $path = realpath(__DIR__ . '/../../Classes/Provider/Sub/TestServiceProviderClass.php');
+        $path = realpath(__DIR__ . '/../../Fixtures/Provider/Sub/TestServiceProviderClass.php');
 
         self::$fixtureFile = $path;
     }

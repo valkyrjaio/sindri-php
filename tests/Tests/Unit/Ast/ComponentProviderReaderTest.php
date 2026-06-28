@@ -25,7 +25,7 @@ final class ComponentProviderReaderTest extends TestCase
     public static function setUpBeforeClass(): void
     {
         /** @var non-empty-string $path */
-        $path = realpath(__DIR__ . '/../../Classes/Provider/TestComponentProviderClass.php');
+        $path = realpath(__DIR__ . '/../../Fixtures/Provider/TestComponentProviderClass.php');
 
         self::$fixtureFile = $path;
     }

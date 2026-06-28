@@ -33,22 +33,22 @@ final class CliRouteAttributeReaderTest extends TestCase
     public static function setUpBeforeClass(): void
     {
         /** @var non-empty-string $path */
-        $path = realpath(__DIR__ . '/../../Classes/Cli/Controller/TestCliControllerClass.php');
+        $path = realpath(__DIR__ . '/../../Fixtures/Cli/Controller/TestCliControllerClass.php');
 
         self::$fixtureFile = $path;
 
         /** @var non-empty-string $richPath */
-        $richPath = realpath(__DIR__ . '/../../Classes/Cli/Controller/TestRichCliControllerClass.php');
+        $richPath = realpath(__DIR__ . '/../../Fixtures/Cli/Controller/TestRichCliControllerClass.php');
 
         self::$richFixtureFile = $richPath;
 
         /** @var non-empty-string $badPath */
-        $badPath = realpath(__DIR__ . '/../../Classes/Cli/Controller/TestBadCliControllerClass.php');
+        $badPath = realpath(__DIR__ . '/../../Fixtures/Cli/Controller/TestBadCliControllerClass.php');
 
         self::$badFixtureFile = $badPath;
 
         /** @var non-empty-string $noNsPath */
-        $noNsPath = realpath(__DIR__ . '/../../Classes/Cli/Controller/TestNoNsCliControllerClass.php');
+        $noNsPath = realpath(__DIR__ . '/../../Fixtures/Cli/Controller/TestNoNsCliControllerClass.php');
 
         self::$noNsFixtureFile = $noNsPath;
     }

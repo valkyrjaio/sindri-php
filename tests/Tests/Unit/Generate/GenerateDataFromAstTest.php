@@ -112,10 +112,10 @@ final class GenerateDataFromAstTest extends TestCase
 
         /** @var non-empty-string $dir */
         $dir    = realpath(__DIR__ . '/../../Fixtures');
-        $config = new ConfigResult(namespace: 'Sindri\\Tests\\Classes', dir: $dir);
+        $config = new ConfigResult(namespace: 'Sindri\\Tests\\Fixtures', dir: $dir);
 
         $result = $walker->callWalkProvider(
-            'Sindri\\Tests\\Classes\\Provider\\TestComponentProviderClass',
+            'Sindri\\Tests\\Fixtures\\Provider\\TestComponentProviderClass',
             $config,
         );
 
@@ -129,9 +129,9 @@ final class GenerateDataFromAstTest extends TestCase
         /** @var non-empty-string $dir */
         $dir    = realpath(__DIR__ . '/../../Fixtures');
         $config = new ConfigResult(
-            namespace: 'Sindri\\Tests\\Classes',
+            namespace: 'Sindri\\Tests\\Fixtures',
             dir: $dir,
-            providers: ['Sindri\\Tests\\Classes\\Provider\\TestComponentProviderClass'],
+            providers: ['Sindri\\Tests\\Fixtures\\Provider\\TestComponentProviderClass'],
         );
 
         $result = $walker->callWalkComponentProviders($config);
@@ -267,10 +267,10 @@ final class GenerateDataFromAstTest extends TestCase
         $classesDir = realpath(__DIR__ . '/../../Fixtures/Provider/Sub');
 
         $config = new ConfigResult(
-            namespace: 'Sindri\\Tests\\Classes\\Provider\\Sub',
+            namespace: 'Sindri\\Tests\\Fixtures\\Provider\\Sub',
             dir: $classesDir,
             dataPath: $tmpDir,
-            dataNamespace: 'Sindri\\Tests\\Classes\\Provider\\Sub\\Data',
+            dataNamespace: 'Sindri\\Tests\\Fixtures\\Provider\\Sub\\Data',
         );
 
         $result = $walker->callGenerateContainerData(
@@ -301,10 +301,10 @@ final class GenerateDataFromAstTest extends TestCase
         $eventDir = realpath(__DIR__ . '/../../Fixtures/Event');
 
         $config = new ConfigResult(
-            namespace: 'Sindri\\Tests\\Classes\\Event',
+            namespace: 'Sindri\\Tests\\Fixtures\\Event',
             dir: $eventDir,
             dataPath: $tmpDir,
-            dataNamespace: 'Sindri\\Tests\\Classes\\Event\\Data',
+            dataNamespace: 'Sindri\\Tests\\Fixtures\\Event\\Data',
         );
 
         $result = $walker->callGenerateEventData(
@@ -335,10 +335,10 @@ final class GenerateDataFromAstTest extends TestCase
         $cliDir = realpath(__DIR__ . '/../../Fixtures/Cli');
 
         $config = new ConfigResult(
-            namespace: 'Sindri\\Tests\\Classes\\Cli',
+            namespace: 'Sindri\\Tests\\Fixtures\\Cli',
             dir: $cliDir,
             dataPath: $tmpDir,
-            dataNamespace: 'Sindri\\Tests\\Classes\\Cli\\Data',
+            dataNamespace: 'Sindri\\Tests\\Fixtures\\Cli\\Data',
         );
 
         $result = $walker->callGenerateCliData(
@@ -369,10 +369,10 @@ final class GenerateDataFromAstTest extends TestCase
         $httpDir = realpath(__DIR__ . '/../../Fixtures/Http');
 
         $config = new ConfigResult(
-            namespace: 'Sindri\\Tests\\Classes\\Http',
+            namespace: 'Sindri\\Tests\\Fixtures\\Http',
             dir: $httpDir,
             dataPath: $tmpDir,
-            dataNamespace: 'Sindri\\Tests\\Classes\\Http\\Data',
+            dataNamespace: 'Sindri\\Tests\\Fixtures\\Http\\Data',
         );
 
         $result = $walker->callGenerateHttpData(
@@ -465,10 +465,10 @@ final class GenerateDataFromAstTest extends TestCase
         $eventDir = realpath(__DIR__ . '/../../Fixtures/Event');
 
         $config = new ConfigResult(
-            namespace: 'Sindri\\Tests\\Classes\\Event',
+            namespace: 'Sindri\\Tests\\Fixtures\\Event',
             dir: $eventDir,
             dataPath: $tmpDir,
-            dataNamespace: 'Sindri\\Tests\\Classes\\Event\\Data',
+            dataNamespace: 'Sindri\\Tests\\Fixtures\\Event\\Data',
         );
 
         $result = $walker->callGenerateEventData(
@@ -530,10 +530,10 @@ final class GenerateDataFromAstTest extends TestCase
         $cliDir = realpath(__DIR__ . '/../../Fixtures/Cli');
 
         $config = new ConfigResult(
-            namespace: 'Sindri\\Tests\\Classes\\Cli',
+            namespace: 'Sindri\\Tests\\Fixtures\\Cli',
             dir: $cliDir,
             dataPath: $tmpDir,
-            dataNamespace: 'Sindri\\Tests\\Classes\\Cli\\Data',
+            dataNamespace: 'Sindri\\Tests\\Fixtures\\Cli\\Data',
         );
 
         $result = $walker->callGenerateCliData(
@@ -595,10 +595,10 @@ final class GenerateDataFromAstTest extends TestCase
         $httpDir = realpath(__DIR__ . '/../../Fixtures/Http');
 
         $config = new ConfigResult(
-            namespace: 'Sindri\\Tests\\Classes\\Http',
+            namespace: 'Sindri\\Tests\\Fixtures\\Http',
             dir: $httpDir,
             dataPath: $tmpDir,
-            dataNamespace: 'Sindri\\Tests\\Classes\\Http\\Data',
+            dataNamespace: 'Sindri\\Tests\\Fixtures\\Http\\Data',
         );
 
         $result = $walker->callGenerateHttpData(

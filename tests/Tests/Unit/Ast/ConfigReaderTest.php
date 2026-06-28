@@ -44,7 +44,7 @@ final class ConfigReaderTest extends TestCase
     {
         $result = new ConfigReader()->readFile(self::$fixtureFile);
 
-        self::assertSame('Sindri\\Tests\\Classes', $result->namespace);
+        self::assertSame('Sindri\\Tests\\Fixtures', $result->namespace);
     }
 
     public function testReadFileExtractsDirAsPsr4Root(): void
@@ -61,7 +61,7 @@ final class ConfigReaderTest extends TestCase
     {
         $fixtureDir       = dirname(self::$fixtureFile);
         $appRoot          = dirname($fixtureDir, 2);
-        $expectedDataPath = $appRoot . '/Classes/Config/Data';
+        $expectedDataPath = $appRoot . '/Fixtures/Config/Data';
 
         $result = new ConfigReader()->readFile(self::$fixtureFile);
 
@@ -72,7 +72,7 @@ final class ConfigReaderTest extends TestCase
     {
         $result = new ConfigReader()->readFile(self::$fixtureFile);
 
-        self::assertSame('Sindri\\Tests\\Classes\\Config\\Data', $result->dataNamespace);
+        self::assertSame('Sindri\\Tests\\Fixtures\\Config\\Data', $result->dataNamespace);
     }
 
     public function testReadFileExtractsProviders(): void

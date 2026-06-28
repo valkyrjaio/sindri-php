@@ -39,22 +39,22 @@ final class HttpRouteAttributeReaderTest extends TestCase
     public static function setUpBeforeClass(): void
     {
         /** @var non-empty-string $path */
-        $path = realpath(__DIR__ . '/../../Classes/Http/Controller/TestHttpControllerClass.php');
+        $path = realpath(__DIR__ . '/../../Fixtures/Http/Controller/TestHttpControllerClass.php');
 
         self::$fixtureFile = $path;
 
         /** @var non-empty-string $richPath */
-        $richPath = realpath(__DIR__ . '/../../Classes/Http/Controller/TestRichHttpControllerClass.php');
+        $richPath = realpath(__DIR__ . '/../../Fixtures/Http/Controller/TestRichHttpControllerClass.php');
 
         self::$richFixtureFile = $richPath;
 
         /** @var non-empty-string $badPath */
-        $badPath = realpath(__DIR__ . '/../../Classes/Http/Controller/TestBadHttpControllerClass.php');
+        $badPath = realpath(__DIR__ . '/../../Fixtures/Http/Controller/TestBadHttpControllerClass.php');
 
         self::$badFixtureFile = $badPath;
 
         /** @var non-empty-string $noNsPath */
-        $noNsPath = realpath(__DIR__ . '/../../Classes/Http/Controller/TestNoNsHttpControllerClass.php');
+        $noNsPath = realpath(__DIR__ . '/../../Fixtures/Http/Controller/TestNoNsHttpControllerClass.php');
 
         self::$noNsFixtureFile = $noNsPath;
     }
