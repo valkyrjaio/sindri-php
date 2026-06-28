@@ -24,6 +24,8 @@ use Sindri\Tests\Unit\Abstract\TestCase;
 use Valkyrja\Cli\Interaction\Output\Factory\Contract\OutputFactoryContract;
 use Valkyrja\Cli\Routing\Data\Contract\RouteContract;
 
+use function realpath;
+
 final class WalkComponentProvidersTest extends TestCase
 {
     private static string $providerFixtureDir;

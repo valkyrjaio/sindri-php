@@ -32,6 +32,13 @@ use Valkyrja\Cli\Interaction\Output\Contract\OutputContract;
 use Valkyrja\Cli\Interaction\Output\Factory\Contract\OutputFactoryContract;
 use Valkyrja\Cli\Routing\Data\Contract\RouteContract;
 
+use function glob;
+use function mkdir;
+use function realpath;
+use function rmdir;
+use function sys_get_temp_dir;
+use function unlink;
+
 final class GenerateDataFromAstTest extends TestCase
 {
     // -----------------------------------------------------------------------

@@ -23,6 +23,11 @@ use Sindri\Tests\Classes\Config\Provider\TestComponentProviderClass;
 use Sindri\Tests\Unit\Abstract\TestCase;
 
 use function dirname;
+use function file_put_contents;
+use function realpath;
+use function sys_get_temp_dir;
+use function tempnam;
+use function unlink;
 
 final class ConfigReaderTest extends TestCase
 {

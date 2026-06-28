@@ -17,6 +17,9 @@ use Sindri\Generator\Ast\Container\AstContainerDataFileGenerator;
 use Sindri\Generator\Enum\GenerateStatus;
 use Sindri\Tests\Unit\Abstract\TestCase;
 
+use function sys_get_temp_dir;
+use function unlink;
+
 final class AstContainerDataFileGeneratorTest extends TestCase
 {
     public function testGenerateClassContentsWithEmptyPublishersContainsDataClass(): void

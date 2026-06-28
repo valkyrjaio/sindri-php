@@ -30,6 +30,10 @@ use Valkyrja\Http\Routing\Data\Parameter;
 use Valkyrja\Http\Routing\Data\Route;
 use Valkyrja\Http\Routing\Processor\Contract\ProcessorContract;
 
+use function file_get_contents;
+use function sys_get_temp_dir;
+use function unlink;
+
 final class AstHttpDataFileGeneratorTest extends TestCase
 {
     public function testGenerateClassContentsWithEmptyDataContainsDataClass(): void
