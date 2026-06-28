@@ -14,7 +14,7 @@ declare(strict_types=1);
 namespace Sindri\Tests\Unit\Ast;
 
 use Sindri\Ast\RouteProviderReader;
-use Sindri\Tests\Classes\Cli\Controller\TestCliControllerClass;
+use Sindri\Tests\Fixtures\Cli\Controller\TestCliControllerClass;
 use Sindri\Tests\Unit\Abstract\TestCase;
 
 final class RouteProviderReaderTest extends TestCase

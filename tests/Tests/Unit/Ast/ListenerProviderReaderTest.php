@@ -14,7 +14,7 @@ declare(strict_types=1);
 namespace Sindri\Tests\Unit\Ast;
 
 use Sindri\Ast\ListenerProviderReader;
-use Sindri\Tests\Classes\Event\TestListenerClass;
+use Sindri\Tests\Fixtures\Event\TestListenerClass;
 use Sindri\Tests\Unit\Abstract\TestCase;
 
 final class ListenerProviderReaderTest extends TestCase

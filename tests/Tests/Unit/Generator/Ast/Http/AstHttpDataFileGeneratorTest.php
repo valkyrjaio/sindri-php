@@ -23,7 +23,7 @@ use Sindri\Ast\Data\HttpRouteData;
 use Sindri\Generator\Ast\Http\AstHttpDataFileGenerator;
 use Sindri\Generator\Enum\GenerateStatus;
 use Sindri\Generator\Throwable\Exception\GeneratorUnreachableException;
-use Sindri\Tests\Classes\Http\TestRegexConstantsClass;
+use Sindri\Tests\Fixtures\Http\TestRegexConstantsClass;
 use Sindri\Tests\Unit\Abstract\TestCase;
 use Valkyrja\Http\Routing\Data\DynamicRoute;
 use Valkyrja\Http\Routing\Data\Parameter;

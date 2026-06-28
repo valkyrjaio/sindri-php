@@ -20,7 +20,7 @@ use PhpParser\Node\Scalar\String_;
 use Sindri\Ast\CliRouteAttributeReader;
 use Sindri\Ast\Data\CliRouteData;
 use Sindri\Ast\Data\HandlerData;
-use Sindri\Tests\Classes\Cli\Controller\TestCliControllerClass;
+use Sindri\Tests\Fixtures\Cli\Controller\TestCliControllerClass;
 use Sindri\Tests\Unit\Abstract\TestCase;
 
 final class CliRouteAttributeReaderTest extends TestCase

@@ -19,7 +19,7 @@ use PhpParser\Node\Expr\Variable;
 use PhpParser\Node\Identifier;
 use PhpParser\Node\Scalar\String_;
 use Sindri\Ast\ConfigReader;
-use Sindri\Tests\Classes\Config\Provider\TestComponentProviderClass;
+use Sindri\Tests\Fixtures\Config\Provider\TestComponentProviderClass;
 use Sindri\Tests\Unit\Abstract\TestCase;
 
 use function dirname;
@@ -31,7 +31,7 @@ final class ConfigReaderTest extends TestCase
     public static function setUpBeforeClass(): void
     {
         /** @var non-empty-string $path */
-        $path = realpath(__DIR__ . '/../../Classes/Config/TestConfigClass.php');
+        $path = realpath(__DIR__ . '/../../Fixtures/Config/TestConfigClass.php');
 
         self::$fixtureFile = $path;
     }

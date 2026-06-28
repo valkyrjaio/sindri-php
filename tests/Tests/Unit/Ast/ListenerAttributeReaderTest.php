@@ -25,7 +25,7 @@ use PhpParser\Node\Stmt\ClassMethod;
 use Sindri\Ast\Data\HandlerData;
 use Sindri\Ast\Data\ListenerData;
 use Sindri\Ast\ListenerAttributeReader;
-use Sindri\Tests\Classes\Event\TestListenerClass;
+use Sindri\Tests\Fixtures\Event\TestListenerClass;
 use Sindri\Tests\Unit\Abstract\TestCase;
 use Valkyrja\Event\Attribute\ListenerHandler;
 
@@ -37,12 +37,12 @@ final class ListenerAttributeReaderTest extends TestCase
     public static function setUpBeforeClass(): void
     {
         /** @var non-empty-string $path */
-        $path = realpath(__DIR__ . '/../../Classes/Event/TestListenerClass.php');
+        $path = realpath(__DIR__ . '/../../Fixtures/Event/TestListenerClass.php');
 
         self::$fixtureFile = $path;
 
         /** @var non-empty-string $richPath */
-        $richPath = realpath(__DIR__ . '/../../Classes/Event/TestRichListenerClass.php');
+        $richPath = realpath(__DIR__ . '/../../Fixtures/Event/TestRichListenerClass.php');
 
         self::$richFixtureFile = $richPath;
     }
@@ -83,7 +83,7 @@ final class ListenerAttributeReaderTest extends TestCase
     public function testReadFileExtractsListenersFromClassWithNoNamespace(): void
     {
         /** @var non-empty-string $path */
-        $path = realpath(__DIR__ . '/../../Classes/Event/TestListenerNoNsClass.php');
+        $path = realpath(__DIR__ . '/../../Fixtures/Event/TestListenerNoNsClass.php');
 
         $result = new ListenerAttributeReader()->readFile($path);
 
