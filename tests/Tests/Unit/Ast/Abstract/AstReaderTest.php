@@ -43,6 +43,12 @@ use Sindri\Ast\Data\HandlerData;
 use Sindri\Ast\Throwable\Exception\AstFileReadException;
 use Sindri\Tests\Unit\Abstract\TestCase;
 
+use function file_put_contents;
+use function is_file;
+use function sys_get_temp_dir;
+use function tempnam;
+use function unlink;
+
 final class AstReaderTest extends TestCase
 {
     private AstReader $reader;

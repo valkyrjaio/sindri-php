@@ -18,6 +18,9 @@ use Sindri\Generator\Ast\Cli\AstCliDataFileGenerator;
 use Sindri\Generator\Enum\GenerateStatus;
 use Sindri\Tests\Unit\Abstract\TestCase;
 
+use function sys_get_temp_dir;
+use function unlink;
+
 final class AstCliDataFileGeneratorTest extends TestCase
 {
     public function testGenerateClassContentsWithEmptyRoutesContainsDataClass(): void

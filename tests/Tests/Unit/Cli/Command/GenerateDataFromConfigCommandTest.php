@@ -24,6 +24,12 @@ use Valkyrja\Cli\Interaction\Output\Factory\Contract\OutputFactoryContract;
 use Valkyrja\Cli\Routing\Data\ArgumentParameter;
 use Valkyrja\Cli\Routing\Data\Contract\RouteContract;
 
+use function glob;
+use function mkdir;
+use function rmdir;
+use function sys_get_temp_dir;
+use function unlink;
+
 final class GenerateDataFromConfigCommandTest extends TestCase
 {
     public function testHelpReturnsMessage(): void

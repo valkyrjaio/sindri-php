@@ -17,6 +17,12 @@ use Sindri\Ast\RouteProviderReader;
 use Sindri\Tests\Fixtures\Cli\Controller\TestCliControllerClass;
 use Sindri\Tests\Unit\Abstract\TestCase;
 
+use function file_put_contents;
+use function realpath;
+use function sys_get_temp_dir;
+use function tempnam;
+use function unlink;
+
 final class RouteProviderReaderTest extends TestCase
 {
     /** Fixture using ::class syntax — produces a real FQN in controllerClasses. */

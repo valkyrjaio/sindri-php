@@ -29,6 +29,12 @@ use Sindri\Tests\Fixtures\Event\TestListenerClass;
 use Sindri\Tests\Unit\Abstract\TestCase;
 use Valkyrja\Event\Attribute\ListenerHandler;
 
+use function file_put_contents;
+use function realpath;
+use function sys_get_temp_dir;
+use function tempnam;
+use function unlink;
+
 final class ListenerAttributeReaderTest extends TestCase
 {
     private static string $fixtureFile;

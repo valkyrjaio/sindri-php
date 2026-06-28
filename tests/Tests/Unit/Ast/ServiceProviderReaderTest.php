@@ -24,6 +24,12 @@ use Sindri\Tests\Fixtures\Provider\Sub\TestServiceClass;
 use Sindri\Tests\Fixtures\Provider\Sub\TestServiceProviderClass;
 use Sindri\Tests\Unit\Abstract\TestCase;
 
+use function file_put_contents;
+use function realpath;
+use function sys_get_temp_dir;
+use function tempnam;
+use function unlink;
+
 final class ServiceProviderReaderTest extends TestCase
 {
     private static string $fixtureFile;
