@@ -17,7 +17,7 @@
   ],
   "require"           : {
     "php"               : ">=8.4",
-    "nikic/php-parser"  : "^5.7.0",
+    "nikic/php-parser"  : "^5.8.0",
     "valkyrja/valkyrja" : "^26.4.1"
   },
   "autoload"          : {
