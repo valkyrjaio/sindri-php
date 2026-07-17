@@ -14,7 +14,7 @@ declare(strict_types=1);
 namespace Sindri\Tests\Unit\Ast;
 
 use Sindri\Ast\ListenerProviderReader;
-use Sindri\Tests\Fixtures\Event\TestListenerClass;
+use Sindri\Tests\Fixtures\Event\TestListenerFixture;
 use Sindri\Tests\Unit\Abstract\TestCase;
 
 use function file_put_contents;
@@ -30,7 +30,7 @@ final class ListenerProviderReaderTest extends TestCase
     public static function setUpBeforeClass(): void
     {
         /** @var non-empty-string $path */
-        $path = realpath(__DIR__ . '/../../Fixtures/Event/Provider/TestListenerProviderClass.php');
+        $path = realpath(__DIR__ . '/../../Fixtures/Event/Provider/TestListenerProviderFixture.php');
 
         self::$fixtureFile = $path;
     }
@@ -39,7 +39,7 @@ final class ListenerProviderReaderTest extends TestCase
     {
         $result = new ListenerProviderReader()->readFile(self::$fixtureFile);
 
-        self::assertSame([TestListenerClass::class], $result->listenerClasses);
+        self::assertSame([TestListenerFixture::class], $result->listenerClasses);
     }
 
     public function testReadFileExtractsEmptyListeners(): void

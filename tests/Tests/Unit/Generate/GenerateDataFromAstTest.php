@@ -20,13 +20,13 @@ use Sindri\Ast\Data\Result\ComponentProviderResult;
 use Sindri\Ast\Data\Result\ConfigResult;
 use Sindri\Generate\Abstract\GenerateDataFromAst;
 use Sindri\Generator\Enum\GenerateStatus;
-use Sindri\Tests\Fixtures\Cli\Provider\TestMissingControllerProviderClass;
-use Sindri\Tests\Fixtures\Cli\Provider\TestRouteProviderClass;
-use Sindri\Tests\Fixtures\Event\Provider\TestListenerProviderClass;
-use Sindri\Tests\Fixtures\Event\Provider\TestMissingListenerProviderClass;
-use Sindri\Tests\Fixtures\Http\Provider\TestMissingControllerProviderClass as HttpTestMissingControllerProviderClass;
-use Sindri\Tests\Fixtures\Http\Provider\TestRouteProviderClass as HttpTestRouteProviderClass;
-use Sindri\Tests\Fixtures\Provider\Sub\TestServiceProviderClass;
+use Sindri\Tests\Fixtures\Cli\Provider\TestMissingControllerProviderFixture;
+use Sindri\Tests\Fixtures\Cli\Provider\TestRouteProviderFixture;
+use Sindri\Tests\Fixtures\Event\Provider\TestListenerProviderFixture;
+use Sindri\Tests\Fixtures\Event\Provider\TestMissingListenerProviderFixture;
+use Sindri\Tests\Fixtures\Http\Provider\TestMissingControllerProviderFixture as HttpTestMissingControllerProviderClass;
+use Sindri\Tests\Fixtures\Http\Provider\TestRouteProviderFixture as HttpTestRouteProviderClass;
+use Sindri\Tests\Fixtures\Provider\Sub\TestServiceProviderFixture;
 use Sindri\Tests\Unit\Abstract\TestCase;
 use Valkyrja\Cli\Interaction\Output\Contract\OutputContract;
 use Valkyrja\Cli\Interaction\Output\Factory\Contract\OutputFactoryContract;
@@ -122,7 +122,7 @@ final class GenerateDataFromAstTest extends TestCase
         $config = new ConfigResult(namespace: 'Sindri\\Tests\\Fixtures', dir: $dir);
 
         $result = $walker->callWalkProvider(
-            'Sindri\\Tests\\Fixtures\\Provider\\TestComponentProviderClass',
+            'Sindri\\Tests\\Fixtures\\Provider\\TestComponentProviderFixture',
             $config,
         );
 
@@ -138,7 +138,7 @@ final class GenerateDataFromAstTest extends TestCase
         $config = new ConfigResult(
             namespace: 'Sindri\\Tests\\Fixtures',
             dir: $dir,
-            providers: ['Sindri\\Tests\\Fixtures\\Provider\\TestComponentProviderClass'],
+            providers: ['Sindri\\Tests\\Fixtures\\Provider\\TestComponentProviderFixture'],
         );
 
         $result = $walker->callWalkComponentProviders($config);
@@ -281,7 +281,7 @@ final class GenerateDataFromAstTest extends TestCase
         );
 
         $result = $walker->callGenerateContainerData(
-            [TestServiceProviderClass::class],
+            [TestServiceProviderFixture::class],
             $config,
             $output,
         );
@@ -315,7 +315,7 @@ final class GenerateDataFromAstTest extends TestCase
         );
 
         $result = $walker->callGenerateEventData(
-            [TestListenerProviderClass::class],
+            [TestListenerProviderFixture::class],
             $config,
             $output,
         );
@@ -349,7 +349,7 @@ final class GenerateDataFromAstTest extends TestCase
         );
 
         $result = $walker->callGenerateCliData(
-            [TestRouteProviderClass::class],
+            [TestRouteProviderFixture::class],
             $config,
             $output,
         );
@@ -479,7 +479,7 @@ final class GenerateDataFromAstTest extends TestCase
         );
 
         $result = $walker->callGenerateEventData(
-            [TestMissingListenerProviderClass::class],
+            [TestMissingListenerProviderFixture::class],
             $config,
             $output,
         );
@@ -544,7 +544,7 @@ final class GenerateDataFromAstTest extends TestCase
         );
 
         $result = $walker->callGenerateCliData(
-            [TestMissingControllerProviderClass::class],
+            [TestMissingControllerProviderFixture::class],
             $config,
             $output,
         );

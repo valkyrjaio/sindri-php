@@ -23,7 +23,7 @@ use Sindri\Ast\Data\HttpRouteData;
 use Sindri\Generator\Ast\Http\AstHttpDataFileGenerator;
 use Sindri\Generator\Enum\GenerateStatus;
 use Sindri\Generator\Throwable\Exception\GeneratorUnreachableException;
-use Sindri\Tests\Fixtures\Http\TestRegexConstantsClass;
+use Sindri\Tests\Fixtures\Http\TestRegexConstantsFixture;
 use Sindri\Tests\Unit\Abstract\TestCase;
 use Valkyrja\Http\Routing\Data\DynamicRoute;
 use Valkyrja\Http\Routing\Data\Parameter;
@@ -382,7 +382,7 @@ final class AstHttpDataFileGeneratorTest extends TestCase
             }
         };
 
-        $data   = new HttpParameterData(name: 'slug', regex: TestRegexConstantsClass::class . '::ALPHA_REGEX');
+        $data   = new HttpParameterData(name: 'slug', regex: TestRegexConstantsFixture::class . '::ALPHA_REGEX');
         $result = $generator->callBuildParameter($data);
 
         self::assertSame('[a-z]+', $result->getRegex());

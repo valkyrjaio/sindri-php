@@ -25,7 +25,7 @@ use PhpParser\Node\Stmt\ClassMethod;
 use Sindri\Ast\Data\HandlerData;
 use Sindri\Ast\Data\ListenerData;
 use Sindri\Ast\ListenerAttributeReader;
-use Sindri\Tests\Fixtures\Event\TestListenerClass;
+use Sindri\Tests\Fixtures\Event\TestListenerFixture;
 use Sindri\Tests\Unit\Abstract\TestCase;
 use Valkyrja\Event\Attribute\ListenerHandler;
 
@@ -43,12 +43,12 @@ final class ListenerAttributeReaderTest extends TestCase
     public static function setUpBeforeClass(): void
     {
         /** @var non-empty-string $path */
-        $path = realpath(__DIR__ . '/../../Fixtures/Event/TestListenerClass.php');
+        $path = realpath(__DIR__ . '/../../Fixtures/Event/TestListenerFixture.php');
 
         self::$fixtureFile = $path;
 
         /** @var non-empty-string $richPath */
-        $richPath = realpath(__DIR__ . '/../../Fixtures/Event/TestRichListenerClass.php');
+        $richPath = realpath(__DIR__ . '/../../Fixtures/Event/TestRichListenerFixture.php');
 
         self::$richFixtureFile = $richPath;
     }
@@ -89,7 +89,7 @@ final class ListenerAttributeReaderTest extends TestCase
     public function testReadFileExtractsListenersFromClassWithNoNamespace(): void
     {
         /** @var non-empty-string $path */
-        $path = realpath(__DIR__ . '/../../Fixtures/Event/TestListenerNoNsClass.php');
+        $path = realpath(__DIR__ . '/../../Fixtures/Event/TestListenerNoNsFixture.php');
 
         $result = new ListenerAttributeReader()->readFile($path);
 
@@ -158,7 +158,7 @@ final class ListenerAttributeReaderTest extends TestCase
         // The inline handler: handler provided directly in #[Listener(handler: [...])]
         // hits the `$handlerRaw instanceof HandlerData ? $handlerRaw : ...` true branch
         self::assertArrayHasKey('inline-handler-method-listener', $captured);
-        self::assertSame(TestListenerClass::class, $captured['inline-handler-method-listener']->handler?->class ?? null);
+        self::assertSame(TestListenerFixture::class, $captured['inline-handler-method-listener']->handler?->class ?? null);
         self::assertSame('handle', $captured['inline-handler-method-listener']->handler?->method ?? null);
     }
 
@@ -183,9 +183,9 @@ final class ListenerAttributeReaderTest extends TestCase
 
         $reader->readFile(self::$richFixtureFile);
 
-        // The #[ListenerHandler([TestListenerClass::class, 'handle'])] provides the handler
+        // The #[ListenerHandler([TestListenerFixture::class, 'handle'])] provides the handler
         self::assertArrayHasKey('handler-class-listener', $captured);
-        self::assertSame(TestListenerClass::class, $captured['handler-class-listener']->handler?->class ?? null);
+        self::assertSame(TestListenerFixture::class, $captured['handler-class-listener']->handler?->class ?? null);
         self::assertSame('handle', $captured['handler-class-listener']->handler?->method ?? null);
     }
 
@@ -203,7 +203,7 @@ final class ListenerAttributeReaderTest extends TestCase
         };
 
         /** @var class-string $eventId */
-        $eventId = TestListenerClass::class;
+        $eventId = TestListenerFixture::class;
 
         $data = new ListenerData(
             eventId: $eventId,
@@ -239,9 +239,9 @@ final class ListenerAttributeReaderTest extends TestCase
         $method = new ClassMethod(new Identifier('onEvent'), ['attrGroups' => [new AttributeGroup([$attr])]]);
         $class  = new Class_(new Identifier('L'));
 
-        $result = $reader->callResolveListenerHandler([], 'Test', TestListenerClass::class, $class, $method);
+        $result = $reader->callResolveListenerHandler([], 'Test', TestListenerFixture::class, $class, $method);
 
         self::assertSame('onEvent', $result->method);
-        self::assertSame(TestListenerClass::class, $result->class);
+        self::assertSame(TestListenerFixture::class, $result->class);
     }
 }

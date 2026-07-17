@@ -23,8 +23,8 @@ use PhpParser\Node\Scalar\String_;
 use PhpParser\Node\Stmt\Class_;
 use PhpParser\Node\Stmt\ClassMethod;
 use Sindri\Ast\HttpRouteAttributeReader;
-use Sindri\Tests\Fixtures\Http\Controller\TestHttpControllerClass;
-use Sindri\Tests\Fixtures\Http\Middleware\TestHttpMiddlewareClass;
+use Sindri\Tests\Fixtures\Http\Controller\TestHttpControllerFixture;
+use Sindri\Tests\Fixtures\Http\Middleware\TestHttpMiddlewareFixture;
 use Sindri\Tests\Unit\Abstract\TestCase;
 use Valkyrja\Http\Routing\Attribute\Route\Name as RouteName;
 use Valkyrja\Http\Routing\Attribute\Route\Path;
@@ -45,22 +45,22 @@ final class HttpRouteAttributeReaderTest extends TestCase
     public static function setUpBeforeClass(): void
     {
         /** @var non-empty-string $path */
-        $path = realpath(__DIR__ . '/../../Fixtures/Http/Controller/TestHttpControllerClass.php');
+        $path = realpath(__DIR__ . '/../../Fixtures/Http/Controller/TestHttpControllerFixture.php');
 
         self::$fixtureFile = $path;
 
         /** @var non-empty-string $richPath */
-        $richPath = realpath(__DIR__ . '/../../Fixtures/Http/Controller/TestRichHttpControllerClass.php');
+        $richPath = realpath(__DIR__ . '/../../Fixtures/Http/Controller/TestRichHttpControllerFixture.php');
 
         self::$richFixtureFile = $richPath;
 
         /** @var non-empty-string $badPath */
-        $badPath = realpath(__DIR__ . '/../../Fixtures/Http/Controller/TestBadHttpControllerClass.php');
+        $badPath = realpath(__DIR__ . '/../../Fixtures/Http/Controller/TestBadHttpControllerFixture.php');
 
         self::$badFixtureFile = $badPath;
 
         /** @var non-empty-string $noNsPath */
-        $noNsPath = realpath(__DIR__ . '/../../Fixtures/Http/Controller/TestNoNsHttpControllerClass.php');
+        $noNsPath = realpath(__DIR__ . '/../../Fixtures/Http/Controller/TestNoNsHttpControllerFixture.php');
 
         self::$noNsFixtureFile = $noNsPath;
     }
@@ -182,11 +182,11 @@ final class HttpRouteAttributeReaderTest extends TestCase
 
         $data = $result->routeData['api.users.create'];
 
-        self::assertContains(TestHttpMiddlewareClass::class, $data->routeMatchedMiddleware);
-        self::assertContains(TestHttpMiddlewareClass::class, $data->routeDispatchedMiddleware);
-        self::assertContains(TestHttpMiddlewareClass::class, $data->throwableCaughtMiddleware);
-        self::assertContains(TestHttpMiddlewareClass::class, $data->sendingResponseMiddleware);
-        self::assertContains(TestHttpMiddlewareClass::class, $data->terminatedMiddleware);
+        self::assertContains(TestHttpMiddlewareFixture::class, $data->routeMatchedMiddleware);
+        self::assertContains(TestHttpMiddlewareFixture::class, $data->routeDispatchedMiddleware);
+        self::assertContains(TestHttpMiddlewareFixture::class, $data->throwableCaughtMiddleware);
+        self::assertContains(TestHttpMiddlewareFixture::class, $data->sendingResponseMiddleware);
+        self::assertContains(TestHttpMiddlewareFixture::class, $data->terminatedMiddleware);
     }
 
     // -----------------------------------------------------------------------
@@ -199,7 +199,7 @@ final class HttpRouteAttributeReaderTest extends TestCase
 
         $data = $result->routeData['api.users.update'];
 
-        self::assertSame(TestHttpMiddlewareClass::class, $data->requestStruct);
+        self::assertSame(TestHttpMiddlewareFixture::class, $data->requestStruct);
     }
 
     public function testReadRichFileExtractsResponseStruct(): void
@@ -208,7 +208,7 @@ final class HttpRouteAttributeReaderTest extends TestCase
 
         $data = $result->routeData['api.users.update'];
 
-        self::assertSame(TestHttpMiddlewareClass::class, $data->responseStruct);
+        self::assertSame(TestHttpMiddlewareFixture::class, $data->responseStruct);
     }
 
     // -----------------------------------------------------------------------
@@ -265,7 +265,7 @@ final class HttpRouteAttributeReaderTest extends TestCase
 
         $data = $result->routeData['api.inline.middleware'];
 
-        self::assertContains(TestHttpMiddlewareClass::class, $data->routeMatchedMiddleware);
+        self::assertContains(TestHttpMiddlewareFixture::class, $data->routeMatchedMiddleware);
     }
 
     public function testReadRichFileExtractsInlineRouteDispatchedMiddleware(): void
@@ -274,7 +274,7 @@ final class HttpRouteAttributeReaderTest extends TestCase
 
         $data = $result->routeData['api.inline.middleware'];
 
-        self::assertContains(TestHttpMiddlewareClass::class, $data->routeDispatchedMiddleware);
+        self::assertContains(TestHttpMiddlewareFixture::class, $data->routeDispatchedMiddleware);
     }
 
     public function testReadRichFileExtractsInlineThrowableCaughtMiddleware(): void
@@ -283,7 +283,7 @@ final class HttpRouteAttributeReaderTest extends TestCase
 
         $data = $result->routeData['api.inline.middleware'];
 
-        self::assertContains(TestHttpMiddlewareClass::class, $data->throwableCaughtMiddleware);
+        self::assertContains(TestHttpMiddlewareFixture::class, $data->throwableCaughtMiddleware);
     }
 
     public function testReadRichFileExtractsInlineSendingResponseMiddleware(): void
@@ -292,7 +292,7 @@ final class HttpRouteAttributeReaderTest extends TestCase
 
         $data = $result->routeData['api.inline.middleware'];
 
-        self::assertContains(TestHttpMiddlewareClass::class, $data->sendingResponseMiddleware);
+        self::assertContains(TestHttpMiddlewareFixture::class, $data->sendingResponseMiddleware);
     }
 
     public function testReadRichFileExtractsInlineTerminatedMiddleware(): void
@@ -301,7 +301,7 @@ final class HttpRouteAttributeReaderTest extends TestCase
 
         $data = $result->routeData['api.inline.middleware'];
 
-        self::assertContains(TestHttpMiddlewareClass::class, $data->terminatedMiddleware);
+        self::assertContains(TestHttpMiddlewareFixture::class, $data->terminatedMiddleware);
     }
 
     // -----------------------------------------------------------------------
@@ -314,7 +314,7 @@ final class HttpRouteAttributeReaderTest extends TestCase
 
         $data = $result->routeData['api.custom.handler'];
 
-        self::assertSame(TestHttpControllerClass::class, $data->handler->class);
+        self::assertSame(TestHttpControllerFixture::class, $data->handler->class);
         self::assertSame('staticAction', $data->handler->method);
     }
 

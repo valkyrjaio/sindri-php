@@ -20,7 +20,7 @@ use PhpParser\Node\Scalar\String_;
 use Sindri\Ast\CliRouteAttributeReader;
 use Sindri\Ast\Data\CliRouteData;
 use Sindri\Ast\Data\HandlerData;
-use Sindri\Tests\Fixtures\Cli\Controller\TestCliControllerClass;
+use Sindri\Tests\Fixtures\Cli\Controller\TestCliControllerFixture;
 use Sindri\Tests\Unit\Abstract\TestCase;
 
 use function file_put_contents;
@@ -39,22 +39,22 @@ final class CliRouteAttributeReaderTest extends TestCase
     public static function setUpBeforeClass(): void
     {
         /** @var non-empty-string $path */
-        $path = realpath(__DIR__ . '/../../Fixtures/Cli/Controller/TestCliControllerClass.php');
+        $path = realpath(__DIR__ . '/../../Fixtures/Cli/Controller/TestCliControllerFixture.php');
 
         self::$fixtureFile = $path;
 
         /** @var non-empty-string $richPath */
-        $richPath = realpath(__DIR__ . '/../../Fixtures/Cli/Controller/TestRichCliControllerClass.php');
+        $richPath = realpath(__DIR__ . '/../../Fixtures/Cli/Controller/TestRichCliControllerFixture.php');
 
         self::$richFixtureFile = $richPath;
 
         /** @var non-empty-string $badPath */
-        $badPath = realpath(__DIR__ . '/../../Fixtures/Cli/Controller/TestBadCliControllerClass.php');
+        $badPath = realpath(__DIR__ . '/../../Fixtures/Cli/Controller/TestBadCliControllerFixture.php');
 
         self::$badFixtureFile = $badPath;
 
         /** @var non-empty-string $noNsPath */
-        $noNsPath = realpath(__DIR__ . '/../../Fixtures/Cli/Controller/TestNoNsCliControllerClass.php');
+        $noNsPath = realpath(__DIR__ . '/../../Fixtures/Cli/Controller/TestNoNsCliControllerFixture.php');
 
         self::$noNsFixtureFile = $noNsPath;
     }
@@ -117,7 +117,7 @@ final class CliRouteAttributeReaderTest extends TestCase
     {
         $result = new CliRouteAttributeReader()->readFile(self::$richFixtureFile);
 
-        // TestCliMiddlewareClass implements RouteMatchedMiddlewareContract
+        // TestCliMiddlewareFixture implements RouteMatchedMiddlewareContract
         self::assertArrayHasKey('rich:middleware', $result->routes);
     }
 
@@ -245,7 +245,7 @@ final class CliRouteAttributeReaderTest extends TestCase
         $data = new CliRouteData(
             name: 'test',
             description: 'test',
-            helpText: new HandlerData(class: TestCliControllerClass::class, method: 'testAction'),
+            helpText: new HandlerData(class: TestCliControllerFixture::class, method: 'testAction'),
         );
 
         $expr = $reader->callBuildRouteExpr($data);

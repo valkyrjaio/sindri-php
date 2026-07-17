@@ -25,7 +25,7 @@ use PhpParser\Node\Scalar\String_;
 use PhpParser\Node\Stmt\ClassMethod;
 use Sindri\Ast\Data\HttpRouteData;
 use Sindri\Ast\HttpRouteMiddlewareReader;
-use Sindri\Tests\Fixtures\Http\Middleware\TestHttpMiddlewareClass;
+use Sindri\Tests\Fixtures\Http\Middleware\TestHttpMiddlewareFixture;
 use Sindri\Tests\Unit\Abstract\TestCase;
 use Valkyrja\Http\Message\Enum\RequestMethod;
 use Valkyrja\Http\Routing\Attribute\Route\Middleware;
@@ -149,7 +149,7 @@ final class HttpRouteMiddlewareReaderTest extends TestCase
         $data = new HttpRouteData(
             path: '/test',
             name: 'test',
-            routeMatchedMiddleware: [TestHttpMiddlewareClass::class],
+            routeMatchedMiddleware: [TestHttpMiddlewareFixture::class],
         );
 
         $args = $this->reader->buildRouteMiddlewareArgs($data);
@@ -163,7 +163,7 @@ final class HttpRouteMiddlewareReaderTest extends TestCase
 
     public function testBuildRouteMiddlewareArgsIncludesAllFiveListsWhenAllNonEmpty(): void
     {
-        $mw   = [TestHttpMiddlewareClass::class];
+        $mw   = [TestHttpMiddlewareFixture::class];
         $data = new HttpRouteData(
             path: '/test',
             name: 'test',
@@ -196,7 +196,7 @@ final class HttpRouteMiddlewareReaderTest extends TestCase
         $data = new HttpRouteData(
             path: '/test',
             name: 'test',
-            requestStruct: TestHttpMiddlewareClass::class,
+            requestStruct: TestHttpMiddlewareFixture::class,
         );
 
         $args = $this->reader->buildRouteStructArgs($data);
@@ -213,8 +213,8 @@ final class HttpRouteMiddlewareReaderTest extends TestCase
         $data = new HttpRouteData(
             path: '/test',
             name: 'test',
-            requestStruct: TestHttpMiddlewareClass::class,
-            responseStruct: TestHttpMiddlewareClass::class,
+            requestStruct: TestHttpMiddlewareFixture::class,
+            responseStruct: TestHttpMiddlewareFixture::class,
         );
 
         $args = $this->reader->buildRouteStructArgs($data);
@@ -259,7 +259,7 @@ final class HttpRouteMiddlewareReaderTest extends TestCase
     {
         $method = $this->methodWithAttribute(Middleware::class, [
             new Arg(
-                value: new ClassConstFetch(new FullyQualified(TestHttpMiddlewareClass::class), new Identifier('class')),
+                value: new ClassConstFetch(new FullyQualified(TestHttpMiddlewareFixture::class), new Identifier('class')),
                 name: new Identifier('name'),
             ),
         ]);
@@ -276,11 +276,11 @@ final class HttpRouteMiddlewareReaderTest extends TestCase
             [],
         );
 
-        self::assertContains(TestHttpMiddlewareClass::class, $matched);
-        self::assertContains(TestHttpMiddlewareClass::class, $dispatched);
-        self::assertContains(TestHttpMiddlewareClass::class, $throwable);
-        self::assertContains(TestHttpMiddlewareClass::class, $sending);
-        self::assertContains(TestHttpMiddlewareClass::class, $terminated);
+        self::assertContains(TestHttpMiddlewareFixture::class, $matched);
+        self::assertContains(TestHttpMiddlewareFixture::class, $dispatched);
+        self::assertContains(TestHttpMiddlewareFixture::class, $throwable);
+        self::assertContains(TestHttpMiddlewareFixture::class, $sending);
+        self::assertContains(TestHttpMiddlewareFixture::class, $terminated);
     }
 
     public function testUpdateMiddlewareSkipsInvalidMiddlewareName(): void
@@ -312,14 +312,14 @@ final class HttpRouteMiddlewareReaderTest extends TestCase
     {
         $method = $this->methodWithAttribute(RequestStruct::class, [
             new Arg(
-                value: new ClassConstFetch(new FullyQualified(TestHttpMiddlewareClass::class), new Identifier('class')),
+                value: new ClassConstFetch(new FullyQualified(TestHttpMiddlewareFixture::class), new Identifier('class')),
                 name: new Identifier('struct'),
             ),
         ]);
 
         $result = $this->reader->updateRequestStruct($method, [], 'Test', 'Test\\TestClass');
 
-        self::assertSame(TestHttpMiddlewareClass::class, $result);
+        self::assertSame(TestHttpMiddlewareFixture::class, $result);
     }
 
     public function testUpdateRequestStructReturnsNullWhenAbsent(): void
@@ -333,14 +333,14 @@ final class HttpRouteMiddlewareReaderTest extends TestCase
     {
         $method = $this->methodWithAttribute(ResponseStruct::class, [
             new Arg(
-                value: new ClassConstFetch(new FullyQualified(TestHttpMiddlewareClass::class), new Identifier('class')),
+                value: new ClassConstFetch(new FullyQualified(TestHttpMiddlewareFixture::class), new Identifier('class')),
                 name: new Identifier('struct'),
             ),
         ]);
 
         $result = $this->reader->updateResponseStruct($method, [], 'Test', 'Test\\TestClass');
 
-        self::assertSame(TestHttpMiddlewareClass::class, $result);
+        self::assertSame(TestHttpMiddlewareFixture::class, $result);
     }
 
     public function testUpdateResponseStructReturnsNullWhenAbsent(): void
