@@ -18,10 +18,10 @@ use PhpParser\Node\Identifier;
 use PhpParser\Node\Stmt\ClassMethod;
 use PhpParser\Node\Stmt\Return_;
 use Sindri\Ast\ServiceProviderReader;
-use Sindri\Tests\Fixtures\Provider\Sub\TestOtherServiceClass;
-use Sindri\Tests\Fixtures\Provider\Sub\TestOtherServiceProviderClass;
-use Sindri\Tests\Fixtures\Provider\Sub\TestServiceClass;
-use Sindri\Tests\Fixtures\Provider\Sub\TestServiceProviderClass;
+use Sindri\Tests\Fixtures\Provider\Sub\TestOtherServiceFixture;
+use Sindri\Tests\Fixtures\Provider\Sub\TestOtherServiceProviderFixture;
+use Sindri\Tests\Fixtures\Provider\Sub\TestServiceFixture;
+use Sindri\Tests\Fixtures\Provider\Sub\TestServiceProviderFixture;
 use Sindri\Tests\Unit\Abstract\TestCase;
 
 use function file_put_contents;
@@ -37,7 +37,7 @@ final class ServiceProviderReaderTest extends TestCase
     public static function setUpBeforeClass(): void
     {
         /** @var non-empty-string $path */
-        $path = realpath(__DIR__ . '/../../Fixtures/Provider/Sub/TestServiceProviderClass.php');
+        $path = realpath(__DIR__ . '/../../Fixtures/Provider/Sub/TestServiceProviderFixture.php');
 
         self::$fixtureFile = $path;
     }
@@ -51,7 +51,7 @@ final class ServiceProviderReaderTest extends TestCase
         $result = new ServiceProviderReader()->readFile(self::$fixtureFile);
 
         self::assertSame(
-            [TestServiceClass::class, TestOtherServiceClass::class],
+            [TestServiceFixture::class, TestOtherServiceFixture::class],
             $result->serviceClasses,
         );
     }
@@ -61,8 +61,8 @@ final class ServiceProviderReaderTest extends TestCase
         $result = new ServiceProviderReader()->readFile(self::$fixtureFile);
 
         self::assertSame(
-            [TestServiceProviderClass::class, 'publishTestService'],
-            $result->publishers[TestServiceClass::class],
+            [TestServiceProviderFixture::class, 'publishTestService'],
+            $result->publishers[TestServiceFixture::class],
         );
     }
 
@@ -71,8 +71,8 @@ final class ServiceProviderReaderTest extends TestCase
         $result = new ServiceProviderReader()->readFile(self::$fixtureFile);
 
         self::assertSame(
-            [TestOtherServiceProviderClass::class, 'publishTestOtherService'],
-            $result->publishers[TestOtherServiceClass::class],
+            [TestOtherServiceProviderFixture::class, 'publishTestOtherService'],
+            $result->publishers[TestOtherServiceFixture::class],
         );
     }
 

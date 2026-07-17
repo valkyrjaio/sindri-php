@@ -14,7 +14,7 @@ declare(strict_types=1);
 namespace Sindri\Tests\Unit\Ast;
 
 use Sindri\Ast\RouteProviderReader;
-use Sindri\Tests\Fixtures\Cli\Controller\TestCliControllerClass;
+use Sindri\Tests\Fixtures\Cli\Controller\TestCliControllerFixture;
 use Sindri\Tests\Unit\Abstract\TestCase;
 
 use function file_put_contents;
@@ -34,12 +34,12 @@ final class RouteProviderReaderTest extends TestCase
     public static function setUpBeforeClass(): void
     {
         /** @var non-empty-string $path */
-        $path = realpath(__DIR__ . '/../../Fixtures/Cli/Provider/TestRouteProviderClass.php');
+        $path = realpath(__DIR__ . '/../../Fixtures/Cli/Provider/TestRouteProviderFixture.php');
 
         self::$classFixtureFile = $path;
 
         /** @var non-empty-string $path */
-        $path = realpath(__DIR__ . '/../../Fixtures/Cli/Provider/RouteProviderClass.php');
+        $path = realpath(__DIR__ . '/../../Fixtures/Cli/Provider/RouteProviderFixture.php');
 
         self::$stringFixtureFile = $path;
     }
@@ -48,7 +48,7 @@ final class RouteProviderReaderTest extends TestCase
     {
         $result = new RouteProviderReader()->readFile(self::$classFixtureFile);
 
-        self::assertSame([TestCliControllerClass::class], $result->controllerClasses);
+        self::assertSame([TestCliControllerFixture::class], $result->controllerClasses);
     }
 
     public function testReadFileExtractsEmptyControllerClassesForPlainStringFixture(): void

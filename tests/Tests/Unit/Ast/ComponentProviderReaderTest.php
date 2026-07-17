@@ -14,8 +14,8 @@ declare(strict_types=1);
 namespace Sindri\Tests\Unit\Ast;
 
 use Sindri\Ast\ComponentProviderReader;
-use Sindri\Tests\Fixtures\Provider\Sub\TestServiceProviderClass;
-use Sindri\Tests\Fixtures\Provider\Sub\TestSubComponentProviderClass;
+use Sindri\Tests\Fixtures\Provider\Sub\TestServiceProviderFixture;
+use Sindri\Tests\Fixtures\Provider\Sub\TestSubComponentProviderFixture;
 use Sindri\Tests\Unit\Abstract\TestCase;
 
 use function file_put_contents;
@@ -31,7 +31,7 @@ final class ComponentProviderReaderTest extends TestCase
     public static function setUpBeforeClass(): void
     {
         /** @var non-empty-string $path */
-        $path = realpath(__DIR__ . '/../../Fixtures/Provider/TestComponentProviderClass.php');
+        $path = realpath(__DIR__ . '/../../Fixtures/Provider/TestComponentProviderFixture.php');
 
         self::$fixtureFile = $path;
     }
@@ -40,14 +40,14 @@ final class ComponentProviderReaderTest extends TestCase
     {
         $result = new ComponentProviderReader()->readFile(self::$fixtureFile);
 
-        self::assertSame([TestSubComponentProviderClass::class], $result->componentProviders);
+        self::assertSame([TestSubComponentProviderFixture::class], $result->componentProviders);
     }
 
     public function testReadFileExtractsServiceProviders(): void
     {
         $result = new ComponentProviderReader()->readFile(self::$fixtureFile);
 
-        self::assertSame([TestServiceProviderClass::class], $result->serviceProviders);
+        self::assertSame([TestServiceProviderFixture::class], $result->serviceProviders);
     }
 
     public function testReadFileExtractsEmptyListenerProviders(): void

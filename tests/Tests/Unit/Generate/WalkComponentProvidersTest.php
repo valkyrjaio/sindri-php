@@ -16,10 +16,10 @@ namespace Sindri\Tests\Unit\Generate;
 use Override;
 use Sindri\Ast\Data\Result\ConfigResult;
 use Sindri\Generate\Abstract\GenerateDataFromAst;
-use Sindri\Tests\Fixtures\Provider\Sub\TestOtherServiceProviderClass;
-use Sindri\Tests\Fixtures\Provider\Sub\TestServiceProviderClass;
-use Sindri\Tests\Fixtures\Provider\TestFirstComponentProviderClass;
-use Sindri\Tests\Fixtures\Provider\TestSecondComponentProviderClass;
+use Sindri\Tests\Fixtures\Provider\Sub\TestOtherServiceProviderFixture;
+use Sindri\Tests\Fixtures\Provider\Sub\TestServiceProviderFixture;
+use Sindri\Tests\Fixtures\Provider\TestFirstComponentProviderFixture;
+use Sindri\Tests\Fixtures\Provider\TestSecondComponentProviderFixture;
 use Sindri\Tests\Unit\Abstract\TestCase;
 use Valkyrja\Cli\Interaction\Output\Factory\Contract\OutputFactoryContract;
 use Valkyrja\Cli\Routing\Data\Contract\RouteContract;
@@ -44,8 +44,8 @@ final class WalkComponentProvidersTest extends TestCase
             namespace: 'Sindri\\Tests\\Fixtures\\Provider',
             dir: self::$providerFixtureDir,
             providers: [
-                TestFirstComponentProviderClass::class,
-                TestSecondComponentProviderClass::class,
+                TestFirstComponentProviderFixture::class,
+                TestSecondComponentProviderFixture::class,
             ],
         );
 
@@ -72,7 +72,7 @@ final class WalkComponentProvidersTest extends TestCase
         $result = $walker->walk($config);
 
         self::assertSame(
-            [TestServiceProviderClass::class, TestOtherServiceProviderClass::class],
+            [TestServiceProviderFixture::class, TestOtherServiceProviderFixture::class],
             $result,
         );
     }
@@ -83,8 +83,8 @@ final class WalkComponentProvidersTest extends TestCase
             namespace: 'Sindri\\Tests\\Fixtures\\Provider',
             dir: self::$providerFixtureDir,
             providers: [
-                TestSecondComponentProviderClass::class,
-                TestFirstComponentProviderClass::class,
+                TestSecondComponentProviderFixture::class,
+                TestFirstComponentProviderFixture::class,
             ],
         );
 
@@ -111,7 +111,7 @@ final class WalkComponentProvidersTest extends TestCase
         $result = $walker->walk($config);
 
         self::assertSame(
-            [TestOtherServiceProviderClass::class, TestServiceProviderClass::class],
+            [TestOtherServiceProviderFixture::class, TestServiceProviderFixture::class],
             $result,
         );
     }
