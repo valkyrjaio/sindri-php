@@ -48,7 +48,7 @@ final class HttpRouteDataTest extends TestCase
         self::assertSame([], $data->routeDispatchedMiddleware);
         self::assertSame([], $data->throwableCaughtMiddleware);
         self::assertSame([], $data->sendingResponseMiddleware);
-        self::assertSame([], $data->terminatedMiddleware);
+        self::assertSame([], $data->responseSentMiddleware);
     }
 
     public function testConstructorDefaultsStructsToNull(): void

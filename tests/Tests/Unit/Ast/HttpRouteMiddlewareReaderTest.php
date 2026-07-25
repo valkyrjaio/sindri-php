@@ -171,7 +171,7 @@ final class HttpRouteMiddlewareReaderTest extends TestCase
             routeDispatchedMiddleware: $mw,
             throwableCaughtMiddleware: $mw,
             sendingResponseMiddleware: $mw,
-            terminatedMiddleware: $mw,
+            responseSentMiddleware: $mw,
         );
 
         $args = $this->reader->buildRouteMiddlewareArgs($data);
@@ -264,7 +264,7 @@ final class HttpRouteMiddlewareReaderTest extends TestCase
             ),
         ]);
 
-        [$matched, $dispatched, $throwable, $sending, $terminated] = $this->reader->updateMiddleware(
+        [$matched, $dispatched, $throwable, $sending, $responseSent] = $this->reader->updateMiddleware(
             $method,
             [],
             'Test',
@@ -280,7 +280,7 @@ final class HttpRouteMiddlewareReaderTest extends TestCase
         self::assertContains(TestHttpMiddlewareFixture::class, $dispatched);
         self::assertContains(TestHttpMiddlewareFixture::class, $throwable);
         self::assertContains(TestHttpMiddlewareFixture::class, $sending);
-        self::assertContains(TestHttpMiddlewareFixture::class, $terminated);
+        self::assertContains(TestHttpMiddlewareFixture::class, $responseSent);
     }
 
     public function testUpdateMiddlewareSkipsInvalidMiddlewareName(): void

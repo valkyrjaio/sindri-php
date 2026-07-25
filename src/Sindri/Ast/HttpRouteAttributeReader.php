@@ -197,7 +197,7 @@ class HttpRouteAttributeReader extends RouteAttributeReader implements HttpRoute
             $currentClass,
         );
 
-        [$routeMatchedMiddleware, $routeDispatchedMiddleware, $throwableCaughtMiddleware, $sendingResponseMiddleware, $terminatedMiddleware]
+        [$routeMatchedMiddleware, $routeDispatchedMiddleware, $throwableCaughtMiddleware, $sendingResponseMiddleware, $responseSentMiddleware]
             = $this->middlewareReader->updateMiddleware(
                 $method,
                 $useMap,
@@ -207,7 +207,7 @@ class HttpRouteAttributeReader extends RouteAttributeReader implements HttpRoute
                 $this->extractClassListArg($args, 'routeDispatchedMiddleware', 6, $useMap, $namespace, $currentClass),
                 $this->extractClassListArg($args, 'throwableCaughtMiddleware', 7, $useMap, $namespace, $currentClass),
                 $this->extractClassListArg($args, 'sendingResponseMiddleware', 8, $useMap, $namespace, $currentClass),
-                $this->extractClassListArg($args, 'terminatedMiddleware', 9, $useMap, $namespace, $currentClass),
+                $this->extractClassListArg($args, 'responseSentMiddleware', 9, $useMap, $namespace, $currentClass),
             );
 
         return new HttpRouteData(
@@ -219,7 +219,7 @@ class HttpRouteAttributeReader extends RouteAttributeReader implements HttpRoute
             routeDispatchedMiddleware: $routeDispatchedMiddleware,
             throwableCaughtMiddleware: $throwableCaughtMiddleware,
             sendingResponseMiddleware: $sendingResponseMiddleware,
-            terminatedMiddleware: $terminatedMiddleware,
+            responseSentMiddleware: $responseSentMiddleware,
             requestStruct: $this->middlewareReader->updateRequestStruct($method, $useMap, $namespace, $currentClass),
             responseStruct: $this->middlewareReader->updateResponseStruct($method, $useMap, $namespace, $currentClass),
             isDynamic: $isDynamic,

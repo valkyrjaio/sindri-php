@@ -62,7 +62,7 @@ interface HttpRouteMiddlewareReaderContract
      * @param class-string[]        $routeDispatchedMiddleware
      * @param class-string[]        $throwableCaughtMiddleware
      * @param class-string[]        $sendingResponseMiddleware
-     * @param class-string[]        $terminatedMiddleware
+     * @param class-string[]        $responseSentMiddleware
      *
      * @return array{class-string[], class-string[], class-string[], class-string[], class-string[]}
      */
@@ -75,7 +75,7 @@ interface HttpRouteMiddlewareReaderContract
         array $routeDispatchedMiddleware,
         array $throwableCaughtMiddleware,
         array $sendingResponseMiddleware,
-        array $terminatedMiddleware,
+        array $responseSentMiddleware,
     ): array;
 
     /**
