@@ -62,8 +62,8 @@ define('BIN_APP_DIR', $dir);
 $config = new CliConfig(
     dir: $dir,
     providers: [
-        CliApplicationComponentProvider::class,
-        SindriComponentProvider::class,
+        new CliApplicationComponentProvider(),
+        new SindriComponentProvider(),
     ],
 );
 
