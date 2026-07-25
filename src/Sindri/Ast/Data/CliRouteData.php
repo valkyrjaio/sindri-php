@@ -34,7 +34,7 @@ readonly class CliRouteData implements CliRouteDataContract
      * @param class-string[]             $routeMatchedMiddleware
      * @param class-string[]             $routeDispatchedMiddleware
      * @param class-string[]             $throwableCaughtMiddleware
-     * @param class-string[]             $exitedMiddleware
+     * @param class-string[]             $processExitingMiddleware
      * @param CliArgumentParameterData[] $arguments
      * @param CliOptionParameterData[]   $options
      */
@@ -46,7 +46,7 @@ readonly class CliRouteData implements CliRouteDataContract
         public array $routeMatchedMiddleware = [],
         public array $routeDispatchedMiddleware = [],
         public array $throwableCaughtMiddleware = [],
-        public array $exitedMiddleware = [],
+        public array $processExitingMiddleware = [],
         public array $arguments = [],
         public array $options = [],
     ) {

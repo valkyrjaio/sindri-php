@@ -66,7 +66,7 @@ final class TestRichCliControllerFixture
         routeMatchedMiddleware: [TestCliMiddlewareFixture::class],
         routeDispatchedMiddleware: [TestCliMiddlewareFixture::class],
         throwableCaughtMiddleware: [TestCliMiddlewareFixture::class],
-        exitedMiddleware: [TestCliMiddlewareFixture::class],
+        processExitingMiddleware: [TestCliMiddlewareFixture::class],
     )]
     public function inlineMiddlewareAction(): void
     {

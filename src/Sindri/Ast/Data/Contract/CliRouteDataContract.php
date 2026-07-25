@@ -50,7 +50,7 @@ interface CliRouteDataContract
     }
 
     /** @var class-string[] */
-    public array $exitedMiddleware {
+    public array $processExitingMiddleware {
         get;
     }
 
