@@ -20,10 +20,10 @@ use Sindri\Ast\Abstract\AstReader;
 use Sindri\Ast\Contract\HttpRouteMiddlewareReaderContract;
 use Sindri\Ast\Data\HttpRouteData;
 use Valkyrja\Http\Message\Enum\RequestMethod as RequestMethodEnum;
+use Valkyrja\Http\Middleware\Contract\ResponseSentMiddlewareContract;
 use Valkyrja\Http\Middleware\Contract\RouteDispatchedMiddlewareContract;
 use Valkyrja\Http\Middleware\Contract\RouteMatchedMiddlewareContract;
 use Valkyrja\Http\Middleware\Contract\SendingResponseMiddlewareContract;
-use Valkyrja\Http\Middleware\Contract\TerminatedMiddlewareContract;
 use Valkyrja\Http\Middleware\Contract\ThrowableCaughtMiddlewareContract;
 use Valkyrja\Http\Routing\Attribute\Route\Middleware;
 use Valkyrja\Http\Routing\Attribute\Route\RequestMethod;
@@ -96,7 +96,7 @@ class HttpRouteMiddlewareReader extends AstReader implements HttpRouteMiddleware
         array $routeDispatchedMiddleware,
         array $throwableCaughtMiddleware,
         array $sendingResponseMiddleware,
-        array $terminatedMiddleware,
+        array $responseSentMiddleware,
     ): array {
         foreach ($this->findAttributesOnNode($method, Middleware::class, $useMap, $namespace) as $attr) {
             $mwFqn = $this->extractExprValue($this->getAttrArg($attr->args, 'name', 0), $useMap, $namespace, $currentClass);
@@ -110,11 +110,11 @@ class HttpRouteMiddlewareReader extends AstReader implements HttpRouteMiddleware
                 $routeDispatchedMiddleware,
                 $throwableCaughtMiddleware,
                 $sendingResponseMiddleware,
-                $terminatedMiddleware,
-            ] = $this->classifyMiddleware($mwFqn, $routeMatchedMiddleware, $routeDispatchedMiddleware, $throwableCaughtMiddleware, $sendingResponseMiddleware, $terminatedMiddleware);
+                $responseSentMiddleware,
+            ] = $this->classifyMiddleware($mwFqn, $routeMatchedMiddleware, $routeDispatchedMiddleware, $throwableCaughtMiddleware, $sendingResponseMiddleware, $responseSentMiddleware);
         }
 
-        return [$routeMatchedMiddleware, $routeDispatchedMiddleware, $throwableCaughtMiddleware, $sendingResponseMiddleware, $terminatedMiddleware];
+        return [$routeMatchedMiddleware, $routeDispatchedMiddleware, $throwableCaughtMiddleware, $sendingResponseMiddleware, $responseSentMiddleware];
     }
 
     #[Override]
@@ -176,8 +176,8 @@ class HttpRouteMiddlewareReader extends AstReader implements HttpRouteMiddleware
             $args[] = $this->buildNamedArg('sendingResponseMiddleware', $this->buildClassArrayExpr($data->sendingResponseMiddleware));
         }
 
-        if ($data->terminatedMiddleware !== []) {
-            $args[] = $this->buildNamedArg('terminatedMiddleware', $this->buildClassArrayExpr($data->terminatedMiddleware));
+        if ($data->responseSentMiddleware !== []) {
+            $args[] = $this->buildNamedArg('responseSentMiddleware', $this->buildClassArrayExpr($data->responseSentMiddleware));
         }
 
         return $args;
@@ -206,7 +206,7 @@ class HttpRouteMiddlewareReader extends AstReader implements HttpRouteMiddleware
      * @param class-string[] $routeDispatchedMiddleware
      * @param class-string[] $throwableCaughtMiddleware
      * @param class-string[] $sendingResponseMiddleware
-     * @param class-string[] $terminatedMiddleware
+     * @param class-string[] $responseSentMiddleware
      *
      * @return array{class-string[], class-string[], class-string[], class-string[], class-string[]}
      */
@@ -216,7 +216,7 @@ class HttpRouteMiddlewareReader extends AstReader implements HttpRouteMiddleware
         array $routeDispatchedMiddleware,
         array $throwableCaughtMiddleware,
         array $sendingResponseMiddleware,
-        array $terminatedMiddleware,
+        array $responseSentMiddleware,
     ): array {
         if (is_a($mwFqn, RouteMatchedMiddlewareContract::class, true)) {
             $routeMatchedMiddleware[] = $mwFqn;
@@ -234,10 +234,10 @@ class HttpRouteMiddlewareReader extends AstReader implements HttpRouteMiddleware
             $sendingResponseMiddleware[] = $mwFqn;
         }
 
-        if (is_a($mwFqn, TerminatedMiddlewareContract::class, true)) {
-            $terminatedMiddleware[] = $mwFqn;
+        if (is_a($mwFqn, ResponseSentMiddlewareContract::class, true)) {
+            $responseSentMiddleware[] = $mwFqn;
         }
 
-        return [$routeMatchedMiddleware, $routeDispatchedMiddleware, $throwableCaughtMiddleware, $sendingResponseMiddleware, $terminatedMiddleware];
+        return [$routeMatchedMiddleware, $routeDispatchedMiddleware, $throwableCaughtMiddleware, $sendingResponseMiddleware, $responseSentMiddleware];
     }
 }

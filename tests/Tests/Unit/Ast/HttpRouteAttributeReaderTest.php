@@ -186,7 +186,7 @@ final class HttpRouteAttributeReaderTest extends TestCase
         self::assertContains(TestHttpMiddlewareFixture::class, $data->routeDispatchedMiddleware);
         self::assertContains(TestHttpMiddlewareFixture::class, $data->throwableCaughtMiddleware);
         self::assertContains(TestHttpMiddlewareFixture::class, $data->sendingResponseMiddleware);
-        self::assertContains(TestHttpMiddlewareFixture::class, $data->terminatedMiddleware);
+        self::assertContains(TestHttpMiddlewareFixture::class, $data->responseSentMiddleware);
     }
 
     // -----------------------------------------------------------------------
@@ -295,13 +295,13 @@ final class HttpRouteAttributeReaderTest extends TestCase
         self::assertContains(TestHttpMiddlewareFixture::class, $data->sendingResponseMiddleware);
     }
 
-    public function testReadRichFileExtractsInlineTerminatedMiddleware(): void
+    public function testReadRichFileExtractsInlineResponseSentMiddleware(): void
     {
         $result = new HttpRouteAttributeReader()->readFile(self::$richFixtureFile);
 
         $data = $result->routeData['api.inline.middleware'];
 
-        self::assertContains(TestHttpMiddlewareFixture::class, $data->terminatedMiddleware);
+        self::assertContains(TestHttpMiddlewareFixture::class, $data->responseSentMiddleware);
     }
 
     // -----------------------------------------------------------------------

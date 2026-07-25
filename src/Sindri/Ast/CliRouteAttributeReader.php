@@ -22,7 +22,7 @@ use Sindri\Ast\Contract\CliRouteAttributeReaderContract;
 use Sindri\Ast\Contract\CliRouteParameterReaderContract;
 use Sindri\Ast\Data\CliRouteData;
 use Sindri\Ast\Data\Result\CliRouteAttributeResult;
-use Valkyrja\Cli\Middleware\Contract\ExitedMiddlewareContract;
+use Valkyrja\Cli\Middleware\Contract\ProcessExitingMiddlewareContract;
 use Valkyrja\Cli\Middleware\Contract\RouteDispatchedMiddlewareContract;
 use Valkyrja\Cli\Middleware\Contract\RouteMatchedMiddlewareContract;
 use Valkyrja\Cli\Middleware\Contract\ThrowableCaughtMiddlewareContract;
@@ -104,7 +104,7 @@ class CliRouteAttributeReader extends RouteAttributeReader implements CliRouteAt
 
         $name = $this->updateName($name, $method, $useMap, $namespace, $currentClass);
 
-        [$routeMatchedMiddleware, $routeDispatchedMiddleware, $throwableCaughtMiddleware, $exitedMiddleware]
+        [$routeMatchedMiddleware, $routeDispatchedMiddleware, $throwableCaughtMiddleware, $processExitingMiddleware]
             = $this->updateMiddleware(
                 $method,
                 $useMap,
@@ -113,7 +113,7 @@ class CliRouteAttributeReader extends RouteAttributeReader implements CliRouteAt
                 $this->extractClassListArg($args, 'routeMatchedMiddleware', 4, $useMap, $namespace, $currentClass),
                 $this->extractClassListArg($args, 'routeDispatchedMiddleware', 5, $useMap, $namespace, $currentClass),
                 $this->extractClassListArg($args, 'throwableCaughtMiddleware', 6, $useMap, $namespace, $currentClass),
-                $this->extractClassListArg($args, 'exitedMiddleware', 7, $useMap, $namespace, $currentClass),
+                $this->extractClassListArg($args, 'processExitingMiddleware', 7, $useMap, $namespace, $currentClass),
             );
 
         return new CliRouteData(
@@ -124,7 +124,7 @@ class CliRouteAttributeReader extends RouteAttributeReader implements CliRouteAt
             routeMatchedMiddleware: $routeMatchedMiddleware,
             routeDispatchedMiddleware: $routeDispatchedMiddleware,
             throwableCaughtMiddleware: $throwableCaughtMiddleware,
-            exitedMiddleware: $exitedMiddleware,
+            processExitingMiddleware: $processExitingMiddleware,
             arguments: $this->parameterReader->updateArguments($method, $useMap, $namespace, $currentClass),
             options: $this->parameterReader->updateOptions($method, $useMap, $namespace, $currentClass),
         );
@@ -160,7 +160,7 @@ class CliRouteAttributeReader extends RouteAttributeReader implements CliRouteAt
      * @param class-string[]        $routeMatchedMiddleware
      * @param class-string[]        $routeDispatchedMiddleware
      * @param class-string[]        $throwableCaughtMiddleware
-     * @param class-string[]        $exitedMiddleware
+     * @param class-string[]        $processExitingMiddleware
      *
      * @return array{class-string[], class-string[], class-string[], class-string[]}
      */
@@ -172,7 +172,7 @@ class CliRouteAttributeReader extends RouteAttributeReader implements CliRouteAt
         array $routeMatchedMiddleware,
         array $routeDispatchedMiddleware,
         array $throwableCaughtMiddleware,
-        array $exitedMiddleware,
+        array $processExitingMiddleware,
     ): array {
         foreach ($this->findAttributesOnNode($method, Middleware::class, $useMap, $namespace) as $attr) {
             $mwFqn = $this->extractExprValue($this->getAttrArg($attr->args, 'name', 0), $useMap, $namespace, $currentClass);
@@ -181,11 +181,11 @@ class CliRouteAttributeReader extends RouteAttributeReader implements CliRouteAt
                 continue;
             }
 
-            [$routeMatchedMiddleware, $routeDispatchedMiddleware, $throwableCaughtMiddleware, $exitedMiddleware]
-                = $this->classifyMiddleware($mwFqn, $routeMatchedMiddleware, $routeDispatchedMiddleware, $throwableCaughtMiddleware, $exitedMiddleware);
+            [$routeMatchedMiddleware, $routeDispatchedMiddleware, $throwableCaughtMiddleware, $processExitingMiddleware]
+                = $this->classifyMiddleware($mwFqn, $routeMatchedMiddleware, $routeDispatchedMiddleware, $throwableCaughtMiddleware, $processExitingMiddleware);
         }
 
-        return [$routeMatchedMiddleware, $routeDispatchedMiddleware, $throwableCaughtMiddleware, $exitedMiddleware];
+        return [$routeMatchedMiddleware, $routeDispatchedMiddleware, $throwableCaughtMiddleware, $processExitingMiddleware];
     }
 
     /**
@@ -194,7 +194,7 @@ class CliRouteAttributeReader extends RouteAttributeReader implements CliRouteAt
      * @param class-string[] $routeMatchedMiddleware
      * @param class-string[] $routeDispatchedMiddleware
      * @param class-string[] $throwableCaughtMiddleware
-     * @param class-string[] $exitedMiddleware
+     * @param class-string[] $processExitingMiddleware
      *
      * @return array{class-string[], class-string[], class-string[], class-string[]}
      */
@@ -203,7 +203,7 @@ class CliRouteAttributeReader extends RouteAttributeReader implements CliRouteAt
         array $routeMatchedMiddleware,
         array $routeDispatchedMiddleware,
         array $throwableCaughtMiddleware,
-        array $exitedMiddleware,
+        array $processExitingMiddleware,
     ): array {
         if (is_a($mwFqn, RouteMatchedMiddlewareContract::class, true)) {
             $routeMatchedMiddleware[] = $mwFqn;
@@ -217,11 +217,11 @@ class CliRouteAttributeReader extends RouteAttributeReader implements CliRouteAt
             $throwableCaughtMiddleware[] = $mwFqn;
         }
 
-        if (is_a($mwFqn, ExitedMiddlewareContract::class, true)) {
-            $exitedMiddleware[] = $mwFqn;
+        if (is_a($mwFqn, ProcessExitingMiddlewareContract::class, true)) {
+            $processExitingMiddleware[] = $mwFqn;
         }
 
-        return [$routeMatchedMiddleware, $routeDispatchedMiddleware, $throwableCaughtMiddleware, $exitedMiddleware];
+        return [$routeMatchedMiddleware, $routeDispatchedMiddleware, $throwableCaughtMiddleware, $processExitingMiddleware];
     }
 
     /**
@@ -268,8 +268,8 @@ class CliRouteAttributeReader extends RouteAttributeReader implements CliRouteAt
             $args[] = $this->buildNamedArg('throwableCaughtMiddleware', $this->buildClassArrayExpr($data->throwableCaughtMiddleware));
         }
 
-        if ($data->exitedMiddleware !== []) {
-            $args[] = $this->buildNamedArg('exitedMiddleware', $this->buildClassArrayExpr($data->exitedMiddleware));
+        if ($data->processExitingMiddleware !== []) {
+            $args[] = $this->buildNamedArg('processExitingMiddleware', $this->buildClassArrayExpr($data->processExitingMiddleware));
         }
 
         array_push($args, ...$this->parameterReader->buildParameterArgs($data));

@@ -47,7 +47,7 @@ final class CliRouteDataTest extends TestCase
         self::assertSame([], $data->routeMatchedMiddleware);
         self::assertSame([], $data->routeDispatchedMiddleware);
         self::assertSame([], $data->throwableCaughtMiddleware);
-        self::assertSame([], $data->exitedMiddleware);
+        self::assertSame([], $data->processExitingMiddleware);
     }
 
     public function testConstructorDefaultsArgumentsAndOptionsToEmpty(): void

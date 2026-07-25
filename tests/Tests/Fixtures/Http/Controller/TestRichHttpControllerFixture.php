@@ -80,7 +80,7 @@ final class TestRichHttpControllerFixture
         routeDispatchedMiddleware: [TestHttpMiddlewareFixture::class],
         throwableCaughtMiddleware: [TestHttpMiddlewareFixture::class],
         sendingResponseMiddleware: [TestHttpMiddlewareFixture::class],
-        terminatedMiddleware: [TestHttpMiddlewareFixture::class],
+        responseSentMiddleware: [TestHttpMiddlewareFixture::class],
     )]
     public function inlineMiddlewareAction(): void
     {

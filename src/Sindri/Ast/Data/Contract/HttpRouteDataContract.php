@@ -56,7 +56,7 @@ interface HttpRouteDataContract
     }
 
     /** @var class-string[] */
-    public array $terminatedMiddleware {
+    public array $responseSentMiddleware {
         get;
     }
 

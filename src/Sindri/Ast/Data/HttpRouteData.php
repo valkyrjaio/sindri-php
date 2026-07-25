@@ -38,7 +38,7 @@ readonly class HttpRouteData implements HttpRouteDataContract
      * @param class-string[]      $routeDispatchedMiddleware
      * @param class-string[]      $throwableCaughtMiddleware
      * @param class-string[]      $sendingResponseMiddleware
-     * @param class-string[]      $terminatedMiddleware
+     * @param class-string[]      $responseSentMiddleware
      * @param class-string|null   $requestStruct             FQN of the request struct class, or null
      * @param class-string|null   $responseStruct            FQN of the response struct class, or null
      * @param bool                $isDynamic                 Whether this is a dynamic (parameterized) route
@@ -53,7 +53,7 @@ readonly class HttpRouteData implements HttpRouteDataContract
         public array $routeDispatchedMiddleware = [],
         public array $throwableCaughtMiddleware = [],
         public array $sendingResponseMiddleware = [],
-        public array $terminatedMiddleware = [],
+        public array $responseSentMiddleware = [],
         public string|null $requestStruct = null,
         public string|null $responseStruct = null,
         public bool $isDynamic = false,
