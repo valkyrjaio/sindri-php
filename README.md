@@ -15,8 +15,8 @@ his namesake did for the gods: crafts the tools and artifacts that make it
 all work faster and better.
 
 <p>
-    <a href="https://packagist.org/packages/valkyrja/sindri"><img src="https://poser.pugx.org/valkyrja/sindri/require/php" alt="PHP Version Require"></a>
     <a href="https://packagist.org/packages/valkyrja/sindri"><img src="https://poser.pugx.org/valkyrja/sindri/v" alt="Latest Stable Version"></a>
+    <a href="https://packagist.org/packages/valkyrja/sindri"><img src="https://poser.pugx.org/valkyrja/sindri/require/php" alt="PHP Version Require"></a>
     <a href="https://packagist.org/packages/valkyrja/sindri"><img src="https://poser.pugx.org/valkyrja/sindri/license" alt="License"></a>
     <a href="https://github.com/valkyrjaio/sindri-php/actions/workflows/ci.yml?query=branch%3A26.x"><img src="https://github.com/valkyrjaio/sindri-php/actions/workflows/ci.yml/badge.svg?branch=26.x" alt="CI Status"></a>
     <a href="https://scrutinizer-ci.com/g/valkyrjaio/sindri-php/?branch=26.x"><img src="https://scrutinizer-ci.com/g/valkyrjaio/sindri-php/badges/quality-score.png?b=26.x" alt="Scrutinizer"></a>
