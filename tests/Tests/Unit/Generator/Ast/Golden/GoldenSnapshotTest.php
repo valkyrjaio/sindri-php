@@ -1,0 +1,183 @@
+<?php
+
+declare(strict_types=1);
+
+/*
+ * This file is part of the Sindri package.
+ *
+ * (c) Melech Mizrachi <melechmizrachi@gmail.com>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+
+namespace Sindri\Tests\Unit\Generator\Ast\Golden;
+
+use PhpParser\Node\Scalar\String_;
+use Sindri\Ast\Data\HttpParameterData;
+use Sindri\Ast\Data\HttpRouteData;
+use Sindri\Generator\Ast\Cli\AstCliDataFileGenerator;
+use Sindri\Generator\Ast\Container\AstContainerDataFileGenerator;
+use Sindri\Generator\Ast\Event\AstEventDataFileGenerator;
+use Sindri\Generator\Ast\Http\AstHttpDataFileGenerator;
+use Sindri\Tests\Unit\Abstract\TestCase;
+
+use function file_get_contents;
+use function sys_get_temp_dir;
+use function unlink;
+
+/**
+ * Full-output golden/snapshot tests for the four Ast data-file generators.
+ *
+ * Unlike the per-generator unit tests (which assert individual substrings such as
+ * `routes:` or a single route key), these pin the ENTIRE emitted source against a
+ * committed golden file, so any change to the generated shape — spacing, ordering,
+ * imports, the fully-qualified references, the closure/`::class` wrappers — is
+ * caught and must be an intentional golden update.
+ *
+ * The inputs exercise the meaningful structure: multiple HTTP routes including a
+ * dynamic `/users/{id}` and a GET/POST split (so `routes`, `paths`, `dynamicPaths`
+ * and `regexes` are all populated); multiple CLI commands; multiple container
+ * publishers; multiple event listeners.
+ *
+ * To refresh the goldens after an intentional generator change, regenerate each
+ * `tests/Tests/Unit/Generator/Ast/Golden/golden/*.golden` from the matching input
+ * below and commit the new snapshot. The assertion here is intentionally a pure
+ * `assertSame` with no update-mode branch, so coverage stays complete.
+ */
+final class GoldenSnapshotTest extends TestCase
+{
+    public function testHttpRoutingDataMatchesGolden(): void
+    {
+        $routes = [
+            'users.index' => new String_('users-index-expr'),
+            'users.show'  => new String_('users-show-expr'),
+            'users.store' => new String_('users-store-expr'),
+        ];
+
+        $routeData = [
+            'users.index' => new HttpRouteData(
+                path: '/users',
+                name: 'users.index',
+                requestMethods: ['Valkyrja\\Http\\Message\\Enum\\RequestMethod::GET'],
+                isDynamic: false,
+            ),
+            'users.show'  => new HttpRouteData(
+                path: '/users/{id}',
+                name: 'users.show',
+                requestMethods: ['Valkyrja\\Http\\Message\\Enum\\RequestMethod::GET'],
+                isDynamic: true,
+                parameters: [new HttpParameterData(name: 'id', regex: '[0-9]+')],
+            ),
+            'users.store' => new HttpRouteData(
+                path: '/users',
+                name: 'users.store',
+                requestMethods: ['Valkyrja\\Http\\Message\\Enum\\RequestMethod::POST'],
+                isDynamic: false,
+            ),
+        ];
+
+        $className = 'AppHttpRoutingData';
+        $filePath  = sys_get_temp_dir() . '/' . $className . '.php';
+        @unlink($filePath);
+
+        $generator = new AstHttpDataFileGenerator();
+        $generator->generateFile(
+            directory: sys_get_temp_dir(),
+            className: $className,
+            namespace: 'App\\Data',
+            routes: $routes,
+            routeData: $routeData,
+        );
+
+        $actual = (string) file_get_contents($filePath);
+        @unlink($filePath);
+
+        $this->assertGolden($actual, $className);
+    }
+
+    public function testCliRoutingDataMatchesGolden(): void
+    {
+        $routes = [
+            'greet'    => new String_('greet-expr'),
+            'farewell' => new String_('farewell-expr'),
+        ];
+
+        $className = 'AppCliRoutingData';
+        $filePath  = sys_get_temp_dir() . '/' . $className . '.php';
+        @unlink($filePath);
+
+        $generator = new AstCliDataFileGenerator();
+        $generator->generateFile(
+            directory: sys_get_temp_dir(),
+            className: $className,
+            namespace: 'App\\Data',
+            routes: $routes,
+        );
+
+        $actual = (string) file_get_contents($filePath);
+        @unlink($filePath);
+
+        $this->assertGolden($actual, $className);
+    }
+
+    public function testContainerDataMatchesGolden(): void
+    {
+        $publishers = [
+            'Fixtures\\Service\\ServiceA' => ['Fixtures\\Provider\\ProviderA', 'publishA'],
+            'Fixtures\\Service\\ServiceB' => ['Fixtures\\Provider\\ProviderB', 'publishB'],
+        ];
+
+        $className = 'AppContainerData';
+        $filePath  = sys_get_temp_dir() . '/' . $className . '.php';
+        @unlink($filePath);
+
+        $generator = new AstContainerDataFileGenerator();
+        $generator->generateFile(
+            directory: sys_get_temp_dir(),
+            className: $className,
+            namespace: 'App\\Data',
+            publishers: $publishers,
+        );
+
+        $actual = (string) file_get_contents($filePath);
+        @unlink($filePath);
+
+        $this->assertGolden($actual, $className);
+    }
+
+    public function testEventDataMatchesGolden(): void
+    {
+        $listeners = [
+            'user.created' => new String_('user-created-expr'),
+            'user.deleted' => new String_('user-deleted-expr'),
+        ];
+
+        $className = 'AppEventData';
+        $filePath  = sys_get_temp_dir() . '/' . $className . '.php';
+        @unlink($filePath);
+
+        $generator = new AstEventDataFileGenerator();
+        $generator->generateFile(
+            directory: sys_get_temp_dir(),
+            className: $className,
+            namespace: 'App\\Data',
+            listeners: $listeners,
+        );
+
+        $actual = (string) file_get_contents($filePath);
+        @unlink($filePath);
+
+        $this->assertGolden($actual, $className);
+    }
+
+    /**
+     * Assert the generated source matches the committed golden snapshot.
+     */
+    private function assertGolden(string $actual, string $goldenName): void
+    {
+        $golden = (string) file_get_contents(__DIR__ . '/golden/' . $goldenName . '.golden');
+
+        self::assertSame($golden, $actual);
+    }
+}
