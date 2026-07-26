@@ -327,16 +327,16 @@
         },
         {
             "name": "valkyrja/valkyrja",
-            "version": "v26.5.0",
+            "version": "v26.5.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/valkyrjaio/valkyrja-php.git",
-                "reference": "19cb146c6d7ad2de5d85f5aba109b241499da62b"
+                "reference": "161cd8cc7e693dc1add0bbac5a2d7f0c5cd4fae5"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/valkyrjaio/valkyrja-php/zipball/19cb146c6d7ad2de5d85f5aba109b241499da62b",
-                "reference": "19cb146c6d7ad2de5d85f5aba109b241499da62b",
+                "url": "https://api.github.com/repos/valkyrjaio/valkyrja-php/zipball/161cd8cc7e693dc1add0bbac5a2d7f0c5cd4fae5",
+                "reference": "161cd8cc7e693dc1add0bbac5a2d7f0c5cd4fae5",
                 "shasum": ""
             },
             "require": {
@@ -377,6 +377,7 @@
             },
             "suggest": {
                 "ext-curl": "Required to use the default Client adapter (*)",
+                "ext-openswoole": "Required to use the OpenSwoole worker entry point (>=26.2.0).",
                 "ext-pdo": "Required to use the default ORM adapter (*)",
                 "ext-redis": "Required to use the default Cache store (^4.0|^5.0).",
                 "ext-sodium": "Required to use the default Crypt adapters and/or JWT EdDSA Algorithm (*)",
@@ -387,9 +388,11 @@
                 "league/flysystem-aws-s3-v3": "Required to use the s3 Filesystem adapter (^3.35.2)",
                 "mailgun/mailgun-php": "Required to use the Mailgun Mail adapter (^4.5.1).",
                 "monolog/monolog": "Required to use the default Log adapter (^3.10.0).",
+                "openswoole/core": "Required to use the OpenSwoole worker entry point (^26.2.0).",
                 "phpmailer/phpmailer": "Required to use the default Mail adapter (^7.1.1).",
                 "predis/predis": "Required to use the Redis Cache store (^3.5.1).",
                 "pusher/pusher-php-server": "Required to use the Pusher Broadcast adapter (^7.2.8).",
+                "spiral/roadrunner-http": "Required to use the RoadRunner worker entry point (^4.1.0).",
                 "twig/twig": "Required to use the Twig View engine (^3.28.0).",
                 "vonage/client-core": "Required to use the default SMS adapter (^4.14.0)."
             },
@@ -417,9 +420,9 @@
             ],
             "support": {
                 "issues": "https://github.com/valkyrjaio/valkyrja-php/issues",
-                "source": "https://github.com/valkyrjaio/valkyrja-php/tree/v26.5.0"
+                "source": "https://github.com/valkyrjaio/valkyrja-php/tree/v26.5.1"
             },
-            "time": "2026-07-25T07:23:24+00:00"
+            "time": "2026-07-26T02:00:11+00:00"
         }
     ],
     "packages-dev": [],
