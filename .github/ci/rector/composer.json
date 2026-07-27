@@ -4,7 +4,7 @@
   },
   "require-dev"       : {
     "valkyrja/rector" : "^26.1.10",
-    "phpstan/phpstan" : "2.2.5"
+    "phpstan/phpstan" : "^2.2.5"
   },
   "scripts"           : {
     "fix"   : "vendor/bin/rector",
