@@ -1,6 +1,18 @@
 # Release Notes for 26.x
 
-## [Unreleased](https://github.com/valkyrjaio/sindri/compare/v26.5.2...26.x)
+## [Unreleased](https://github.com/valkyrjaio/sindri/compare/v26.6.0...26.x)
+
+## [v26.6.0](https://github.com/valkyrjaio/sindri/compare/v26.5.2...v26.6.0) - 2026-07-27
+
+* [Documentation] Move stable release badge before PHP version badge in README by [@MelechMizrachi](https://github.com/MelechMizrachi) in https://github.com/valkyrjaio/sindri-php/pull/168
+* [Composer] Update composer dependencies by [@valkyrja-volundr](https://github.com/valkyrja-volundr)[bot] in https://github.com/valkyrjaio/sindri-php/pull/167
+* [Composer] Update composer dependencies by [@valkyrja-volundr](https://github.com/valkyrja-volundr)[bot] in https://github.com/valkyrjaio/sindri-php/pull/169
+* [Composer] Update composer dependencies by [@valkyrja-volundr](https://github.com/valkyrja-volundr)[bot] in https://github.com/valkyrjaio/sindri-php/pull/170
+* [Http] Expand the any request method when generating routing data by [@MelechMizrachi](https://github.com/MelechMizrachi) in https://github.com/valkyrjaio/sindri-php/pull/173
+* [GitHub] Update ci-phpstan-php workflow refs to v26.1.11 by [@valkyrja-volundr](https://github.com/valkyrja-volundr)[bot] in https://github.com/valkyrjaio/sindri-php/pull/171
+* [GitHub] Update ci-rector-php workflow refs to v26.1.11 by [@valkyrja-volundr](https://github.com/valkyrja-volundr)[bot] in https://github.com/valkyrjaio/sindri-php/pull/172
+* [GitHub] Update .github workflow refs to v26.12.0 by [@valkyrja-volundr](https://github.com/valkyrja-volundr)[bot] in https://github.com/valkyrjaio/sindri-php/pull/174
+* [Composer] Update composer dependencies by [@valkyrja-volundr](https://github.com/valkyrja-volundr)[bot] in https://github.com/valkyrjaio/sindri-php/pull/175
 
 ## [v26.5.2](https://github.com/valkyrjaio/sindri/compare/v26.5.1...v26.5.2) - 2026-07-25
 
