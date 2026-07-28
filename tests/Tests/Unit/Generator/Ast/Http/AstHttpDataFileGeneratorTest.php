@@ -25,6 +25,7 @@ use Sindri\Generator\Enum\GenerateStatus;
 use Sindri\Generator\Throwable\Exception\GeneratorUnreachableException;
 use Sindri\Tests\Fixtures\Http\TestRegexConstantsFixture;
 use Sindri\Tests\Unit\Abstract\TestCase;
+use Valkyrja\Http\Message\Enum\RequestMethod;
 use Valkyrja\Http\Routing\Data\DynamicRoute;
 use Valkyrja\Http\Routing\Data\Parameter;
 use Valkyrja\Http\Routing\Data\Route;
@@ -232,6 +233,78 @@ final class AstHttpDataFileGeneratorTest extends TestCase
 
         self::assertSame(GenerateStatus::SUCCESS, $status);
         self::assertStringContainsString('/items/{id}', $contents);
+    }
+
+    public function testGenerateFileWithStaticAnyMethodRouteExpandsToEveryConcreteMethod(): void
+    {
+        $directory = sys_get_temp_dir();
+        $className = 'AppHttpRoutingDataAny' . __FUNCTION__;
+        $filePath  = $directory . '/' . $className . '.php';
+
+        $routeData = new HttpRouteData(
+            path: '/any',
+            name: 'any.route',
+            requestMethods: ['Valkyrja\\Http\\Message\\Enum\\RequestMethod::ANY'],
+            isDynamic: false,
+        );
+
+        $generator = new AstHttpDataFileGenerator();
+        $status    = $generator->generateFile(
+            directory: $directory,
+            className: $className,
+            namespace: 'App\\Data',
+            routes: ['any.route' => new String_('route-expr')],
+            routeData: ['any.route' => $routeData],
+        );
+
+        $contents = (string) file_get_contents($filePath);
+        @unlink($filePath);
+
+        self::assertSame(GenerateStatus::SUCCESS, $status);
+
+        // Registered under every concrete method, exactly as RouteCollection does at runtime.
+        foreach (RequestMethod::all() as $requestMethod) {
+            self::assertStringContainsString("'{$requestMethod->value}' =>", $contents);
+        }
+
+        // Never keyed under a literal ANY, which no request could ever match.
+        self::assertStringNotContainsString("'" . RequestMethod::ANY->value . "' =>", $contents);
+    }
+
+    public function testGenerateFileWithDynamicAnyMethodRouteExpandsToEveryConcreteMethod(): void
+    {
+        $directory = sys_get_temp_dir();
+        $className = 'AppHttpRoutingDataAnyDynamic' . __FUNCTION__;
+        $filePath  = $directory . '/' . $className . '.php';
+
+        $parameter = new HttpParameterData(name: 'id', regex: '[0-9]+');
+        $routeData = new HttpRouteData(
+            path: '/any/{id}',
+            name: 'any.show',
+            requestMethods: ['Valkyrja\\Http\\Message\\Enum\\RequestMethod::ANY'],
+            isDynamic: true,
+            parameters: [$parameter],
+        );
+
+        $generator = new AstHttpDataFileGenerator();
+        $status    = $generator->generateFile(
+            directory: $directory,
+            className: $className,
+            namespace: 'App\\Data',
+            routes: ['any.show' => new String_('route-expr')],
+            routeData: ['any.show' => $routeData],
+        );
+
+        $contents = (string) file_get_contents($filePath);
+        @unlink($filePath);
+
+        self::assertSame(GenerateStatus::SUCCESS, $status);
+
+        foreach (RequestMethod::all() as $requestMethod) {
+            self::assertStringContainsString("'{$requestMethod->value}' =>", $contents);
+        }
+
+        self::assertStringNotContainsString("'" . RequestMethod::ANY->value . "' =>", $contents);
     }
 
     // -----------------------------------------------------------------------

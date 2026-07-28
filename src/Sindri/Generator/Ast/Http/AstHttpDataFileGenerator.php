@@ -30,6 +30,7 @@ use Sindri\Generator\Abstract\AstFileGenerator;
 use Sindri\Generator\Enum\GenerateStatus;
 use Sindri\Generator\Http\Contract\HttpDataFileGeneratorContract;
 use Sindri\Generator\Throwable\Exception\GeneratorUnreachableException;
+use Valkyrja\Http\Message\Enum\RequestMethod;
 use Valkyrja\Http\Routing\Data\Contract\RouteContract;
 use Valkyrja\Http\Routing\Data\DynamicRoute;
 use Valkyrja\Http\Routing\Data\HttpRoutingData;
@@ -37,8 +38,10 @@ use Valkyrja\Http\Routing\Data\Parameter;
 use Valkyrja\Http\Routing\Processor\Contract\ProcessorContract;
 use Valkyrja\Http\Routing\Processor\Processor;
 
+use function array_map;
 use function constant;
 use function defined;
+use function in_array;
 use function str_contains;
 use function strrpos;
 use function substr;
@@ -320,6 +323,12 @@ class AstHttpDataFileGenerator extends AstFileGenerator implements HttpDataFileG
     /**
      * Extract HTTP method name strings from "FQN::CASE" enum strings.
      *
+     * A route registered for any request method is expanded to every concrete method,
+     * and is never keyed under a literal `ANY`, mirroring how the framework's
+     * RouteCollection registers it at runtime. Without that expansion a cached route
+     * declared for ANY would never be matched, since a request always carries a
+     * concrete method.
+     *
      * @param string[] $requestMethods
      *
      * @return string[]
@@ -334,6 +343,13 @@ class AstHttpDataFileGenerator extends AstFileGenerator implements HttpDataFileG
             if ($pos !== false) {
                 $methods[] = substr($method, $pos + 2);
             }
+        }
+
+        if (in_array(RequestMethod::ANY->value, $methods, true)) {
+            return array_map(
+                static fn (RequestMethod $requestMethod): string => $requestMethod->value,
+                RequestMethod::all()
+            );
         }
 
         return $methods;
