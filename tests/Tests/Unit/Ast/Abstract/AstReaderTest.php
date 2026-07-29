@@ -783,6 +783,36 @@ final class AstReaderTest extends TestCase
         self::assertNull($this->reader->callGetAttrArg([], 'missing', 5));
     }
 
+    public function testGetAttrArgDoesNotReadANamedArgumentByPosition(): void
+    {
+        // An attribute that names only some of its arguments, as in
+        // #[OptionParameter(name: 'flag', description: 'd', mode: ..., valueMode: ...)].
+        $args = [
+            new Arg(value: new String_('flag'), name: new Identifier('name')),
+            new Arg(value: new String_('d'), name: new Identifier('description')),
+            new Arg(value: new String_('mode-value'), name: new Identifier('mode')),
+        ];
+
+        // The argument that shares a position with `mode` must not be read as it.
+        self::assertNull($this->reader->callGetAttrArg($args, 'valueDisplayName', 2));
+        self::assertNull($this->reader->callGetAttrArg($args, 'cast', 2));
+        // The named argument is still resolved by its own name.
+        self::assertInstanceOf(String_::class, $this->reader->callGetAttrArg($args, 'mode', 2));
+    }
+
+    public function testGetAttrArgStillMatchesPositionalArgumentsBeforeNamedOnes(): void
+    {
+        // Positional arguments must precede named ones, so position stays valid for them.
+        $args = [
+            new Arg(new String_('first')),
+            new Arg(new String_('second')),
+            new Arg(value: new String_('named'), name: new Identifier('third')),
+        ];
+
+        self::assertInstanceOf(String_::class, $this->reader->callGetAttrArg($args, 'missing', 1));
+        self::assertNull($this->reader->callGetAttrArg($args, 'missing', 2));
+    }
+
     // -------------------------------------------------------------------------
     // parseClassFile
     // -------------------------------------------------------------------------

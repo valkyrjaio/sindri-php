@@ -409,7 +409,17 @@ abstract class AstReader
             }
         }
 
-        return $args[$position]->value ?? null;
+        $positional = $args[$position] ?? null;
+
+        // Only a genuinely positional argument may be matched by position. An argument
+        // written with a name belongs to that name alone, so falling back to it here
+        // would read an unrelated value into this one (for example an attribute that
+        // names only `mode` would have it read as the `cast` that shares its position).
+        if ($positional === null || $positional->name !== null) {
+            return null;
+        }
+
+        return $positional->value;
     }
 
     /**
