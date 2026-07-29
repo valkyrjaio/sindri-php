@@ -23,6 +23,8 @@ use Sindri\Generator\Ast\Http\AstHttpDataFileGenerator;
 use Sindri\Tests\Unit\Abstract\TestCase;
 
 use function file_get_contents;
+use function file_put_contents;
+use function getenv;
 use function sys_get_temp_dir;
 use function unlink;
 
@@ -40,10 +42,11 @@ use function unlink;
  * and `regexes` are all populated); multiple CLI commands; multiple container
  * publishers; multiple event listeners.
  *
- * To refresh the goldens after an intentional generator change, regenerate each
- * `tests/Tests/Unit/Generator/Ast/Golden/golden/*.golden` from the matching input
- * below and commit the new snapshot. The assertion here is intentionally a pure
- * `assertSame` with no update-mode branch, so coverage stays complete.
+ * To refresh the goldens after an intentional generator change, run this suite with
+ * `GOLDEN_UPDATE=1` set — each `tests/Tests/Unit/Generator/Ast/Golden/golden/*.golden`
+ * is rewritten from the matching generator output — then review and commit the new
+ * snapshots. Coverage is unaffected either way: `phpunit.xml.dist` scopes `<source>`
+ * to `src/`, so a branch in this test file is never measured.
  */
 final class GoldenSnapshotTest extends TestCase
 {
@@ -172,11 +175,18 @@ final class GoldenSnapshotTest extends TestCase
     }
 
     /**
-     * Assert the generated source matches the committed golden snapshot.
+     * Assert the generated source matches the committed golden snapshot, refreshing it first when
+     * `GOLDEN_UPDATE=1` is set (mirroring the Java and TypeScript ports' snapshot switch).
      */
     private function assertGolden(string $actual, string $goldenName): void
     {
-        $golden = (string) file_get_contents(__DIR__ . '/golden/' . $goldenName . '.golden');
+        $goldenPath = __DIR__ . '/golden/' . $goldenName . '.golden';
+
+        if (getenv('GOLDEN_UPDATE') === '1') {
+            file_put_contents($goldenPath, $actual);
+        }
+
+        $golden = (string) file_get_contents($goldenPath);
 
         self::assertSame($golden, $actual);
     }
