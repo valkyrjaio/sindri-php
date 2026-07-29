@@ -1,6 +1,12 @@
 # Release Notes for 26.x
 
-## [Unreleased](https://github.com/valkyrjaio/sindri/compare/v26.6.1...26.x)
+## [Unreleased](https://github.com/valkyrjaio/sindri/compare/v26.6.2...26.x)
+
+## [v26.6.2](https://github.com/valkyrjaio/sindri/compare/v26.6.1...v26.6.2) - 2026-07-28
+
+* [Generator] Refresh the golden snapshots via a GOLDEN_UPDATE environment switch by [@MelechMizrachi](https://github.com/MelechMizrachi) in https://github.com/valkyrjaio/sindri-php/pull/178
+* [GitHub] Update .github workflow refs to v26.12.1 by [@valkyrja-volundr](https://github.com/valkyrja-volundr)[bot] in https://github.com/valkyrjaio/sindri-php/pull/179
+* [Composer] Update composer dependencies by [@valkyrja-volundr](https://github.com/valkyrja-volundr)[bot] in https://github.com/valkyrjaio/sindri-php/pull/180
 
 ## [v26.6.1](https://github.com/valkyrjaio/sindri/compare/v26.6.0...v26.6.1) - 2026-07-28
 
