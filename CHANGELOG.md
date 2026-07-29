@@ -1,6 +1,11 @@
 # Release Notes for 26.x
 
-## [Unreleased](https://github.com/valkyrjaio/sindri/compare/v26.6.0...26.x)
+## [Unreleased](https://github.com/valkyrjaio/sindri/compare/v26.6.1...26.x)
+
+## [v26.6.1](https://github.com/valkyrjaio/sindri/compare/v26.6.0...v26.6.1) - 2026-07-28
+
+* [Ast] Stop reading a named attribute argument by its position by [@MelechMizrachi](https://github.com/MelechMizrachi) in https://github.com/valkyrjaio/sindri-php/pull/177
+* [Composer] Update composer dependencies by [@valkyrja-volundr](https://github.com/valkyrja-volundr)[bot] in https://github.com/valkyrjaio/sindri-php/pull/176
 
 ## [v26.6.0](https://github.com/valkyrjaio/sindri/compare/v26.5.2...v26.6.0) - 2026-07-27
 
