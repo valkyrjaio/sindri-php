@@ -3,8 +3,8 @@
     "php" : ">=8.4"
   },
   "require-dev"       : {
-    "valkyrja/rector" : "^26.1.11",
-    "phpstan/phpstan" : "^2.2.6"
+    "valkyrja/rector" : "^26.2.0",
+    "phpstan/phpstan" : "^2.2.7"
   },
   "scripts"           : {
     "fix"   : "vendor/bin/rector",
