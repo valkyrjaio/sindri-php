@@ -4,3 +4,4 @@
 !composer.json
 !composer.lock
 !phpunit.xml.dist
+!coverage-check.php
