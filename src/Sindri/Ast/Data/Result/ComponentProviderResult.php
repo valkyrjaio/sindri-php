@@ -32,6 +32,7 @@ readonly class ComponentProviderResult
      * @param class-string[] $cliRouteProviders   CLI route providers (getCliProviders)
      * @param class-string[] $httpRouteProviders  HTTP route providers (getHttpProviders)
      * @param class-string[] $queueRouteProviders Queue route providers (getQueueProviders)
+     * @param class-string[] $grpcRouteProviders  gRPC route providers (getGrpcProviders)
      */
     public function __construct(
         public array $componentProviders = [],
@@ -40,6 +41,7 @@ readonly class ComponentProviderResult
         public array $cliRouteProviders = [],
         public array $httpRouteProviders = [],
         public array $queueRouteProviders = [],
+        public array $grpcRouteProviders = [],
     ) {
     }
 
@@ -55,6 +57,7 @@ readonly class ComponentProviderResult
             cliRouteProviders: array_values(array_unique([...$this->cliRouteProviders, ...$other->cliRouteProviders])),
             httpRouteProviders: array_values(array_unique([...$this->httpRouteProviders, ...$other->httpRouteProviders])),
             queueRouteProviders: array_values(array_unique([...$this->queueRouteProviders, ...$other->queueRouteProviders])),
+            grpcRouteProviders: array_values(array_unique([...$this->grpcRouteProviders, ...$other->grpcRouteProviders])),
         );
     }
 }

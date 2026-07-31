@@ -18,6 +18,7 @@ use Sindri\Ast\Data\HttpRouteData;
 use Sindri\Generator\Ast\Cli\AstCliDataFileGenerator;
 use Sindri\Generator\Ast\Container\AstContainerDataFileGenerator;
 use Sindri\Generator\Ast\Event\AstEventDataFileGenerator;
+use Sindri\Generator\Ast\Grpc\AstGrpcDataFileGenerator;
 use Sindri\Generator\Ast\Http\AstHttpDataFileGenerator;
 use Sindri\Generator\Ast\Queue\AstQueueDataFileGenerator;
 use Sindri\Tests\Unit\Abstract\TestCase;
@@ -191,6 +192,31 @@ final class GoldenSnapshotTest extends TestCase
             className: $className,
             namespace: 'App\\Data',
             listeners: $listeners,
+        );
+
+        $actual = (string) file_get_contents($filePath);
+        @unlink($filePath);
+
+        $this->assertGolden($actual, $className);
+    }
+
+    public function testGrpcRoutingDataMatchesGolden(): void
+    {
+        $routes = [
+            '/pkg.Greeter/SayHello' => new String_('say-hello-expr'),
+            '/pkg.Greeter/Chat'     => new String_('chat-expr'),
+        ];
+
+        $className = 'AppGrpcRoutingData';
+        $filePath  = sys_get_temp_dir() . '/' . $className . '.php';
+        @unlink($filePath);
+
+        $generator = new AstGrpcDataFileGenerator();
+        $generator->generateFile(
+            directory: sys_get_temp_dir(),
+            className: $className,
+            namespace: 'App\\Data',
+            routes: $routes,
         );
 
         $actual = (string) file_get_contents($filePath);
