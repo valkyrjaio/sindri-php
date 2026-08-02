@@ -1,7 +1,5 @@
 <?php
 
-// phpcs:ignoreFile
-
 declare(strict_types=1);
 
 /*
@@ -11,6 +9,8 @@ declare(strict_types=1);
  *
  * Released under the MIT License. See LICENSE.md for details.
  */
+
+// phpcs:ignoreFile
 
 use Sindri\Tests\Fixtures\Event\TestEventFixture;
 use Valkyrja\Event\Attribute\Listener;
