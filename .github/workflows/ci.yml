@@ -43,7 +43,7 @@ jobs:
       phpunit-extensions: 'mbstring, intl, sodium, fileinfo, pdo, php-mysql, php-sqlite3, php-pgsql, pdo_sqlite, pdo_pgsql, pdo_mysql, xdebug'
       psalm-run-script: 'psalm-shepherd-with-stats'
       source-paths: |
-        bin/valkyrja
+        bin/sindri
         functions/**/*.php
         src/**/*.php
         tests/**/*.php
