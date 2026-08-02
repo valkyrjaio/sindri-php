@@ -38,7 +38,9 @@ jobs:
     permissions:
       pull-requests: write
       contents: read
-    secrets: inherit
+    secrets:
+      VALKYRJA_GHA_APP_ID: ${{ secrets.VALKYRJA_GHA_APP_ID }}
+      VALKYRJA_GHA_PRIVATE_KEY: ${{ secrets.VALKYRJA_GHA_PRIVATE_KEY }}
 
   # A check's name is built from every job name down the call chain, so this composes
   # as `CI / Tools / <Tool> / …`.
