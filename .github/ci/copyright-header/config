@@ -1,0 +1,41 @@
+#
+# This file is part of the Sindri package.
+#
+# Copyright (c) 2016-present Melech Mizrachi
+#
+# Released under the MIT License. See LICENSE.md for details.
+#
+
+# The package this repository is. COPYRIGHT_HEADER.md in the .github repository
+# maps every repository to its own identifier.
+IDENTIFIER='Sindri'
+
+# The files that carry no copyright header. Every other tracked file must carry
+# it, so a new file fails the check until a person adds the header or adds the
+# file here.
+EXCLUDED=(
+    # A document, a lock file, a workflow, and a configuration file hold no
+    # program code.
+    '*.md'
+    '*.json'
+    '*.lock'
+    '*.neon'
+    '*.xml'
+    '*.yml'
+    '*.dist'
+    '*.gitattributes'
+    '*.editorconfig'
+    '*.gitignore'
+
+    # The output that the golden tests compare against. Sindri generates each
+    # file, so a header would have to come from the generator, and the generator
+    # writes the file that an application consumes.
+    'tests/Tests/Unit/Generator/Ast/Golden/golden/*'
+
+    # A PHP entry point that carries no `.php` extension. It holds the header as
+    # a block comment, which is the form every PHP file in this repository uses,
+    # and PHP CS Fixer checks it: `.php_cs.dist.php` names the file. This check
+    # gives the block comment to a `*.php` path only, so it would ask this file
+    # for a line comment instead.
+    'bin/sindri'
+)
