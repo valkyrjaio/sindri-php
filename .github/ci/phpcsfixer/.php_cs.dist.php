@@ -3,7 +3,7 @@
 declare(strict_types=1);
 
 /*
- * This file is part of the Valkyrja Framework package.
+ * This file is part of the Sindri package.
  *
  * (c) Melech Mizrachi <melechmizrachi@gmail.com>
  *
@@ -24,7 +24,11 @@ $header = <<<EOF
     EOF;
 
 $finder = Finder::create()
-    ->exclude('.github')
+    // Finder ignores a dot directory by default, which put every PHP file under
+    // .github outside the header rule. Those files are this repository's own source
+    // and carry the header too, so the finder descends into them.
+    ->ignoreDotFiles(false)
+    ->exclude('.git')
     ->exclude('vendor')
     ->in(__DIR__ . '/../../../');
 
