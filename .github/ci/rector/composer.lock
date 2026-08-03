@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "bcdeeb236d263bac61e56b6928c4848d",
+    "content-hash": "aee321faf9aa298efd4c03ae184db767",
     "packages": [],
     "packages-dev": [
         {
@@ -223,7 +223,7 @@
             "time": "2026-07-30T22:10:00+00:00"
         },
         {
-            "name": "valkyrja/rector",
+            "name": "valkyrja/ci-rector",
             "version": "v26.2.4",
             "source": {
                 "type": "git",
