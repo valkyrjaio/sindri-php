@@ -55,7 +55,7 @@ class AstGrpcDataFileGenerator extends AstFileGenerator implements GrpcDataFileG
     #[Override]
     public function generateClassContents(array $routes): string
     {
-        $dataNamespace = 'Sindri\Grpc\Data\GrpcRoutingData';
+        $dataNamespace = GrpcRoutingData::class;
         $routesContent = $this->getRoutesAsContent($routes);
 
         // phpcs:disable

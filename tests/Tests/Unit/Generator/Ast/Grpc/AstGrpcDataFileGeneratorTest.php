@@ -16,6 +16,7 @@ use PhpParser\Node\Scalar\String_;
 use Sindri\Generator\Ast\Grpc\AstGrpcDataFileGenerator;
 use Sindri\Generator\Enum\GenerateStatus;
 use Sindri\Tests\Unit\Abstract\TestCase;
+use Valkyrja\Grpc\Routing\Data\GrpcRoutingData;
 
 use function file_get_contents;
 use function sys_get_temp_dir;
@@ -27,7 +28,7 @@ final class AstGrpcDataFileGeneratorTest extends TestCase
     {
         $contents = new AstGrpcDataFileGenerator()->generateClassContents([]);
 
-        self::assertStringContainsString('Sindri\Grpc\Data\GrpcRoutingData', $contents);
+        self::assertStringContainsString(GrpcRoutingData::class, $contents);
         self::assertStringContainsString('routes:', $contents);
     }
 
