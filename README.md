@@ -151,7 +151,7 @@ Sindri is open-source software licensed under the
 [github sindri]: https://github.com/valkyrjaio/sindri-php
 [starter url]: https://github.com/valkyrjaio/valkyrja-starter-app-php
 [docs url]: ./src/Valkyrja/README.md
-[Versioning and Release Process url]: ./src/Valkyrja/VERSIONING_AND_RELEASE_PROCESS.md
+[Versioning and Release Process url]: https://github.com/valkyrjaio/valkyrja-php/blob/26.x/src/Valkyrja/VERSIONING_AND_RELEASE_PROCESS.md
 [contributing url]: https://github.com/valkyrjaio/.github/blob/26.x/CONTRIBUTING.md
 [vocabulary url]: https://github.com/valkyrjaio/.github/blob/26.x/VOCABULARY.md
 [security vulnerabilities url]: https://github.com/valkyrjaio/.github/blob/26.x/SECURITY.md
