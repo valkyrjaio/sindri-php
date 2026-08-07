@@ -14,16 +14,6 @@ namespace Sindri\Ast\Data;
 
 use Sindri\Ast\Data\Contract\QueueRouteDataContract;
 
-/**
- * Portable intermediate representation of a single queue route extracted from
- * #[Route] and related sub-attributes on a job handler method.
- *
- * Mirrors the shape of Valkyrja\Queue\Routing\Data\Route without requiring the
- * framework data class to be instantiated. A queue route carries no retry or
- * attempts policy — those ride on the job, because the producer decides them.
- *
- * Middleware class names are stored as FQN strings.
- */
 readonly class QueueRouteData implements QueueRouteDataContract
 {
     /**

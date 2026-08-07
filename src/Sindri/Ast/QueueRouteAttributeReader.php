@@ -35,13 +35,6 @@ use function array_push;
 use function is_a;
 use function is_string;
 
-/**
- * Scans a queue job handler class file for #[Route] and related sub-attributes and
- * returns PHP-Parser Expr nodes ready for the data cache generator.
- *
- * Mirrors the logic of the framework's runtime attribute collector but operates
- * entirely on AST without executing any PHP code.
- */
 class QueueRouteAttributeReader extends RouteAttributeReader implements QueueRouteAttributeReaderContract
 {
     /**

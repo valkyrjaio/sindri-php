@@ -14,12 +14,6 @@ namespace Sindri\Ast\Data\Result;
 
 use PhpParser\Node\Expr;
 
-/**
- * Result of scanning a queue job handler class file for #[Route] and related attributes.
- *
- * Each element of $routes is a PHP-Parser Expr node (typically Expr\New_)
- * ready to be embedded verbatim in the data cache file by the generator.
- */
 readonly class QueueRouteAttributeResult
 {
     /**

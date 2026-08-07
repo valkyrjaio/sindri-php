@@ -14,9 +14,6 @@ namespace Sindri\Ast\Contract;
 
 use Sindri\Ast\Data\Result\QueueRouteAttributeResult;
 
-/**
- * Reads #[Route] and related queue routing attributes from a job handler class file.
- */
 interface QueueRouteAttributeReaderContract
 {
     /**
