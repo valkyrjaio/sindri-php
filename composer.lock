@@ -327,16 +327,16 @@
         },
         {
             "name": "valkyrja/valkyrja",
-            "version": "v26.9.0",
+            "version": "v26.10.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/valkyrjaio/valkyrja-php.git",
-                "reference": "96ad6d1a5cdd2f90baac507833490e5e178e7db1"
+                "reference": "1177a3032d3991653428de44193eca93f16accc5"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/valkyrjaio/valkyrja-php/zipball/96ad6d1a5cdd2f90baac507833490e5e178e7db1",
-                "reference": "96ad6d1a5cdd2f90baac507833490e5e178e7db1",
+                "url": "https://api.github.com/repos/valkyrjaio/valkyrja-php/zipball/1177a3032d3991653428de44193eca93f16accc5",
+                "reference": "1177a3032d3991653428de44193eca93f16accc5",
                 "shasum": ""
             },
             "require": {
@@ -350,7 +350,7 @@
             "conflict": {
                 "filp/whoops": "<2.18.4",
                 "firebase/php-jwt": "<7.1.0",
-                "guzzlehttp/guzzle": "<7.15.2",
+                "guzzlehttp/guzzle": "<7.15.3",
                 "league/flysystem": "<3.35.2",
                 "league/flysystem-aws-s3-v3": "<3.35.2",
                 "mailgun/mailgun-php": "<4.5.1",
@@ -364,7 +364,7 @@
             "require-dev": {
                 "filp/whoops": "^2.18.4",
                 "firebase/php-jwt": "^7.1.0",
-                "guzzlehttp/guzzle": "^7.15.2",
+                "guzzlehttp/guzzle": "^7.15.3",
                 "league/flysystem": "^3.35.2",
                 "league/flysystem-aws-s3-v3": "^3.35.2",
                 "mailgun/mailgun-php": "^4.5.1",
@@ -383,7 +383,7 @@
                 "ext-sodium": "Required to use the default Crypt adapters and/or JWT EdDSA Algorithm (*)",
                 "filp/whoops": "Required to use the default Throwable handler (^2.18.4)",
                 "firebase/php-jwt": "Required to use the default Jwt adapter (^7.1.0)",
-                "guzzlehttp/guzzle": "Required to use the default Client adapter (^7.15.2).",
+                "guzzlehttp/guzzle": "Required to use the default Client adapter (^7.15.3).",
                 "league/flysystem": "Required to use the default Filesystem adapter (^3.35.2).",
                 "league/flysystem-aws-s3-v3": "Required to use the s3 Filesystem adapter (^3.35.2)",
                 "mailgun/mailgun-php": "Required to use the Mailgun Mail adapter (^4.5.1).",
@@ -420,9 +420,9 @@
             ],
             "support": {
                 "issues": "https://github.com/valkyrjaio/valkyrja-php/issues",
-                "source": "https://github.com/valkyrjaio/valkyrja-php/tree/v26.9.0"
+                "source": "https://github.com/valkyrjaio/valkyrja-php/tree/v26.10.0"
             },
-            "time": "2026-08-05T16:15:15+00:00"
+            "time": "2026-08-06T15:23:39+00:00"
         }
     ],
     "packages-dev": [],
