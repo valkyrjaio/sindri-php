@@ -22,12 +22,6 @@ use Sindri\Generator\Queue\Contract\QueueDataFileGeneratorContract;
 use Valkyrja\Queue\Routing\Data\Contract\RouteContract;
 use Valkyrja\Queue\Routing\Data\QueueRoutingData;
 
-/**
- * AST-based queue routing data file generator.
- *
- * Accepts PHP-Parser Expr nodes produced by QueueRouteAttributeReader and pretty-prints
- * them directly into the generated data class, bypassing any runtime app boot.
- */
 class AstQueueDataFileGenerator extends AstFileGenerator implements QueueDataFileGeneratorContract
 {
     public function __construct(
