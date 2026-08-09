@@ -327,16 +327,16 @@
         },
         {
             "name": "valkyrja/valkyrja",
-            "version": "v26.11.1",
+            "version": "v26.11.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/valkyrjaio/valkyrja-php.git",
-                "reference": "4bc1ec6949b2db16a2db49bd1c002d837b0b4183"
+                "reference": "400b2d5245d8560e84054a193005ca0bdc70dfe5"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/valkyrjaio/valkyrja-php/zipball/4bc1ec6949b2db16a2db49bd1c002d837b0b4183",
-                "reference": "4bc1ec6949b2db16a2db49bd1c002d837b0b4183",
+                "url": "https://api.github.com/repos/valkyrjaio/valkyrja-php/zipball/400b2d5245d8560e84054a193005ca0bdc70dfe5",
+                "reference": "400b2d5245d8560e84054a193005ca0bdc70dfe5",
                 "shasum": ""
             },
             "require": {
@@ -420,9 +420,9 @@
             ],
             "support": {
                 "issues": "https://github.com/valkyrjaio/valkyrja-php/issues",
-                "source": "https://github.com/valkyrjaio/valkyrja-php/tree/v26.11.1"
+                "source": "https://github.com/valkyrjaio/valkyrja-php/tree/v26.11.2"
             },
-            "time": "2026-08-08T13:47:23+00:00"
+            "time": "2026-08-09T13:51:24+00:00"
         }
     ],
     "packages-dev": [],
