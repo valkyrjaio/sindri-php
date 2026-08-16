@@ -12,9 +12,6 @@ declare(strict_types=1);
 
 namespace Sindri\Ast\Data\Contract;
 
-/**
- * Contract for a portable listener intermediate representation.
- */
 interface ListenerDataContract
 {
     /** @var class-string */
