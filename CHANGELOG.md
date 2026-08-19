@@ -1,6 +1,13 @@
 # Release Notes for 26.x
 
-## [Unreleased](https://github.com/valkyrjaio/sindri/compare/v26.6.18...26.x)
+## [Unreleased](https://github.com/valkyrjaio/sindri/compare/v26.6.19...26.x)
+
+## [v26.6.19](https://github.com/valkyrjaio/sindri/compare/v26.6.18...v26.6.19) - 2026-08-19
+
+* [Comment] docs: Remove the restating doc blocks from type declarations by [@MelechMizrachi](https://github.com/MelechMizrachi) in https://github.com/valkyrjaio/sindri-php/pull/275
+* [Dependency] build: Update composer dependencies by [@valkyrja-volundr](https://github.com/valkyrja-volundr)[bot] in https://github.com/valkyrjaio/sindri-php/pull/280
+* [Workflow] ci: Update .github workflow refs to v26.25.1 by [@valkyrja-volundr](https://github.com/valkyrja-volundr)[bot] in https://github.com/valkyrjaio/sindri-php/pull/281
+* [Dependency] build: Update composer dependencies by [@valkyrja-volundr](https://github.com/valkyrja-volundr)[bot] in https://github.com/valkyrjaio/sindri-php/pull/282
 
 ## [v26.6.18](https://github.com/valkyrjaio/sindri/compare/v26.6.17...v26.6.18) - 2026-08-18
 
