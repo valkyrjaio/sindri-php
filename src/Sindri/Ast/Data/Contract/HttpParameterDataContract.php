@@ -12,9 +12,6 @@ declare(strict_types=1);
 
 namespace Sindri\Ast\Data\Contract;
 
-/**
- * Contract for a portable HTTP route parameter intermediate representation.
- */
 interface HttpParameterDataContract
 {
     public string $name {

@@ -12,9 +12,6 @@ declare(strict_types=1);
 
 namespace Sindri\Ast\Data\Contract;
 
-/**
- * Contract for a portable CLI route intermediate representation.
- */
 interface CliRouteDataContract
 {
     public string $name {

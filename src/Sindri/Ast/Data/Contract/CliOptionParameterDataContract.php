@@ -12,9 +12,6 @@ declare(strict_types=1);
 
 namespace Sindri\Ast\Data\Contract;
 
-/**
- * Contract for a portable CLI option parameter intermediate representation.
- */
 interface CliOptionParameterDataContract
 {
     public string $name {

@@ -16,8 +16,7 @@ use Override;
 use Valkyrja\Event\Provider\Contract\ListenerProviderContract;
 
 /**
- * A listener provider that references a non-existent listener class.
- * Used to exercise the "listener class file not found" branch in GenerateDataFromAst.
+ * A listener provider naming a listener class that does not exist, for the not-found branch.
  */
 final class TestMissingListenerProviderFixture implements ListenerProviderContract
 {

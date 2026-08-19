@@ -16,8 +16,7 @@ use Override;
 use Valkyrja\Http\Routing\Provider\Contract\HttpRouteProviderContract;
 
 /**
- * A route provider that references a non-existent controller class.
- * Used to exercise the "controller class file not found" branch in GenerateDataFromAst.
+ * An HTTP route provider naming a controller class that does not exist, for the not-found branch.
  */
 final class TestMissingControllerProviderFixture implements HttpRouteProviderContract
 {
