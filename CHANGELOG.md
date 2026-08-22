@@ -1,6 +1,12 @@
 # Release Notes for 26.x
 
-## [Unreleased](https://github.com/valkyrjaio/sindri/compare/v26.6.21...26.x)
+## [Unreleased](https://github.com/valkyrjaio/sindri/compare/v26.6.22...26.x)
+
+## [v26.6.22](https://github.com/valkyrjaio/sindri/compare/v26.6.21...v26.6.22) - 2026-08-22
+
+* [Dependency] build: Update composer dependencies by [@valkyrja-volundr](https://github.com/valkyrja-volundr)[bot] in https://github.com/valkyrjaio/sindri-php/pull/288
+* [Dependency] build: Update composer dependencies by [@valkyrja-volundr](https://github.com/valkyrja-volundr)[bot] in https://github.com/valkyrjaio/sindri-php/pull/289
+* [Dependency] build: Update composer dependencies by [@valkyrja-volundr](https://github.com/valkyrja-volundr)[bot] in https://github.com/valkyrjaio/sindri-php/pull/290
 
 ## [v26.6.21](https://github.com/valkyrjaio/sindri/compare/v26.6.20...v26.6.21) - 2026-08-21
 
