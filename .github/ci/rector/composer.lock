@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "e65a02d7a474e1e484221532fe10c315",
+    "content-hash": "dd5887612f626726b60b505e58b65a6e",
     "packages": [],
     "packages-dev": [
         {
@@ -100,11 +100,11 @@
         },
         {
             "name": "phpstan/phpstan",
-            "version": "2.2.11",
+            "version": "2.2.12",
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/phpstan/phpstan/zipball/0eb899d48d9b784eee3f1b58a6c9dc79734cf811",
-                "reference": "0eb899d48d9b784eee3f1b58a6c9dc79734cf811",
+                "url": "https://api.github.com/repos/phpstan/phpstan/zipball/174b0d88710f00a42598886504dd7a146f91ace5",
+                "reference": "174b0d88710f00a42598886504dd7a146f91ace5",
                 "shasum": ""
             },
             "require": {
@@ -160,7 +160,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2026-08-31T10:33:10+00:00"
+            "time": "2026-08-31T19:09:43+00:00"
         },
         {
             "name": "rector/rector",
@@ -221,22 +221,22 @@
         },
         {
             "name": "valkyrja/ci-rector",
-            "version": "v26.3.25",
+            "version": "v26.3.26",
             "source": {
                 "type": "git",
                 "url": "https://github.com/valkyrjaio/ci-rector-php.git",
-                "reference": "97a22d39015ee776674bfb75a37e225bfe6a7be5"
+                "reference": "8c7af0d1c496bb14897efb65a388b5513e165643"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/valkyrjaio/ci-rector-php/zipball/97a22d39015ee776674bfb75a37e225bfe6a7be5",
-                "reference": "97a22d39015ee776674bfb75a37e225bfe6a7be5",
+                "url": "https://api.github.com/repos/valkyrjaio/ci-rector-php/zipball/8c7af0d1c496bb14897efb65a388b5513e165643",
+                "reference": "8c7af0d1c496bb14897efb65a388b5513e165643",
                 "shasum": ""
             },
             "require": {
                 "nette/utils": "^4.1.5",
                 "php": ">=8.4",
-                "rector/rector": "^2.6.4"
+                "rector/rector": "^2.6.5"
             },
             "type": "project",
             "autoload": {
@@ -263,9 +263,9 @@
             ],
             "support": {
                 "issues": "https://github.com/valkyrjaio/ci-rector-php/issues",
-                "source": "https://github.com/valkyrjaio/ci-rector-php/tree/v26.3.25"
+                "source": "https://github.com/valkyrjaio/ci-rector-php/tree/v26.3.26"
             },
-            "time": "2026-08-30T15:13:35+00:00"
+            "time": "2026-08-31T17:50:47+00:00"
         }
     ],
     "aliases": [],
