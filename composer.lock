@@ -327,16 +327,16 @@
         },
         {
             "name": "valkyrja/valkyrja",
-            "version": "v26.15.9",
+            "version": "v26.15.10",
             "source": {
                 "type": "git",
                 "url": "https://github.com/valkyrjaio/valkyrja-php.git",
-                "reference": "ef089624ffde8e1fe68df71573f6fad40672d016"
+                "reference": "d28b14bcf4c61937830aa31c86318d6bd02a507d"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/valkyrjaio/valkyrja-php/zipball/ef089624ffde8e1fe68df71573f6fad40672d016",
-                "reference": "ef089624ffde8e1fe68df71573f6fad40672d016",
+                "url": "https://api.github.com/repos/valkyrjaio/valkyrja-php/zipball/d28b14bcf4c61937830aa31c86318d6bd02a507d",
+                "reference": "d28b14bcf4c61937830aa31c86318d6bd02a507d",
                 "shasum": ""
             },
             "require": {
@@ -349,7 +349,7 @@
             },
             "conflict": {
                 "filp/whoops": "<2.18.4",
-                "firebase/php-jwt": "<7.1.0",
+                "firebase/php-jwt": "<7.1.1",
                 "guzzlehttp/guzzle": "<7.15.5",
                 "league/flysystem": "<3.36.0",
                 "league/flysystem-aws-s3-v3": "<3.35.3",
@@ -363,7 +363,7 @@
             },
             "require-dev": {
                 "filp/whoops": "^2.18.4",
-                "firebase/php-jwt": "^7.1.0",
+                "firebase/php-jwt": "^7.1.1",
                 "guzzlehttp/guzzle": "^7.15.5",
                 "league/flysystem": "^3.36.0",
                 "league/flysystem-aws-s3-v3": "^3.35.3",
@@ -382,7 +382,7 @@
                 "ext-redis": "Required to use the default Cache store (^4.0|^5.0).",
                 "ext-sodium": "Required to use the default Crypt adapters and/or JWT EdDSA Algorithm (*)",
                 "filp/whoops": "Required to use the default Throwable handler (^2.18.4)",
-                "firebase/php-jwt": "Required to use the default Jwt adapter (^7.1.0)",
+                "firebase/php-jwt": "Required to use the default Jwt adapter (^7.1.1)",
                 "guzzlehttp/guzzle": "Required to use the default Client adapter (^7.15.5).",
                 "league/flysystem": "Required to use the default Filesystem adapter (^3.36.0).",
                 "league/flysystem-aws-s3-v3": "Required to use the s3 Filesystem adapter (^3.35.3)",
@@ -420,9 +420,9 @@
             ],
             "support": {
                 "issues": "https://github.com/valkyrjaio/valkyrja-php/issues",
-                "source": "https://github.com/valkyrjaio/valkyrja-php/tree/v26.15.9"
+                "source": "https://github.com/valkyrjaio/valkyrja-php/tree/v26.15.10"
             },
-            "time": "2026-09-13T16:03:50+00:00"
+            "time": "2026-09-14T18:06:19+00:00"
         }
     ],
     "packages-dev": [],
