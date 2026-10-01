@@ -16,6 +16,7 @@ use PhpParser\PrettyPrinter\Standard;
 use Sindri\Ast\GrpcRouteAttributeReader;
 use Sindri\Tests\Fixtures\Grpc\Controller\TestGrpcControllerFixture;
 use Sindri\Tests\Fixtures\Grpc\Middleware\TestGrpcMiddlewareFixture;
+use Sindri\Tests\Fixtures\Grpc\Middleware\TestGrpcRouteMatchedOnlyMiddlewareFixture;
 use Sindri\Tests\Unit\Abstract\TestCase;
 
 use function file_put_contents;
@@ -60,7 +61,7 @@ final class GrpcRouteAttributeReaderTest extends TestCase
     {
         $result = new GrpcRouteAttributeReader()->readFile(self::$fixtureFile);
 
-        self::assertCount(2, $result->routes);
+        self::assertCount(3, $result->routes);
         self::assertArrayNotHasKey('/pkg.Greeter/notAnRpc', $result->routes);
     }
 
@@ -113,6 +114,20 @@ final class GrpcRouteAttributeReaderTest extends TestCase
         self::assertStringContainsString("throwableCaughtMiddleware: [$middleware::class]", $printed);
         self::assertStringContainsString("sendingResponseMiddleware: [$middleware::class]", $printed);
         self::assertStringContainsString("responseSentMiddleware: [$middleware::class]", $printed);
+    }
+
+    public function testASingleStageMiddlewareReachesOnlyItsOwnBucket(): void
+    {
+        $result = new GrpcRouteAttributeReader()->readFile(self::$fixtureFile);
+
+        $printed    = self::print($result->routes['/pkg.Greeter/Matched']);
+        $middleware = '\\' . TestGrpcRouteMatchedOnlyMiddlewareFixture::class;
+
+        self::assertStringContainsString("routeMatchedMiddleware: [$middleware::class]", $printed);
+        self::assertStringNotContainsString('routeDispatchedMiddleware:', $printed);
+        self::assertStringNotContainsString('throwableCaughtMiddleware:', $printed);
+        self::assertStringNotContainsString('sendingResponseMiddleware:', $printed);
+        self::assertStringNotContainsString('responseSentMiddleware:', $printed);
     }
 
     public function testAMethodWithoutMiddlewareEmitsNone(): void
