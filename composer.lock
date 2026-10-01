@@ -327,16 +327,16 @@
         },
         {
             "name": "valkyrja/valkyrja",
-            "version": "v26.16.14",
+            "version": "v26.16.15",
             "source": {
                 "type": "git",
                 "url": "https://github.com/valkyrjaio/valkyrja-php.git",
-                "reference": "d3bedbbcb4a1cccd99d8380b25c57ff11143e6f9"
+                "reference": "377d1007694f4510590674d47c231fa382b242d9"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/valkyrjaio/valkyrja-php/zipball/d3bedbbcb4a1cccd99d8380b25c57ff11143e6f9",
-                "reference": "d3bedbbcb4a1cccd99d8380b25c57ff11143e6f9",
+                "url": "https://api.github.com/repos/valkyrjaio/valkyrja-php/zipball/377d1007694f4510590674d47c231fa382b242d9",
+                "reference": "377d1007694f4510590674d47c231fa382b242d9",
                 "shasum": ""
             },
             "require": {
@@ -354,7 +354,7 @@
                 "league/flysystem": "<3.36.0",
                 "league/flysystem-aws-s3-v3": "<3.35.3",
                 "mailgun/mailgun-php": "<4.5.2",
-                "monolog/monolog": "<3.12.0",
+                "monolog/monolog": "<3.12.1",
                 "phpmailer/phpmailer": "<7.1.1",
                 "predis/predis": "<3.6.1",
                 "pusher/pusher-php-server": "<7.3.0",
@@ -368,7 +368,7 @@
                 "league/flysystem": "^3.36.0",
                 "league/flysystem-aws-s3-v3": "^3.35.3",
                 "mailgun/mailgun-php": "^4.5.2",
-                "monolog/monolog": "^3.12.0",
+                "monolog/monolog": "^3.12.1",
                 "phpmailer/phpmailer": "^7.1.1",
                 "predis/predis": "^3.6.1",
                 "pusher/pusher-php-server": "^7.3.0",
@@ -387,7 +387,7 @@
                 "league/flysystem": "Required to use the default Filesystem adapter (^3.36.0).",
                 "league/flysystem-aws-s3-v3": "Required to use the s3 Filesystem adapter (^3.35.3)",
                 "mailgun/mailgun-php": "Required to use the Mailgun Mail adapter (^4.5.2).",
-                "monolog/monolog": "Required to use the default Log adapter (^3.12.0).",
+                "monolog/monolog": "Required to use the default Log adapter (^3.12.1).",
                 "openswoole/core": "Required to use the OpenSwoole worker entry point (^26.2.0).",
                 "phpmailer/phpmailer": "Required to use the default Mail adapter (^7.1.1).",
                 "predis/predis": "Required to use the Redis Cache store (^3.6.1).",
@@ -420,9 +420,9 @@
             ],
             "support": {
                 "issues": "https://github.com/valkyrjaio/valkyrja-php/issues",
-                "source": "https://github.com/valkyrjaio/valkyrja-php/tree/v26.16.14"
+                "source": "https://github.com/valkyrjaio/valkyrja-php/tree/v26.16.15"
             },
-            "time": "2026-09-29T18:04:13+00:00"
+            "time": "2026-09-30T17:59:52+00:00"
         }
     ],
     "packages-dev": [],
