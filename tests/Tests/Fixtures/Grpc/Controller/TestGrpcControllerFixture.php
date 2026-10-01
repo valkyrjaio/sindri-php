@@ -13,6 +13,7 @@ declare(strict_types=1);
 namespace Sindri\Tests\Fixtures\Grpc\Controller;
 
 use Sindri\Tests\Fixtures\Grpc\Middleware\TestGrpcMiddlewareFixture;
+use Sindri\Tests\Fixtures\Grpc\Middleware\TestGrpcRouteMatchedOnlyMiddlewareFixture;
 use Valkyrja\Container\Manager\Contract\ContainerContract;
 use Valkyrja\Grpc\Message\Response\Contract\ServiceResponseContract;
 use Valkyrja\Grpc\Message\Response\ServiceResponse;
@@ -35,6 +36,13 @@ final class TestGrpcControllerFixture
     public static function chat(ContainerContract $container, RouteContract $route): ServiceResponseContract
     {
         return ServiceResponse::ok('chat');
+    }
+
+    #[Method(name: 'Matched')]
+    #[Middleware(name: TestGrpcRouteMatchedOnlyMiddlewareFixture::class)]
+    public static function matched(ContainerContract $container, RouteContract $route): ServiceResponseContract
+    {
+        return ServiceResponse::ok('matched');
     }
 
     /**
