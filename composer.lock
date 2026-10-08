@@ -327,16 +327,16 @@
         },
         {
             "name": "valkyrja/valkyrja",
-            "version": "v26.17.4",
+            "version": "v26.18.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/valkyrjaio/valkyrja-php.git",
-                "reference": "80c5f78a0fb1b09fda673cc45ae4ceedf462e4c1"
+                "reference": "c04912016217b15a9a9fdd988b40da50e7f47a19"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/valkyrjaio/valkyrja-php/zipball/80c5f78a0fb1b09fda673cc45ae4ceedf462e4c1",
-                "reference": "80c5f78a0fb1b09fda673cc45ae4ceedf462e4c1",
+                "url": "https://api.github.com/repos/valkyrjaio/valkyrja-php/zipball/c04912016217b15a9a9fdd988b40da50e7f47a19",
+                "reference": "c04912016217b15a9a9fdd988b40da50e7f47a19",
                 "shasum": ""
             },
             "require": {
@@ -356,7 +356,7 @@
                 "mailgun/mailgun-php": "<4.5.2",
                 "monolog/monolog": "<3.12.1",
                 "phpmailer/phpmailer": "<7.1.1",
-                "predis/predis": "<3.6.1",
+                "predis/predis": "<3.7.0",
                 "pusher/pusher-php-server": "<7.3.0",
                 "twig/twig": "<3.30.0",
                 "vonage/client-core": "<4.14.0"
@@ -370,7 +370,7 @@
                 "mailgun/mailgun-php": "^4.5.2",
                 "monolog/monolog": "^3.12.1",
                 "phpmailer/phpmailer": "^7.1.1",
-                "predis/predis": "^3.6.1",
+                "predis/predis": "^3.7.0",
                 "pusher/pusher-php-server": "^7.3.0",
                 "twig/twig": "^3.30.0",
                 "vonage/client-core": "^4.14.0"
@@ -390,7 +390,7 @@
                 "monolog/monolog": "Required to use the default Log adapter (^3.12.1).",
                 "openswoole/core": "Required to use the OpenSwoole worker entry point (^26.2.0).",
                 "phpmailer/phpmailer": "Required to use the default Mail adapter (^7.1.1).",
-                "predis/predis": "Required to use the Redis Cache store (^3.6.1).",
+                "predis/predis": "Required to use the Redis Cache store (^3.7.0).",
                 "pusher/pusher-php-server": "Required to use the Pusher Broadcast adapter (^7.3.0).",
                 "spiral/roadrunner-http": "Required to use the RoadRunner worker entry point (^4.1.0).",
                 "twig/twig": "Required to use the Twig View engine (^3.30.0).",
@@ -420,9 +420,9 @@
             ],
             "support": {
                 "issues": "https://github.com/valkyrjaio/valkyrja-php/issues",
-                "source": "https://github.com/valkyrjaio/valkyrja-php/tree/v26.17.4"
+                "source": "https://github.com/valkyrjaio/valkyrja-php/tree/v26.18.0"
             },
-            "time": "2026-10-07T18:52:33+00:00"
+            "time": "2026-10-08T18:49:53+00:00"
         }
     ],
     "packages-dev": [],
