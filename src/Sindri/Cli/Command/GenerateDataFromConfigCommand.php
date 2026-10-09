@@ -19,11 +19,13 @@ use Sindri\Ast\ConfigReader;
 use Sindri\Ast\Contract\CliRouteAttributeReaderContract;
 use Sindri\Ast\Contract\ComponentProviderReaderContract;
 use Sindri\Ast\Contract\ConfigReaderContract;
+use Sindri\Ast\Contract\GrpcRouteAttributeReaderContract;
 use Sindri\Ast\Contract\HttpRouteAttributeReaderContract;
 use Sindri\Ast\Contract\ListenerAttributeReaderContract;
 use Sindri\Ast\Contract\ListenerProviderReaderContract;
 use Sindri\Ast\Contract\RouteProviderReaderContract;
 use Sindri\Ast\Contract\ServiceProviderReaderContract;
+use Sindri\Ast\GrpcRouteAttributeReader;
 use Sindri\Ast\HttpRouteAttributeReader;
 use Sindri\Ast\ListenerAttributeReader;
 use Sindri\Ast\ListenerProviderReader;
@@ -34,10 +36,12 @@ use Sindri\Generate\Abstract\GenerateDataFromAst;
 use Sindri\Generator\Ast\Cli\AstCliDataFileGenerator;
 use Sindri\Generator\Ast\Container\AstContainerDataFileGenerator;
 use Sindri\Generator\Ast\Event\AstEventDataFileGenerator;
+use Sindri\Generator\Ast\Grpc\AstGrpcDataFileGenerator;
 use Sindri\Generator\Ast\Http\AstHttpDataFileGenerator;
 use Sindri\Generator\Cli\Contract\CliDataFileGeneratorContract;
 use Sindri\Generator\Container\Contract\ContainerDataFileGeneratorContract;
 use Sindri\Generator\Event\Contract\EventDataFileGeneratorContract;
+use Sindri\Generator\Grpc\Contract\GrpcDataFileGeneratorContract;
 use Sindri\Generator\Http\Contract\HttpDataFileGeneratorContract;
 use Sindri\Provider\SindriCliRouteProvider;
 use Valkyrja\Cli\Interaction\Message\Contract\MessageContract;
@@ -62,11 +66,13 @@ class GenerateDataFromConfigCommand extends GenerateDataFromAst
         protected ServiceProviderReaderContract $serviceProviderReader = new ServiceProviderReader(),
         protected CliRouteAttributeReaderContract $cliRouteAttributeReader = new CliRouteAttributeReader(),
         protected HttpRouteAttributeReaderContract $httpRouteAttributeReader = new HttpRouteAttributeReader(),
+        protected GrpcRouteAttributeReaderContract $grpcRouteAttributeReader = new GrpcRouteAttributeReader(),
         protected ListenerAttributeReaderContract $listenerAttributeReader = new ListenerAttributeReader(),
         protected ContainerDataFileGeneratorContract $containerGenerator = new AstContainerDataFileGenerator(),
         protected EventDataFileGeneratorContract $eventGenerator = new AstEventDataFileGenerator(),
         protected CliDataFileGeneratorContract $cliGenerator = new AstCliDataFileGenerator(),
         protected HttpDataFileGeneratorContract $httpGenerator = new AstHttpDataFileGenerator(),
+        protected GrpcDataFileGeneratorContract $grpcGenerator = new AstGrpcDataFileGenerator(),
     ) {
         parent::__construct(
             outputFactory: $outputFactory,
@@ -79,11 +85,13 @@ class GenerateDataFromConfigCommand extends GenerateDataFromAst
             serviceProviderReader: $serviceProviderReader,
             cliRouteAttributeReader: $cliRouteAttributeReader,
             httpRouteAttributeReader: $httpRouteAttributeReader,
+            grpcRouteAttributeReader: $grpcRouteAttributeReader,
             listenerAttributeReader: $listenerAttributeReader,
             containerGenerator: $containerGenerator,
             eventGenerator: $eventGenerator,
             cliGenerator: $cliGenerator,
             httpGenerator: $httpGenerator,
+            grpcGenerator: $grpcGenerator,
         );
     }
 

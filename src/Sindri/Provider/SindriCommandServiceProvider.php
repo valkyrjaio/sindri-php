@@ -16,6 +16,7 @@ use Override;
 use Sindri\Ast\Contract\CliRouteAttributeReaderContract;
 use Sindri\Ast\Contract\ComponentProviderReaderContract;
 use Sindri\Ast\Contract\ConfigReaderContract;
+use Sindri\Ast\Contract\GrpcRouteAttributeReaderContract;
 use Sindri\Ast\Contract\HttpRouteAttributeReaderContract;
 use Sindri\Ast\Contract\ListenerAttributeReaderContract;
 use Sindri\Ast\Contract\ListenerProviderReaderContract;
@@ -25,6 +26,7 @@ use Sindri\Cli\Command\GenerateDataFromConfigCommand;
 use Sindri\Generator\Cli\Contract\CliDataFileGeneratorContract;
 use Sindri\Generator\Container\Contract\ContainerDataFileGeneratorContract;
 use Sindri\Generator\Event\Contract\EventDataFileGeneratorContract;
+use Sindri\Generator\Grpc\Contract\GrpcDataFileGeneratorContract;
 use Sindri\Generator\Http\Contract\HttpDataFileGeneratorContract;
 use Valkyrja\Cli\Interaction\Output\Factory\Contract\OutputFactoryContract;
 use Valkyrja\Cli\Routing\Data\Contract\RouteContract;
@@ -47,11 +49,13 @@ class SindriCommandServiceProvider implements ServiceProviderContract
                 serviceProviderReader: $container->getSingleton(ServiceProviderReaderContract::class),
                 cliRouteAttributeReader: $container->getSingleton(CliRouteAttributeReaderContract::class),
                 httpRouteAttributeReader: $container->getSingleton(HttpRouteAttributeReaderContract::class),
+                grpcRouteAttributeReader: $container->getSingleton(GrpcRouteAttributeReaderContract::class),
                 listenerAttributeReader: $container->getSingleton(ListenerAttributeReaderContract::class),
                 containerGenerator: $container->getSingleton(ContainerDataFileGeneratorContract::class),
                 eventGenerator: $container->getSingleton(EventDataFileGeneratorContract::class),
                 cliGenerator: $container->getSingleton(CliDataFileGeneratorContract::class),
                 httpGenerator: $container->getSingleton(HttpDataFileGeneratorContract::class),
+                grpcGenerator: $container->getSingleton(GrpcDataFileGeneratorContract::class),
             )
         );
     }
