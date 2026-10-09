@@ -49,4 +49,10 @@ final class TestComponentProviderFixture implements ComponentProviderContract
     {
         return [];
     }
+
+    #[Override]
+    public function getQueueProviders(ApplicationContract $app): array
+    {
+        return [];
+    }
 }
