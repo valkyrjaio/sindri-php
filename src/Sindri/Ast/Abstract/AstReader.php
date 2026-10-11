@@ -32,6 +32,7 @@ use PhpParser\Node\Scalar\InterpolatedString;
 use PhpParser\Node\Scalar\String_;
 use PhpParser\Node\Stmt\Class_;
 use PhpParser\Node\Stmt\ClassMethod;
+use PhpParser\Node\Stmt\GroupUse;
 use PhpParser\Node\Stmt\Namespace_;
 use PhpParser\Node\Stmt\Return_;
 use PhpParser\Node\Stmt\Use_;
@@ -106,7 +107,10 @@ abstract class AstReader
     }
 
     /**
-     * Build a map of alias/short-name → fully-qualified name from use statements.
+     * Build a map of alias/short-name → fully-qualified class name from use statements.
+     *
+     * A group use statement contributes each of its items, prefixed. A function or constant
+     * import contributes nothing, because a class name never resolves through one.
      *
      * @param Node[] $stmts
      *
@@ -117,24 +121,47 @@ abstract class AstReader
         $map = [];
 
         foreach ($stmts as $stmt) {
-            if (! $stmt instanceof Use_) {
+            if ($stmt instanceof GroupUse) {
+                $map = [...$map, ...$this->buildUseMapForItems($stmt->uses, $stmt->type, $stmt->prefix->toString() . '\\')];
+
                 continue;
             }
 
-            foreach ($stmt->uses as $use) {
-                /** @var UseItem $use */
-                $fqn = $use->name->toString();
-
-                if ($use->alias instanceof Identifier) {
-                    $alias = $use->alias->toString();
-                } elseif (str_contains($fqn, '\\')) {
-                    $alias = substr($fqn, (int) strrpos($fqn, '\\') + 1);
-                } else {
-                    $alias = $fqn;
-                }
-
-                $map[$alias] = $fqn;
+            if ($stmt instanceof Use_) {
+                $map = [...$map, ...$this->buildUseMapForItems($stmt->uses, $stmt->type)];
             }
+        }
+
+        return $map;
+    }
+
+    /**
+     * Build the alias → fully-qualified class name entries for one use statement's items.
+     *
+     * @param UseItem[] $uses
+     *
+     * @return array<string, string>
+     */
+    protected function buildUseMapForItems(array $uses, int $statementType, string $prefix = ''): array
+    {
+        $map = [];
+
+        foreach ($uses as $use) {
+            if (($statementType | $use->type) !== Use_::TYPE_NORMAL) {
+                continue;
+            }
+
+            $fqn = $prefix . $use->name->toString();
+
+            if ($use->alias instanceof Identifier) {
+                $alias = $use->alias->toString();
+            } elseif (str_contains($fqn, '\\')) {
+                $alias = substr($fqn, (int) strrpos($fqn, '\\') + 1);
+            } else {
+                $alias = $fqn;
+            }
+
+            $map[$alias] = $fqn;
         }
 
         return $map;
