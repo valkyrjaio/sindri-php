@@ -12,6 +12,12 @@ declare(strict_types=1);
 
 namespace Sindri\Generate\Abstract;
 
+use PhpParser\Node\Expr\Array_;
+use PhpParser\Node\Expr\ClassConstFetch;
+use PhpParser\Node\Expr\New_;
+use PhpParser\Node\Identifier;
+use PhpParser\Node\Name;
+use PhpParser\Node\Scalar\String_;
 use ReflectionClass;
 use ReflectionException;
 use Sindri\Ast\CliRouteAttributeReader;
@@ -25,6 +31,7 @@ use Sindri\Ast\Contract\ListenerAttributeReaderContract;
 use Sindri\Ast\Contract\ListenerProviderReaderContract;
 use Sindri\Ast\Contract\RouteProviderReaderContract;
 use Sindri\Ast\Contract\ServiceProviderReaderContract;
+use Sindri\Ast\Data\HttpRouteData;
 use Sindri\Ast\Data\Result\ComponentProviderResult;
 use Sindri\Ast\Data\Result\ConfigResult;
 use Sindri\Ast\HttpRouteAttributeReader;
@@ -52,7 +59,10 @@ use Valkyrja\Cli\Interaction\Message\NewLine;
 use Valkyrja\Cli\Interaction\Output\Contract\OutputContract;
 use Valkyrja\Cli\Interaction\Output\Factory\Contract\OutputFactoryContract;
 use Valkyrja\Cli\Routing\Data\Contract\RouteContract;
+use Valkyrja\Http\Message\Enum\RequestMethod;
+use Valkyrja\Http\Routing\Data\Contract\DynamicRouteContract;
 
+use function is_a;
 use function is_file;
 use function rtrim;
 use function str_replace;
@@ -291,7 +301,8 @@ abstract class GenerateDataFromAst
             new Message('Generating Cli Routes Data.....................'),
         )->writeMessages();
 
-        $allRoutes = [];
+        $allRoutes    = [];
+        $manualRoutes = [];
 
         foreach ($cliRouteProviders as $providerClass) {
             $filePath = $this->fqnToFilePath($providerClass, $config->namespace, $config->dir);
@@ -301,6 +312,7 @@ abstract class GenerateDataFromAst
             }
 
             $providerResult = $this->routeProviderReader->readFile($filePath);
+            $manualRoutes   = [...$manualRoutes, ...$providerResult->routes];
 
             foreach ($providerResult->controllerClasses as $controllerClass) {
                 $controllerPath = $this->fqnToFilePath($controllerClass, $config->namespace, $config->dir);
@@ -312,6 +324,20 @@ abstract class GenerateDataFromAst
                 $attrResult = $this->cliRouteAttributeReader->readFile($controllerPath);
                 $allRoutes  = [...$allRoutes, ...$attrResult->routes];
             }
+        }
+
+        // The manual routes of every provider are applied after every attribute route, the way
+        // the Cli routing service provider adds them, so a name collision resolves the same way.
+        // A manual CLI route is keyed by its name, which is its first constructor argument.
+        foreach ($manualRoutes as $routeExpr) {
+            $className = $this->getManualRouteClassName($routeExpr);
+            $name      = $this->getManualRouteStringArg($routeExpr, 'name', 0);
+
+            if ($className === null || $name === null) {
+                continue;
+            }
+
+            $allRoutes[$name] = $routeExpr;
         }
 
         $status = $this->cliGenerator->generateFile(
@@ -339,6 +365,7 @@ abstract class GenerateDataFromAst
 
         $allRoutes    = [];
         $allRouteData = [];
+        $manualRoutes = [];
 
         foreach ($httpRouteProviders as $providerClass) {
             $filePath = $this->fqnToFilePath($providerClass, $config->namespace, $config->dir);
@@ -348,6 +375,7 @@ abstract class GenerateDataFromAst
             }
 
             $providerResult = $this->routeProviderReader->readFile($filePath);
+            $manualRoutes   = [...$manualRoutes, ...$providerResult->routes];
 
             foreach ($providerResult->controllerClasses as $controllerClass) {
                 $controllerPath = $this->fqnToFilePath($controllerClass, $config->namespace, $config->dir);
@@ -362,6 +390,33 @@ abstract class GenerateDataFromAst
             }
         }
 
+        // The manual routes of every provider are applied after every attribute route, the way
+        // the Http routing service provider adds them, so a name collision resolves the same
+        // way. A manual HTTP route is keyed by its name, which is its second constructor
+        // argument. Its path and request methods build the paths entry it is matched through.
+        foreach ($manualRoutes as $routeExpr) {
+            $className = $this->getManualRouteClassName($routeExpr);
+
+            if ($className === null || is_a($className, DynamicRouteContract::class, true)) {
+                continue;
+            }
+
+            $path           = $this->getManualRouteStringArg($routeExpr, 'path', 0);
+            $name           = $this->getManualRouteStringArg($routeExpr, 'name', 1);
+            $requestMethods = $this->getManualRouteRequestMethods($routeExpr);
+
+            if ($path === null || $name === null || $requestMethods === null) {
+                continue;
+            }
+
+            $allRoutes[$name]    = $routeExpr;
+            $allRouteData[$name] = new HttpRouteData(
+                path: $path,
+                name: $name,
+                requestMethods: $requestMethods,
+            );
+        }
+
         $status = $this->httpGenerator->generateFile(
             directory: $config->dataPath,
             className: 'AppHttpRoutingData',
@@ -373,6 +428,85 @@ abstract class GenerateDataFromAst
         return $this->addMessagesForGenerateStatus($output, $status)
             ->withAddedMessages(new NewLine())
             ->writeMessages();
+    }
+
+    /**
+     * Read the name of the class a manual route construction builds.
+     *
+     * Returns null when the construction names no class statically, as `new ($class)()` does.
+     * The generated data file holds none of the provider's own variables, so such a
+     * construction cannot be cached.
+     */
+    protected function getManualRouteClassName(New_ $routeExpr): string|null
+    {
+        return $routeExpr->class instanceof Name ? $routeExpr->class->toString() : null;
+    }
+
+    /**
+     * Read a string literal constructor argument of a manual route, by name or by position.
+     *
+     * Returns null when the argument is absent or is not a string literal.
+     */
+    protected function getManualRouteStringArg(New_ $routeExpr, string $name, int $position): string|null
+    {
+        $value = $routeExpr->getArg($name, $position)?->value;
+
+        return $value instanceof String_ ? $value->value : null;
+    }
+
+    /**
+     * Read the request methods of a manual HTTP route as "FQN::CASE" strings.
+     *
+     * Returns null when the argument is present and this reader cannot read every method out
+     * of it. The caller drops such a route. Warning: a route cached with the wrong methods is
+     * served on a method the application never declared, so a method this reader cannot read
+     * is never guessed.
+     *
+     * An absent argument gives HEAD and GET, which the Route constructor defaults to. An
+     * argument that holds an empty array gives no method, because the route collection
+     * registers a path for each method the route lists and such a route lists none.
+     *
+     * Only a case fetched from the RequestMethod enum itself is read. A class constant that
+     * holds a case names the constant, not the case, so the cache would hold a method name
+     * that no request carries.
+     *
+     * @return string[]|null
+     */
+    protected function getManualRouteRequestMethods(New_ $routeExpr): array|null
+    {
+        $argument = $routeExpr->getArg('requestMethods', 3);
+
+        if ($argument === null) {
+            return [
+                RequestMethod::class . '::' . RequestMethod::HEAD->name,
+                RequestMethod::class . '::' . RequestMethod::GET->name,
+            ];
+        }
+
+        $value = $argument->value;
+
+        if (! $value instanceof Array_) {
+            return null;
+        }
+
+        $requestMethods = [];
+
+        foreach ($value->items as $item) {
+            $case = $item?->value;
+
+            if (! $case instanceof ClassConstFetch
+                || ! $case->class instanceof Name
+                || $case->class->toString() !== RequestMethod::class
+                || ! $case->name instanceof Identifier
+                || $case->name->toString() === 'class'
+            ) {
+                return null;
+            }
+
+            $requestMethods[] = RequestMethod::class . '::' . $case->name->toString();
+        }
+
+        return $requestMethods;
     }
 
     /**
