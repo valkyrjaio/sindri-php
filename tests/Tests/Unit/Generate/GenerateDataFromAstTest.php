@@ -13,6 +13,14 @@ declare(strict_types=1);
 namespace Sindri\Tests\Unit\Generate;
 
 use Override;
+use PhpParser\Node\Arg;
+use PhpParser\Node\ArrayItem;
+use PhpParser\Node\Expr\Array_;
+use PhpParser\Node\Expr\ClassConstFetch;
+use PhpParser\Node\Expr\New_;
+use PhpParser\Node\Expr\Variable;
+use PhpParser\Node\Identifier;
+use PhpParser\Node\Name\FullyQualified;
 use PhpParser\ParserFactory;
 use ReflectionClass;
 use Sindri\Ast\ConfigReader;
@@ -35,6 +43,8 @@ use Sindri\Tests\Unit\Abstract\TestCase;
 use Valkyrja\Cli\Interaction\Output\Contract\OutputContract;
 use Valkyrja\Cli\Interaction\Output\Factory\Contract\OutputFactoryContract;
 use Valkyrja\Cli\Routing\Data\Contract\RouteContract;
+use Valkyrja\Http\Message\Enum\RequestMethod;
+use Valkyrja\Http\Routing\Data\Route;
 
 use function file_get_contents;
 use function glob;
@@ -764,6 +774,8 @@ final class GenerateDataFromAstTest extends TestCase
         self::assertStringNotContainsString('manual.unreadable-methods', $contents);
         self::assertStringNotContainsString('manual.non-literal-method-list', $contents);
         self::assertStringNotContainsString('manual.method-class', $contents);
+        self::assertStringNotContainsString('manual.string-method', $contents);
+        self::assertStringNotContainsString('manual.expression-method', $contents);
         self::assertStringNotContainsString('manual.spread', $contents);
         // A constant of the provider is read inside the provider's own scope. The generated
         // file reads it from outside, where a constant that is not public is inaccessible.
@@ -774,6 +786,33 @@ final class GenerateDataFromAstTest extends TestCase
         self::assertStringContainsString('dynamicPaths: [],', $contents);
         self::assertStringContainsString('regexes: [],', $contents);
         $this->assertParsesAsPhp($contents);
+    }
+
+    public function testGetManualRouteRequestMethodsRejectsADynamicCaseName(): void
+    {
+        $walker = $this->makeWalker(self::createStub(OutputFactoryContract::class));
+
+        // `RequestMethod::{$case}` never reaches here through the reader, because the qualifier
+        // drops a construction whose constant name is not an identifier. The guard stays for a
+        // caller that builds the expression itself.
+        $routeExpr = new New_(
+            new FullyQualified(Route::class),
+            [
+                new Arg(
+                    value: new Array_([
+                        new ArrayItem(
+                            new ClassConstFetch(
+                                new FullyQualified(RequestMethod::class),
+                                new Variable('case'),
+                            )
+                        ),
+                    ]),
+                    name: new Identifier('requestMethods'),
+                ),
+            ],
+        );
+
+        self::assertNull($walker->callGetManualRouteRequestMethods($routeExpr));
     }
 
     // -----------------------------------------------------------------------
@@ -950,6 +989,12 @@ final class GenerateDataFromAstTest extends TestCase
                 OutputContract $output,
             ): OutputContract {
                 return $this->generateHttpData($httpRouteProviders, $config, $output);
+            }
+
+            /** @return string[]|null */
+            public function callGetManualRouteRequestMethods(New_ $routeExpr): array|null
+            {
+                return $this->getManualRouteRequestMethods($routeExpr);
             }
         };
     }

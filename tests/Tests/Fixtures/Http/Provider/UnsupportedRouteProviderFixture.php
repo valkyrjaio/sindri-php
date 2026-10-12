@@ -85,6 +85,13 @@ final class UnsupportedRouteProviderFixture implements HttpRouteProviderContract
                 ->withAddedRequestMethods(RequestMethod::POST),
             new Route('/manual-spread', 'manual.spread', [self::class, 'handler'], ...TestRouteConstantsFixture::SPREAD_ARGUMENTS),
             new Route('/manual-method-class', 'manual.method-class', [self::class, 'handler'], [RequestMethod::class]),
+            new Route('/manual-string-method', 'manual.string-method', [self::class, 'handler'], ['GET']),
+            new Route(
+                '/manual-expression-method',
+                'manual.expression-method',
+                [self::class, 'handler'],
+                [(new TestRouteConstantsFixture())::HTTP_NAME],
+            ),
             new Route(
                 '/manual-closure-handler',
                 'manual.closure-handler',
