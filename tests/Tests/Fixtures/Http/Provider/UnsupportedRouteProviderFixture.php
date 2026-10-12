@@ -30,12 +30,23 @@ final class UnsupportedRouteProviderFixture implements HttpRouteProviderContract
 {
     private const array ROUTE_MIDDLEWARE = [];
 
+    /** @var class-string[] */
+    private array $routeMiddleware = [];
+
     /**
      * @param array<array-key, mixed> $arguments
      */
     public static function handler(ContainerContract $container, array $arguments = []): ResponseContract
     {
         return new Response();
+    }
+
+    /**
+     * @return class-string[]
+     */
+    private static function routeMiddleware(): array
+    {
+        return [];
     }
 
     #[Override]
@@ -74,6 +85,25 @@ final class UnsupportedRouteProviderFixture implements HttpRouteProviderContract
                 ->withAddedRequestMethods(RequestMethod::POST),
             new Route('/manual-spread', 'manual.spread', [self::class, 'handler'], ...TestRouteConstantsFixture::SPREAD_ARGUMENTS),
             new Route('/manual-method-class', 'manual.method-class', [self::class, 'handler'], [RequestMethod::class]),
+            new Route(
+                '/manual-closure-handler',
+                'manual.closure-handler',
+                static fn (): ResponseContract => new Response(),
+            ),
+            new Route(
+                '/manual-property',
+                'manual.property',
+                [self::class, 'handler'],
+                [RequestMethod::GET],
+                $this->routeMiddleware,
+            ),
+            new Route(
+                '/manual-call',
+                'manual.call',
+                [self::class, 'handler'],
+                [RequestMethod::GET],
+                self::routeMiddleware(),
+            ),
             new Route(
                 '/manual-own-constant',
                 'manual.own-constant',

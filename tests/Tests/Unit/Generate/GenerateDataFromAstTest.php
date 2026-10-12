@@ -768,6 +768,9 @@ final class GenerateDataFromAstTest extends TestCase
         // A constant of the provider is read inside the provider's own scope. The generated
         // file reads it from outside, where a constant that is not public is inaccessible.
         self::assertStringNotContainsString('manual.own-constant', $contents);
+        self::assertStringNotContainsString('manual.closure-handler', $contents);
+        self::assertStringNotContainsString('manual.property', $contents);
+        self::assertStringNotContainsString('manual.call', $contents);
         self::assertStringContainsString('dynamicPaths: [],', $contents);
         self::assertStringContainsString('regexes: [],', $contents);
         $this->assertParsesAsPhp($contents);
