@@ -182,6 +182,17 @@ final class RouteExpressionQualifierTest extends TestCase
         self::assertFalse($qualifier->isEvaluable());
     }
 
+    public function testReportsTheProvidersOwnConstantReadFromAnInstanceAsUnevaluable(): void
+    {
+        $qualifier = $this->qualifier();
+
+        // The fetch names no class, so the scope it reads cannot be told apart from the
+        // provider's own, and a constant that is not public is unreachable from outside it.
+        $this->traverse('[(new self())::MIDDLEWARE]', $qualifier);
+
+        self::assertFalse($qualifier->isEvaluable());
+    }
+
     public function testReportsAForeignClassConstantAsEvaluable(): void
     {
         $qualifier = $this->qualifier(['RequestMethod' => 'Vendor\\Message\\RequestMethod']);

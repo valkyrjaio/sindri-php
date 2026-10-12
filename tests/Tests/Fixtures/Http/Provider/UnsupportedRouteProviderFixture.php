@@ -24,7 +24,9 @@ use Valkyrja\Http\Routing\Data\Route;
 use Valkyrja\Http\Routing\Provider\Contract\HttpRouteProviderContract;
 
 /**
- * An HTTP route provider whose getRoutes() returns shapes that the cache cannot hold.
+ * An HTTP route provider whose getRoutes() returns shapes that the cache cannot hold. A reader
+ * parses this file and never collects it, so a route here can hold a request method that the
+ * route collection rejects.
  */
 final class UnsupportedRouteProviderFixture implements HttpRouteProviderContract
 {
@@ -86,12 +88,6 @@ final class UnsupportedRouteProviderFixture implements HttpRouteProviderContract
             new Route('/manual-spread', 'manual.spread', [self::class, 'handler'], ...TestRouteConstantsFixture::SPREAD_ARGUMENTS),
             new Route('/manual-method-class', 'manual.method-class', [self::class, 'handler'], [RequestMethod::class]),
             new Route('/manual-string-method', 'manual.string-method', [self::class, 'handler'], ['GET']),
-            new Route(
-                '/manual-expression-method',
-                'manual.expression-method',
-                [self::class, 'handler'],
-                [(new TestRouteConstantsFixture())::HTTP_NAME],
-            ),
             new Route(
                 '/manual-closure-handler',
                 'manual.closure-handler',

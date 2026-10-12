@@ -15,9 +15,11 @@ namespace Sindri\Tests\Unit\Generate;
 use Override;
 use PhpParser\Node\Arg;
 use PhpParser\Node\ArrayItem;
+use PhpParser\Node\Expr;
 use PhpParser\Node\Expr\Array_;
 use PhpParser\Node\Expr\ClassConstFetch;
 use PhpParser\Node\Expr\New_;
+use PhpParser\Node\Expr\StaticCall;
 use PhpParser\Node\Expr\Variable;
 use PhpParser\Node\Identifier;
 use PhpParser\Node\Name\FullyQualified;
@@ -775,7 +777,6 @@ final class GenerateDataFromAstTest extends TestCase
         self::assertStringNotContainsString('manual.non-literal-method-list', $contents);
         self::assertStringNotContainsString('manual.method-class', $contents);
         self::assertStringNotContainsString('manual.string-method', $contents);
-        self::assertStringNotContainsString('manual.expression-method', $contents);
         self::assertStringNotContainsString('manual.spread', $contents);
         // A constant of the provider is read inside the provider's own scope. The generated
         // file reads it from outside, where a constant that is not public is inaccessible.
@@ -790,29 +791,31 @@ final class GenerateDataFromAstTest extends TestCase
 
     public function testGetManualRouteRequestMethodsRejectsADynamicCaseName(): void
     {
-        $walker = $this->makeWalker(self::createStub(OutputFactoryContract::class));
-
         // `RequestMethod::{$case}` never reaches here through the reader, because the qualifier
-        // drops a construction whose constant name is not an identifier. The guard stays for a
-        // caller that builds the expression itself.
-        $routeExpr = new New_(
-            new FullyQualified(Route::class),
-            [
-                new Arg(
-                    value: new Array_([
-                        new ArrayItem(
-                            new ClassConstFetch(
-                                new FullyQualified(RequestMethod::class),
-                                new Variable('case'),
-                            )
-                        ),
-                    ]),
-                    name: new Identifier('requestMethods'),
-                ),
-            ],
-        );
+        // drops a construction whose constant name is not an identifier. Each guard below stays
+        // for a caller that builds the expression itself.
+        self::assertNull($this->readRequestMethods(
+            new ClassConstFetch(new FullyQualified(RequestMethod::class), new Variable('case')),
+        ));
+    }
 
-        self::assertNull($walker->callGetManualRouteRequestMethods($routeExpr));
+    public function testGetManualRouteRequestMethodsRejectsACaseFetchedFromAnExpression(): void
+    {
+        self::assertNull($this->readRequestMethods(
+            new ClassConstFetch(
+                new New_(new FullyQualified(RequestMethod::class)),
+                new Identifier('GET'),
+            ),
+        ));
+    }
+
+    public function testGetManualRouteRequestMethodsRejectsAStaticCall(): void
+    {
+        // Without the first guard a static call reads as a case, and the cache then holds a
+        // request method that no request carries.
+        self::assertNull($this->readRequestMethods(
+            new StaticCall(new FullyQualified(RequestMethod::class), new Identifier('foo')),
+        ));
     }
 
     // -----------------------------------------------------------------------
@@ -901,6 +904,26 @@ final class GenerateDataFromAstTest extends TestCase
     private function assertParsesAsPhp(string $contents): void
     {
         self::assertNotSame([], new ParserFactory()->createForNewestSupportedVersion()->parse($contents));
+    }
+
+    /**
+     * Read the request methods of a route whose requestMethods argument holds the given item.
+     *
+     * @return string[]|null
+     */
+    private function readRequestMethods(Expr $item): array|null
+    {
+        $walker = $this->makeWalker(self::createStub(OutputFactoryContract::class));
+
+        return $walker->callGetManualRouteRequestMethods(new New_(
+            new FullyQualified(Route::class),
+            [
+                new Arg(
+                    value: new Array_([new ArrayItem($item)]),
+                    name: new Identifier('requestMethods'),
+                ),
+            ],
+        ));
     }
 
     private function buildChainableOutputStub(): OutputContract
