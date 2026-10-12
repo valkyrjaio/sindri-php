@@ -215,8 +215,6 @@ final class RouteExpressionQualifierTest extends TestCase
     {
         $qualifier = $this->qualifier();
 
-        // The fetch itself names no scope. The variable it reads the class from is what makes
-        // the expression unevaluable.
         $this->traverse('[$class::CASE]', $qualifier);
 
         self::assertFalse($qualifier->isEvaluable());

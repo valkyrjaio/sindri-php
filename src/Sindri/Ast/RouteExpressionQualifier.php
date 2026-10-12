@@ -133,7 +133,7 @@ class RouteExpressionQualifier extends NameResolver
     }
 
     /**
-     * Report whether a class node is one whose non-public members the provider alone can read.
+     * Report whether a class node may name a scope only the provider can read.
      */
     protected function namesOwnScope(Node $class): bool
     {
