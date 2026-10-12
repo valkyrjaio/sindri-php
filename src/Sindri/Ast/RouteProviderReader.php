@@ -123,13 +123,12 @@ class RouteProviderReader extends AstReader implements RouteProviderReaderContra
 
     /**
      * Report whether a construction's argument list cannot be read by position.
-     *
-     * A spread argument is skipped without shifting the positions after it, so an argument that
-     * follows one reads as absent.
      */
     protected function hasUnreadableArgs(New_ $route): bool
     {
         foreach ($route->getRawArgs() as $arg) {
+            // A placeholder leaves no argument to read, and a spread is skipped without
+            // shifting the positions after it, so an argument that follows one reads as absent.
             if (! $arg instanceof Arg || $arg->unpack) {
                 return true;
             }

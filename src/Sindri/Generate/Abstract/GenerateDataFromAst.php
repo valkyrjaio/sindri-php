@@ -451,9 +451,6 @@ abstract class GenerateDataFromAst
      * Read the request methods of a manual HTTP route as "FQN::CASE" strings, or null when the
      * argument is present and unreadable.
      *
-     * A method this reader cannot read is never guessed, because a route cached with the wrong
-     * methods answers a method the application never declared.
-     *
      * @return string[]|null
      */
     protected function getManualRouteRequestMethods(New_ $routeExpr): array|null
@@ -461,6 +458,7 @@ abstract class GenerateDataFromAst
         $argument = $routeExpr->getArg('requestMethods', 3);
 
         if ($argument === null) {
+            // Route::__construct defaults to these two.
             return [
                 RequestMethod::class . '::' . RequestMethod::HEAD->name,
                 RequestMethod::class . '::' . RequestMethod::GET->name,
@@ -470,6 +468,8 @@ abstract class GenerateDataFromAst
         $value = $argument->value;
 
         if (! $value instanceof Array_) {
+            // A method this reader cannot read is never guessed, because a route cached with
+            // the wrong methods answers a method the application never declared.
             return null;
         }
 
@@ -478,6 +478,8 @@ abstract class GenerateDataFromAst
         foreach ($value->items as $item) {
             $case = $item?->value;
 
+            // A constant of another class can hold a case, and `::class` is no case at all.
+            // Either one would key a path by a name that no request carries.
             if (! $case instanceof ClassConstFetch
                 || ! $case->class instanceof Name
                 || $case->class->toString() !== RequestMethod::class
@@ -490,6 +492,7 @@ abstract class GenerateDataFromAst
             $requestMethods[] = RequestMethod::class . '::' . $case->name->toString();
         }
 
+        // An empty list gives no method, which is what the route collection registers for it.
         return $requestMethods;
     }
 

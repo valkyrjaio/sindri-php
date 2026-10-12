@@ -134,19 +134,18 @@ class RouteExpressionQualifier extends NameResolver
 
     /**
      * Report whether a class node is one whose non-public members the provider alone can read.
-     *
-     * A node that names no class, as `(new self())::X` does, is read as the provider's own
-     * scope, because the scope it names cannot be told apart from it. This reader opens one
-     * file, so a constant a grandparent declares reads as a foreign one.
      */
     protected function namesOwnScope(Node $class): bool
     {
+        // A node that names no class, as `(new self())::X` does, cannot be told apart from the
+        // provider's own scope.
         if (! $class instanceof Name) {
             return true;
         }
 
         $name = $class->toString();
 
+        // This reader opens one file, so a constant a grandparent declares reads as a foreign one.
         return $name === $this->class || ($this->parentClass !== '' && $name === $this->parentClass);
     }
 
