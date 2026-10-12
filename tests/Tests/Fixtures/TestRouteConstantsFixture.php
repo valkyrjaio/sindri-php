@@ -1,0 +1,36 @@
+<?php
+
+declare(strict_types=1);
+
+/*
+ * This file is part of the Sindri package.
+ *
+ * Copyright (c) 2016-present Melech Mizrachi
+ *
+ * Released under the MIT License. See LICENSE.md for details.
+ */
+
+namespace Sindri\Tests\Fixtures;
+
+use Valkyrja\Http\Message\Enum\RequestMethod;
+
+/**
+ * Public constants a route provider can read, for the route arguments a reader cannot read.
+ */
+final class TestRouteConstantsFixture
+{
+    /** @var non-empty-string */
+    public const string CLI_NAME = 'manual:foreign-constant';
+
+    /** @var non-empty-string */
+    public const string HTTP_NAME = 'manual.foreign-constant';
+
+    /** @var non-empty-string */
+    public const string HTTP_PATH = '/manual-foreign-constant';
+
+    /** @var RequestMethod[] */
+    public const array REQUEST_METHODS = [RequestMethod::OPTIONS];
+
+    /** @var array{RequestMethod[]} */
+    public const array SPREAD_ARGUMENTS = [[RequestMethod::OPTIONS]];
+}

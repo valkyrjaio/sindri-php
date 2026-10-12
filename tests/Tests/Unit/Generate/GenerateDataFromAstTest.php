@@ -13,24 +13,42 @@ declare(strict_types=1);
 namespace Sindri\Tests\Unit\Generate;
 
 use Override;
+use PhpParser\Node\Arg;
+use PhpParser\Node\ArrayItem;
+use PhpParser\Node\Expr;
+use PhpParser\Node\Expr\Array_;
+use PhpParser\Node\Expr\ClassConstFetch;
+use PhpParser\Node\Expr\New_;
+use PhpParser\Node\Expr\StaticCall;
+use PhpParser\Node\Expr\Variable;
+use PhpParser\Node\Identifier;
+use PhpParser\Node\Name\FullyQualified;
+use PhpParser\ParserFactory;
 use ReflectionClass;
 use Sindri\Ast\ConfigReader;
 use Sindri\Ast\Data\Result\ComponentProviderResult;
 use Sindri\Ast\Data\Result\ConfigResult;
 use Sindri\Generate\Abstract\GenerateDataFromAst;
 use Sindri\Generator\Enum\GenerateStatus;
+use Sindri\Tests\Fixtures\Cli\Provider\ManualRouteProviderFixture;
 use Sindri\Tests\Fixtures\Cli\Provider\TestMissingControllerProviderFixture;
 use Sindri\Tests\Fixtures\Cli\Provider\TestRouteProviderFixture;
+use Sindri\Tests\Fixtures\Cli\Provider\UnsupportedRouteProviderFixture;
 use Sindri\Tests\Fixtures\Event\Provider\TestListenerProviderFixture;
 use Sindri\Tests\Fixtures\Event\Provider\TestMissingListenerProviderFixture;
+use Sindri\Tests\Fixtures\Http\Provider\ManualRouteProviderFixture as HttpManualRouteProviderClass;
 use Sindri\Tests\Fixtures\Http\Provider\TestMissingControllerProviderFixture as HttpTestMissingControllerProviderClass;
 use Sindri\Tests\Fixtures\Http\Provider\TestRouteProviderFixture as HttpTestRouteProviderClass;
+use Sindri\Tests\Fixtures\Http\Provider\UnsupportedRouteProviderFixture as HttpUnsupportedRouteProviderClass;
 use Sindri\Tests\Fixtures\Provider\Sub\TestServiceProviderFixture;
 use Sindri\Tests\Unit\Abstract\TestCase;
 use Valkyrja\Cli\Interaction\Output\Contract\OutputContract;
 use Valkyrja\Cli\Interaction\Output\Factory\Contract\OutputFactoryContract;
 use Valkyrja\Cli\Routing\Data\Contract\RouteContract;
+use Valkyrja\Http\Message\Enum\RequestMethod;
+use Valkyrja\Http\Routing\Data\Route;
 
+use function file_get_contents;
 use function glob;
 use function mkdir;
 use function realpath;
@@ -623,8 +641,287 @@ final class GenerateDataFromAstTest extends TestCase
     }
 
     // -----------------------------------------------------------------------
+    // Manual provider routes — getRoutes()
+    // -----------------------------------------------------------------------
+
+    public function testGenerateCliDataCachesAnAttributeDeclaredRoute(): void
+    {
+        $contents = $this->generateCliDataContents([TestRouteProviderFixture::class]);
+
+        self::assertStringContainsString("'test:cli-route' => static fn ()", $contents);
+        self::assertStringContainsString('A test CLI route', $contents);
+        $this->assertParsesAsPhp($contents);
+    }
+
+    public function testGenerateCliDataSkipsAManualBuilderChainRoute(): void
+    {
+        // A builder chain is not a bare construction, and a CLI route is keyed by the name that
+        // `withName` changes, so the chain cannot be keyed from the construction it starts from.
+        $contents = $this->generateCliDataContents([UnsupportedRouteProviderFixture::class]);
+
+        self::assertStringNotContainsString('Declared by a builder chain', $contents);
+        self::assertStringNotContainsString('manual:renamed', $contents);
+        $this->assertParsesAsPhp($contents);
+    }
+
+    public function testGenerateCliDataCachesTheManualProviderRoutes(): void
+    {
+        $contents = $this->generateCliDataContents([ManualRouteProviderFixture::class]);
+
+        $provider = ManualRouteProviderFixture::class;
+
+        self::assertStringContainsString("'manual:named' => static fn ()", $contents);
+        self::assertStringContainsString("'manual:positional' => static fn ()", $contents);
+        self::assertStringContainsString(
+            "new \\Valkyrja\\Cli\\Routing\\Data\\Route(name: 'manual:named', description: 'Keyed by a named first argument', handler: [\\$provider::class, 'handler'])",
+            $contents,
+        );
+        $this->assertParsesAsPhp($contents);
+    }
+
+    public function testGenerateCliDataSkipsTheManualRoutesItCannotKey(): void
+    {
+        $contents = $this->generateCliDataContents([UnsupportedRouteProviderFixture::class]);
+
+        self::assertStringNotContainsString('The name is not a string literal', $contents);
+        self::assertStringNotContainsString('manual:expression-class', $contents);
+        self::assertStringNotContainsString('manual:builder', $contents);
+        self::assertStringNotContainsString('The name argument is absent', $contents);
+        $this->assertParsesAsPhp($contents);
+    }
+
+    public function testGenerateCliDataAppliesTheManualRoutesAfterEveryAttributeRoute(): void
+    {
+        // The routing service provider adds every attribute route first, across every provider,
+        // so a manual route wins a name collision whichever provider declares it.
+        $contents = $this->generateCliDataContents([
+            ManualRouteProviderFixture::class,
+            TestRouteProviderFixture::class,
+        ]);
+
+        self::assertStringContainsString('Takes the name of an attribute route', $contents);
+        self::assertStringNotContainsString('A test CLI route', $contents);
+        $this->assertParsesAsPhp($contents);
+    }
+
+    public function testGenerateHttpDataCachesAnAttributeDeclaredRoute(): void
+    {
+        $contents = $this->generateHttpDataContents([HttpTestRouteProviderClass::class]);
+
+        self::assertStringContainsString("'test.route' => static fn ()", $contents);
+        self::assertStringContainsString("'/test' => 'test.route'", $contents);
+        $this->assertParsesAsPhp($contents);
+    }
+
+    public function testGenerateHttpDataSkipsAManualBuilderChainRoute(): void
+    {
+        // An HTTP route's path, name and request methods each have a builder that changes them,
+        // so a chain cannot be keyed from the construction it starts from.
+        $contents = $this->generateHttpDataContents([HttpUnsupportedRouteProviderClass::class]);
+
+        self::assertStringNotContainsString('manual.chained', $contents);
+        self::assertStringNotContainsString('/manual-chained', $contents);
+        $this->assertParsesAsPhp($contents);
+    }
+
+    public function testGenerateHttpDataCachesTheManualProviderRoutes(): void
+    {
+        $contents = $this->generateHttpDataContents([HttpManualRouteProviderClass::class]);
+
+        self::assertStringContainsString("'manual.default' => static fn ()", $contents);
+        self::assertStringContainsString("'manual.put' => static fn ()", $contents);
+        self::assertStringContainsString("'manual.any' => static fn ()", $contents);
+        self::assertStringContainsString("'manual.none' => static fn ()", $contents);
+        $this->assertParsesAsPhp($contents);
+    }
+
+    public function testGenerateHttpDataBuildsThePathsEntryForEachManualRoute(): void
+    {
+        $contents = $this->generateHttpDataContents([HttpManualRouteProviderClass::class]);
+
+        // An absent requestMethods argument gives HEAD and GET, a listed method gives that
+        // method alone, ANY expands to every method, and an empty list gives no entry.
+        self::assertStringContainsString(
+            "'HEAD' => ['/manual-default' => 'manual.default', '/manual-any' => 'manual.any']",
+            $contents,
+        );
+        self::assertStringContainsString(
+            "'GET' => ['/manual-default' => 'manual.default', '/manual-any' => 'manual.any']",
+            $contents,
+        );
+        self::assertStringContainsString(
+            "'PUT' => ['/manual-put' => 'manual.put', '/manual-any' => 'manual.any']",
+            $contents,
+        );
+        self::assertStringContainsString("'POST' => ['/manual-any' => 'manual.any']", $contents);
+        // The route with an empty requestMethods list is cached, and no path maps to it,
+        // which is what the route collection does with it at run time.
+        self::assertStringContainsString("'manual.none' => static fn ()", $contents);
+        self::assertStringNotContainsString("'/manual-none' =>", $contents);
+        $this->assertParsesAsPhp($contents);
+    }
+
+    public function testGenerateHttpDataSkipsTheManualRoutesItCannotCache(): void
+    {
+        $contents = $this->generateHttpDataContents([HttpUnsupportedRouteProviderClass::class]);
+
+        // A manual DynamicRoute stays unsupported, because the reader extracts no parameters
+        // and the generator computes the regex that a dynamic route is matched by from them.
+        self::assertStringNotContainsString('manual.dynamic', $contents);
+        self::assertStringNotContainsString('manual.non-literal-path', $contents);
+        self::assertStringNotContainsString("'/manual-non-literal-name'", $contents);
+        self::assertStringNotContainsString('manual.expression-class', $contents);
+        self::assertStringNotContainsString('manual.unreadable-methods', $contents);
+        self::assertStringNotContainsString('manual.non-literal-method-list', $contents);
+        self::assertStringNotContainsString('manual.method-class', $contents);
+        self::assertStringNotContainsString('manual.string-method', $contents);
+        self::assertStringNotContainsString('manual.spread', $contents);
+        // A constant of the provider is read inside the provider's own scope. The generated
+        // file reads it from outside, where a constant that is not public is inaccessible.
+        self::assertStringNotContainsString('manual.own-constant', $contents);
+        self::assertStringNotContainsString('manual.closure-handler', $contents);
+        self::assertStringNotContainsString('manual.property', $contents);
+        self::assertStringNotContainsString('manual.call', $contents);
+        self::assertStringContainsString('dynamicPaths: [],', $contents);
+        self::assertStringContainsString('regexes: [],', $contents);
+        $this->assertParsesAsPhp($contents);
+    }
+
+    public function testGetManualRouteRequestMethodsRejectsADynamicCaseName(): void
+    {
+        // The qualifier drops such a construction, so each guard below stays only for a caller
+        // that builds the expression itself.
+        self::assertNull($this->readRequestMethods(
+            new ClassConstFetch(new FullyQualified(RequestMethod::class), new Variable('case')),
+        ));
+    }
+
+    public function testGetManualRouteRequestMethodsRejectsACaseFetchedFromAnExpression(): void
+    {
+        self::assertNull($this->readRequestMethods(
+            new ClassConstFetch(
+                new New_(new FullyQualified(RequestMethod::class)),
+                new Identifier('GET'),
+            ),
+        ));
+    }
+
+    public function testGetManualRouteRequestMethodsRejectsAStaticCall(): void
+    {
+        // Without the first guard a static call reads as a case, and the cache then holds a
+        // request method that no request carries.
+        self::assertNull($this->readRequestMethods(
+            new StaticCall(new FullyQualified(RequestMethod::class), new Identifier('foo')),
+        ));
+    }
+
+    // -----------------------------------------------------------------------
     // Helpers
     // -----------------------------------------------------------------------
+
+    /**
+     * Generate the CLI routing data from the given providers and read the generated file back.
+     *
+     * @param class-string[] $cliRouteProviders
+     */
+    private function generateCliDataContents(array $cliRouteProviders): string
+    {
+        /** @var non-empty-string $cliDir */
+        $cliDir = realpath(__DIR__ . '/../../Fixtures/Cli');
+
+        return $this->generateDataContents(
+            'AppCliRoutingData',
+            'Sindri\\Tests\\Fixtures\\Cli',
+            $cliDir,
+            static fn (object $walker, ConfigResult $config, OutputContract $output): OutputContract => $walker->callGenerateCliData($cliRouteProviders, $config, $output),
+        );
+    }
+
+    /**
+     * Generate the HTTP routing data from the given providers and read the generated file back.
+     *
+     * @param class-string[] $httpRouteProviders
+     */
+    private function generateHttpDataContents(array $httpRouteProviders): string
+    {
+        /** @var non-empty-string $httpDir */
+        $httpDir = realpath(__DIR__ . '/../../Fixtures/Http');
+
+        return $this->generateDataContents(
+            'AppHttpRoutingData',
+            'Sindri\\Tests\\Fixtures\\Http',
+            $httpDir,
+            static fn (object $walker, ConfigResult $config, OutputContract $output): OutputContract => $walker->callGenerateHttpData($httpRouteProviders, $config, $output),
+        );
+    }
+
+    /**
+     * Run one generate step into a temporary directory and return the generated source.
+     *
+     * @param callable(object, ConfigResult, OutputContract): OutputContract $generate
+     */
+    private function generateDataContents(
+        string $className,
+        string $namespace,
+        string $dir,
+        callable $generate,
+    ): string {
+        $tmpDir = sys_get_temp_dir() . '/' . $this->name();
+        mkdir($tmpDir);
+
+        $config = new ConfigResult(
+            namespace: $namespace,
+            dir: $dir,
+            dataPath: $tmpDir,
+            dataNamespace: $namespace . '\\Data',
+        );
+
+        $generate(
+            $this->makeWalker(self::createStub(OutputFactoryContract::class)),
+            $config,
+            $this->buildChainableOutputStub(),
+        );
+
+        $contents = (string) file_get_contents($tmpDir . '/' . $className . '.php');
+
+        foreach (glob($tmpDir . '/*.php') ?: [] as $f) {
+            @unlink($f);
+        }
+
+        @rmdir($tmpDir);
+
+        return $contents;
+    }
+
+    /**
+     * Assert the generated source is valid PHP, because an uncompilable cache breaks the boot.
+     *
+     * A syntax error throws, so this also fails the test through the parser itself.
+     */
+    private function assertParsesAsPhp(string $contents): void
+    {
+        self::assertNotSame([], new ParserFactory()->createForNewestSupportedVersion()->parse($contents));
+    }
+
+    /**
+     * Read the request methods of a route whose requestMethods argument holds the given item.
+     *
+     * @return string[]|null
+     */
+    private function readRequestMethods(Expr $item): array|null
+    {
+        $walker = $this->makeWalker(self::createStub(OutputFactoryContract::class));
+
+        return $walker->callGetManualRouteRequestMethods(new New_(
+            new FullyQualified(Route::class),
+            [
+                new Arg(
+                    value: new Array_([new ArrayItem($item)]),
+                    name: new Identifier('requestMethods'),
+                ),
+            ],
+        ));
+    }
 
     private function buildChainableOutputStub(): OutputContract
     {
@@ -712,6 +1009,12 @@ final class GenerateDataFromAstTest extends TestCase
                 OutputContract $output,
             ): OutputContract {
                 return $this->generateHttpData($httpRouteProviders, $config, $output);
+            }
+
+            /** @return string[]|null */
+            public function callGetManualRouteRequestMethods(New_ $routeExpr): array|null
+            {
+                return $this->getManualRouteRequestMethods($routeExpr);
             }
         };
     }

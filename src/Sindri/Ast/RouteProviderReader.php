@@ -13,7 +13,11 @@ declare(strict_types=1);
 namespace Sindri\Ast;
 
 use Override;
-use PhpParser\Node\Expr;
+use PhpParser\Node\Arg;
+use PhpParser\Node\Expr\New_;
+use PhpParser\Node\Name;
+use PhpParser\Node\Stmt\ClassMethod;
+use PhpParser\NodeTraverser;
 use Sindri\Ast\Abstract\AstReader;
 use Sindri\Ast\Contract\RouteProviderReaderContract;
 use Sindri\Ast\Data\Result\RouteProviderResult;
@@ -29,10 +33,10 @@ use Sindri\Ast\Data\Result\RouteProviderResult;
  *                             a subsequent attribute-reader pass will scan each class
  *                             for #[Route] attributes and build full route data objects.
  *
- *   getRoutes()            — returns manually-defined route data objects;
- *                             their exact shapes are preserved as-is.
- *                             (AST parsing of new-expression arguments to reconstruct
- *                             these objects is a planned next step.)
+ *   getRoutes()            — returns manually-defined route objects; each bare construction
+ *                             the generated file can evaluate is kept verbatim, with each
+ *                             imported, namespace-relative, `self` and `static` class name in
+ *                             it made fully qualified.
  *
  * All methods and properties are protected to allow easy subclass customization.
  */
@@ -47,38 +51,89 @@ class RouteProviderReader extends AstReader implements RouteProviderReaderContra
     #[Override]
     public function readFile(string $filePath): RouteProviderResult
     {
-        $stmts = $this->parseFileToStmts($filePath);
+        $classContext = $this->parseClassFile($filePath);
 
-        [$namespace, $stmts] = $this->unwrapNamespace($stmts);
-
-        $useMap    = $this->buildUseMap($stmts);
-        $classNode = $this->findClass($stmts);
-
-        if ($classNode === null) {
+        if ($classContext === null) {
             return new RouteProviderResult();
         }
 
-        $methods = $this->indexMethods($classNode);
+        [$classNode, $namespace, $useMap, $currentClass] = $classContext;
+
+        $methods     = $this->indexMethods($classNode);
+        $parentClass = $classNode->extends instanceof Name
+            ? $this->nameToFqn($classNode->extends, $useMap, $namespace)
+            : '';
 
         return new RouteProviderResult(
             controllerClasses: $this->extractClassListFromValues($methods[self::METHOD_CONTROLLER_CLASSES] ?? null, $useMap, $namespace),
-            routes: $this->extractRoutes($methods[self::METHOD_ROUTES] ?? null, $useMap, $namespace),
+            routes: $this->extractRoutes($methods[self::METHOD_ROUTES] ?? null, $useMap, $namespace, $currentClass, $parentClass),
         );
     }
 
     /**
-     * Extract manually-defined route objects from the getRoutes() method.
+     * Extract the manually-defined route constructions from the getRoutes() method.
      *
-     * Currently returns an empty array. Parsing new-expression arguments to
-     * reconstruct route data objects from their AST representation is a planned
-     * next step.
+     * Only a bare construction the generated file can evaluate is kept.
      *
      * @param array<string, string> $useMap
      *
-     * @return Expr[]
+     * @return New_[]
      */
-    protected function extractRoutes(mixed $method, array $useMap, string $namespace): array
+    protected function extractRoutes(
+        ClassMethod|null $method,
+        array $useMap,
+        string $namespace,
+        string $currentClass,
+        string $parentClass,
+    ): array {
+        if ($method === null) {
+            return [];
+        }
+
+        $array = $this->findReturnedArray($method);
+
+        if ($array === null) {
+            return [];
+        }
+
+        // The generated data file carries none of the provider file's use statements, so each
+        // class name in the expression is made fully qualified before the generator prints it.
+        $qualifier = new RouteExpressionQualifier($useMap, $namespace, $currentClass, $parentClass);
+        $traverser = new NodeTraverser($qualifier);
+        $routes    = [];
+
+        foreach ($array->items as $item) {
+            $route = $item?->value;
+
+            if (! $route instanceof New_ || $this->hasUnreadableArgs($route)) {
+                continue;
+            }
+
+            $traverser->traverse([$route]);
+
+            if (! $qualifier->isEvaluable()) {
+                continue;
+            }
+
+            $routes[] = $route;
+        }
+
+        return $routes;
+    }
+
+    /**
+     * Report whether a construction's argument list cannot be read by position.
+     */
+    protected function hasUnreadableArgs(New_ $route): bool
     {
-        return [];
+        foreach ($route->getRawArgs() as $arg) {
+            // A placeholder leaves no argument to read, and a spread is skipped without
+            // shifting the positions after it, so an argument that follows one reads as absent.
+            if (! $arg instanceof Arg || $arg->unpack) {
+                return true;
+            }
+        }
+
+        return false;
     }
 }

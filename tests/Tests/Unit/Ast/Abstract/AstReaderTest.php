@@ -33,6 +33,7 @@ use PhpParser\Node\Scalar\InterpolatedString;
 use PhpParser\Node\Scalar\String_;
 use PhpParser\Node\Stmt\Class_;
 use PhpParser\Node\Stmt\ClassMethod;
+use PhpParser\Node\Stmt\GroupUse;
 use PhpParser\Node\Stmt\Namespace_;
 use PhpParser\Node\Stmt\Return_;
 use PhpParser\Node\Stmt\Use_;
@@ -727,6 +728,35 @@ final class AstReaderTest extends TestCase
     public function testBuildUseMapIgnoresNonUseStatements(): void
     {
         self::assertSame([], $this->reader->callBuildUseMap([new ClassMethod(new Identifier('x'))]));
+    }
+
+    public function testBuildUseMapResolvesAGroupUseStatement(): void
+    {
+        $groupUse = new GroupUse(new Name('App\\Data'), [
+            new UseItem(new Name('Foo')),
+            new UseItem(new Name('Bar'), new Identifier('B')),
+        ]);
+
+        $map = $this->reader->callBuildUseMap([$groupUse]);
+
+        self::assertSame('App\\Data\\Foo', $map['Foo']);
+        self::assertSame('App\\Data\\Bar', $map['B']);
+    }
+
+    public function testBuildUseMapIgnoresFunctionAndConstantImports(): void
+    {
+        // A class name never resolves through a function or constant import, and an entry for
+        // one shadows the class alias that shares its name.
+        $statements = [
+            new Use_([new UseItem(new Name('App\\strlen'))], Use_::TYPE_FUNCTION),
+            new Use_([new UseItem(new Name('App\\VERSION'))], Use_::TYPE_CONSTANT),
+            new GroupUse(new Name('App\\Support'), [
+                new UseItem(new Name('helper'), null, Use_::TYPE_FUNCTION),
+                new UseItem(new Name('Helper')),
+            ]),
+        ];
+
+        self::assertSame(['Helper' => 'App\\Support\\Helper'], $this->reader->callBuildUseMap($statements));
     }
 
     // -------------------------------------------------------------------------

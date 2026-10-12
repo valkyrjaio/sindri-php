@@ -12,7 +12,7 @@ declare(strict_types=1);
 
 namespace Sindri\Ast\Data\Result;
 
-use PhpParser\Node\Expr;
+use PhpParser\Node\Expr\New_;
 
 use function array_unique;
 use function array_values;
@@ -24,9 +24,10 @@ use function array_values;
  *                        attributes; a subsequent CliRouteAttributeReader or
  *                        HttpRouteAttributeReader will scan each class.
  *
- * `routes`             — raw AST Expr nodes captured verbatim from getRoutes();
- *                        the file generator writes them back out as-is so the exact
- *                        user-defined shape is preserved without re-interpretation.
+ * `routes`             — raw AST bare constructions captured verbatim from getRoutes(), with
+ *                        each imported, namespace-relative, `self` and `static` class name in
+ *                        them made fully qualified; the file generator writes them back out
+ *                        as-is so the exact user-defined shape is preserved.
  *
  * This result is shared by both CLI and HTTP route providers since their contracts
  * are structurally identical (getControllerClasses / getRoutes).
@@ -35,7 +36,7 @@ readonly class RouteProviderResult
 {
     /**
      * @param class-string[] $controllerClasses
-     * @param Expr[]         $routes            Raw AST expressions from getRoutes()
+     * @param New_[]         $routes            Raw AST constructions from getRoutes()
      */
     public function __construct(
         public array $controllerClasses = [],

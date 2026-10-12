@@ -12,6 +12,12 @@ declare(strict_types=1);
 
 namespace Sindri\Generate\Abstract;
 
+use PhpParser\Node\Expr\Array_;
+use PhpParser\Node\Expr\ClassConstFetch;
+use PhpParser\Node\Expr\New_;
+use PhpParser\Node\Identifier;
+use PhpParser\Node\Name;
+use PhpParser\Node\Scalar\String_;
 use ReflectionClass;
 use ReflectionException;
 use Sindri\Ast\CliRouteAttributeReader;
@@ -25,6 +31,7 @@ use Sindri\Ast\Contract\ListenerAttributeReaderContract;
 use Sindri\Ast\Contract\ListenerProviderReaderContract;
 use Sindri\Ast\Contract\RouteProviderReaderContract;
 use Sindri\Ast\Contract\ServiceProviderReaderContract;
+use Sindri\Ast\Data\HttpRouteData;
 use Sindri\Ast\Data\Result\ComponentProviderResult;
 use Sindri\Ast\Data\Result\ConfigResult;
 use Sindri\Ast\HttpRouteAttributeReader;
@@ -52,7 +59,10 @@ use Valkyrja\Cli\Interaction\Message\NewLine;
 use Valkyrja\Cli\Interaction\Output\Contract\OutputContract;
 use Valkyrja\Cli\Interaction\Output\Factory\Contract\OutputFactoryContract;
 use Valkyrja\Cli\Routing\Data\Contract\RouteContract;
+use Valkyrja\Http\Message\Enum\RequestMethod;
+use Valkyrja\Http\Routing\Data\Contract\DynamicRouteContract;
 
+use function is_a;
 use function is_file;
 use function rtrim;
 use function str_replace;
@@ -291,7 +301,8 @@ abstract class GenerateDataFromAst
             new Message('Generating Cli Routes Data.....................'),
         )->writeMessages();
 
-        $allRoutes = [];
+        $allRoutes    = [];
+        $manualRoutes = [];
 
         foreach ($cliRouteProviders as $providerClass) {
             $filePath = $this->fqnToFilePath($providerClass, $config->namespace, $config->dir);
@@ -301,6 +312,7 @@ abstract class GenerateDataFromAst
             }
 
             $providerResult = $this->routeProviderReader->readFile($filePath);
+            $manualRoutes   = [...$manualRoutes, ...$providerResult->routes];
 
             foreach ($providerResult->controllerClasses as $controllerClass) {
                 $controllerPath = $this->fqnToFilePath($controllerClass, $config->namespace, $config->dir);
@@ -312,6 +324,19 @@ abstract class GenerateDataFromAst
                 $attrResult = $this->cliRouteAttributeReader->readFile($controllerPath);
                 $allRoutes  = [...$allRoutes, ...$attrResult->routes];
             }
+        }
+
+        // Applied after every attribute route, the way CliRoutingServiceProvider adds them, so a
+        // name collision resolves the same way.
+        foreach ($manualRoutes as $routeExpr) {
+            $className = $this->getManualRouteClassName($routeExpr);
+            $name      = $this->getManualRouteStringArg($routeExpr, 'name', 0);
+
+            if ($className === null || $name === null) {
+                continue;
+            }
+
+            $allRoutes[$name] = $routeExpr;
         }
 
         $status = $this->cliGenerator->generateFile(
@@ -339,6 +364,7 @@ abstract class GenerateDataFromAst
 
         $allRoutes    = [];
         $allRouteData = [];
+        $manualRoutes = [];
 
         foreach ($httpRouteProviders as $providerClass) {
             $filePath = $this->fqnToFilePath($providerClass, $config->namespace, $config->dir);
@@ -348,6 +374,7 @@ abstract class GenerateDataFromAst
             }
 
             $providerResult = $this->routeProviderReader->readFile($filePath);
+            $manualRoutes   = [...$manualRoutes, ...$providerResult->routes];
 
             foreach ($providerResult->controllerClasses as $controllerClass) {
                 $controllerPath = $this->fqnToFilePath($controllerClass, $config->namespace, $config->dir);
@@ -362,6 +389,31 @@ abstract class GenerateDataFromAst
             }
         }
 
+        // Applied after every attribute route, the way HttpRoutingServiceProvider adds them, so
+        // a name collision resolves the same way.
+        foreach ($manualRoutes as $routeExpr) {
+            $className = $this->getManualRouteClassName($routeExpr);
+
+            if ($className === null || is_a($className, DynamicRouteContract::class, true)) {
+                continue;
+            }
+
+            $path           = $this->getManualRouteStringArg($routeExpr, 'path', 0);
+            $name           = $this->getManualRouteStringArg($routeExpr, 'name', 1);
+            $requestMethods = $this->getManualRouteRequestMethods($routeExpr);
+
+            if ($path === null || $name === null || $requestMethods === null) {
+                continue;
+            }
+
+            $allRoutes[$name]    = $routeExpr;
+            $allRouteData[$name] = new HttpRouteData(
+                path: $path,
+                name: $name,
+                requestMethods: $requestMethods,
+            );
+        }
+
         $status = $this->httpGenerator->generateFile(
             directory: $config->dataPath,
             className: 'AppHttpRoutingData',
@@ -373,6 +425,74 @@ abstract class GenerateDataFromAst
         return $this->addMessagesForGenerateStatus($output, $status)
             ->withAddedMessages(new NewLine())
             ->writeMessages();
+    }
+
+    /**
+     * Read the name of the class a manual route construction builds, or null when it names none
+     * statically, as `new ($class)()` does.
+     */
+    protected function getManualRouteClassName(New_ $routeExpr): string|null
+    {
+        return $routeExpr->class instanceof Name ? $routeExpr->class->toString() : null;
+    }
+
+    /**
+     * Read a string literal constructor argument of a manual route, by name or by position, or
+     * null when the argument is absent or holds no literal.
+     */
+    protected function getManualRouteStringArg(New_ $routeExpr, string $name, int $position): string|null
+    {
+        $value = $routeExpr->getArg($name, $position)?->value;
+
+        return $value instanceof String_ ? $value->value : null;
+    }
+
+    /**
+     * Read the request methods of a manual HTTP route as "FQN::CASE" strings, or null when the
+     * argument is present and unreadable.
+     *
+     * @return string[]|null
+     */
+    protected function getManualRouteRequestMethods(New_ $routeExpr): array|null
+    {
+        $argument = $routeExpr->getArg('requestMethods', 3);
+
+        if ($argument === null) {
+            // Route::__construct defaults to these two.
+            return [
+                RequestMethod::class . '::' . RequestMethod::HEAD->name,
+                RequestMethod::class . '::' . RequestMethod::GET->name,
+            ];
+        }
+
+        $value = $argument->value;
+
+        if (! $value instanceof Array_) {
+            // A method this reader cannot read is never guessed, because a route cached with
+            // the wrong methods answers a method the application never declared.
+            return null;
+        }
+
+        $requestMethods = [];
+
+        foreach ($value->items as $item) {
+            $case = $item?->value;
+
+            // Anything but a literal case of this enum keys a path by a name no request carries.
+            if (! $case instanceof ClassConstFetch
+                || ! $case->class instanceof Name
+                || $case->class->toString() !== RequestMethod::class
+                || ! $case->name instanceof Identifier
+                || $case->name->toString() === 'class'
+            ) {
+                return null;
+            }
+
+            $requestMethods[] = RequestMethod::class . '::' . $case->name->toString();
+        }
+
+        // An empty list gives no method, which is what the route collection registers for it.
+        return $requestMethods;
     }
 
     /**

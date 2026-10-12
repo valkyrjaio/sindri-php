@@ -23,8 +23,9 @@ interface RouteProviderReaderContract
      * Extracts:
      *   - controllerClasses from getControllerClasses() — attributed classes for later
      *     attribute scanning to produce full route data objects.
-     *   - routes from getRoutes() — manually-defined data objects whose exact
-     *     shapes are preserved as-is.
+     *   - routes from getRoutes() — manually-defined bare constructions whose exact
+     *     shapes are preserved as-is, with each imported, namespace-relative, `self` and
+     *     `static` class name in them made fully qualified.
      *
      * This contract is shared by both CLI and HTTP route providers since their
      * structures are identical.
