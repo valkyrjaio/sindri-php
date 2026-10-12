@@ -59,9 +59,8 @@ class RouteExpressionQualifier extends NameResolver
     /**
      * Report whether the generated file can evaluate every node of the last traversal.
      *
-     * A caller drops an expression it cannot evaluate. The expression is written into a static
-     * closure in another class and another namespace, so nothing that reads the declaring
-     * provider's scope survives the move.
+     * The expression moves into a static closure in another class and another namespace, so
+     * nothing that reads the declaring provider's scope survives the move.
      */
     public function isEvaluable(): bool
     {
@@ -107,11 +106,8 @@ class RouteExpressionQualifier extends NameResolver
     /**
      * Report whether the generated file can evaluate one node of a route construction.
      *
-     * Warning: an expression that reads the provider's scope evaluates to nothing in the
-     * generated file, and the application then fails on the route instead of serving it. So a
-     * node is listed here only when its value is the same wherever it is written, and every
-     * other node, such as a variable, a property or a call, makes the whole expression
-     * unevaluable.
+     * A node is listed here only when its value is the same wherever it is written, because the
+     * generated file reads none of the provider's scope.
      */
     protected function isEvaluableNode(Node $node): bool
     {
@@ -139,8 +135,7 @@ class RouteExpressionQualifier extends NameResolver
     /**
      * Report whether a class name is one whose non-public members the provider alone can read.
      *
-     * Warning: this reader opens one file, so a constant a grandparent declares is out of
-     * reach. Such a constant reads as a foreign one and the route is cached.
+     * This reader opens one file, so a constant a grandparent declares reads as a foreign one.
      */
     protected function namesOwnScope(Node $class): bool
     {

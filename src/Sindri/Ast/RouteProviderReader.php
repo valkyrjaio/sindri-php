@@ -73,9 +73,7 @@ class RouteProviderReader extends AstReader implements RouteProviderReaderContra
     /**
      * Extract the manually-defined route constructions from the getRoutes() method.
      *
-     * Only a bare construction is kept, and only when the generated file can evaluate every
-     * node of it. A builder chain over a construction, and a construction whose argument list
-     * cannot be read by position, are each dropped as well.
+     * Only a bare construction the generated file can evaluate is kept.
      *
      * @param array<string, string> $useMap
      *
@@ -126,9 +124,8 @@ class RouteProviderReader extends AstReader implements RouteProviderReaderContra
     /**
      * Report whether a construction's argument list cannot be read by position.
      *
-     * A spread argument is skipped without shifting the positions after it, so an argument
-     * that follows one reads as absent and the route is cached with a value the application
-     * never declared. A first-class callable placeholder leaves no argument to read at all.
+     * A spread argument is skipped without shifting the positions after it, so an argument that
+     * follows one reads as absent.
      */
     protected function hasUnreadableArgs(New_ $route): bool
     {

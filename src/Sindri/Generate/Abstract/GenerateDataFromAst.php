@@ -326,9 +326,8 @@ abstract class GenerateDataFromAst
             }
         }
 
-        // The manual routes of every provider are applied after every attribute route, the way
-        // the Cli routing service provider adds them, so a name collision resolves the same way.
-        // A manual CLI route is keyed by its name, which is its first constructor argument.
+        // Applied after every attribute route, the way CliRoutingServiceProvider adds them, so a
+        // name collision resolves the same way.
         foreach ($manualRoutes as $routeExpr) {
             $className = $this->getManualRouteClassName($routeExpr);
             $name      = $this->getManualRouteStringArg($routeExpr, 'name', 0);
@@ -390,10 +389,8 @@ abstract class GenerateDataFromAst
             }
         }
 
-        // The manual routes of every provider are applied after every attribute route, the way
-        // the Http routing service provider adds them, so a name collision resolves the same
-        // way. A manual HTTP route is keyed by its name, which is its second constructor
-        // argument. Its path and request methods build the paths entry it is matched through.
+        // Applied after every attribute route, the way HttpRoutingServiceProvider adds them, so
+        // a name collision resolves the same way.
         foreach ($manualRoutes as $routeExpr) {
             $className = $this->getManualRouteClassName($routeExpr);
 
@@ -431,11 +428,8 @@ abstract class GenerateDataFromAst
     }
 
     /**
-     * Read the name of the class a manual route construction builds.
-     *
-     * Returns null when the construction names no class statically, as `new ($class)()` does.
-     * The generated data file holds none of the provider's own variables, so such a
-     * construction cannot be cached.
+     * Read the name of the class a manual route construction builds, or null when it names none
+     * statically, as `new ($class)()` does.
      */
     protected function getManualRouteClassName(New_ $routeExpr): string|null
     {
@@ -443,9 +437,8 @@ abstract class GenerateDataFromAst
     }
 
     /**
-     * Read a string literal constructor argument of a manual route, by name or by position.
-     *
-     * Returns null when the argument is absent or is not a string literal.
+     * Read a string literal constructor argument of a manual route, by name or by position, or
+     * null when the argument is absent or holds no literal.
      */
     protected function getManualRouteStringArg(New_ $routeExpr, string $name, int $position): string|null
     {
@@ -455,20 +448,11 @@ abstract class GenerateDataFromAst
     }
 
     /**
-     * Read the request methods of a manual HTTP route as "FQN::CASE" strings.
+     * Read the request methods of a manual HTTP route as "FQN::CASE" strings, or null when the
+     * argument is present and unreadable.
      *
-     * Returns null when the argument is present and this reader cannot read every method out
-     * of it. The caller drops such a route. Warning: a route cached with the wrong methods is
-     * served on a method the application never declared, so a method this reader cannot read
-     * is never guessed.
-     *
-     * An absent argument gives HEAD and GET, which the Route constructor defaults to. An
-     * argument that holds an empty array gives no method, because the route collection
-     * registers a path for each method the route lists and such a route lists none.
-     *
-     * Only a case fetched from the RequestMethod enum itself is read. A class constant that
-     * holds a case names the constant, not the case, so the cache would hold a method name
-     * that no request carries.
+     * A method this reader cannot read is never guessed, because a route cached with the wrong
+     * methods answers a method the application never declared.
      *
      * @return string[]|null
      */
