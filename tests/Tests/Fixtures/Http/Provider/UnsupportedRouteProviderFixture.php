@@ -24,9 +24,7 @@ use Valkyrja\Http\Routing\Data\Route;
 use Valkyrja\Http\Routing\Provider\Contract\HttpRouteProviderContract;
 
 /**
- * An HTTP route provider whose getRoutes() returns shapes that the cache cannot hold. A reader
- * parses this file and never collects it, so a route here can hold a request method that the
- * route collection rejects.
+ * An HTTP route provider whose getRoutes() returns shapes that the cache cannot hold.
  */
 final class UnsupportedRouteProviderFixture implements HttpRouteProviderContract
 {

@@ -21,8 +21,7 @@ use Valkyrja\Cli\Routing\Provider\Contract\CliRouteProviderContract;
 use Valkyrja\Container\Manager\Contract\ContainerContract;
 
 /**
- * A CLI route provider whose getRoutes() returns shapes that the cache cannot hold. A reader
- * parses this file and never invokes it, so one construction here omits a required argument.
+ * A CLI route provider whose getRoutes() returns shapes that the cache cannot hold.
  */
 final class UnsupportedRouteProviderFixture implements CliRouteProviderContract
 {

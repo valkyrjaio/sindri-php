@@ -692,9 +692,8 @@ final class GenerateDataFromAstTest extends TestCase
 
     public function testGenerateCliDataAppliesTheManualRoutesAfterEveryAttributeRoute(): void
     {
-        // The Cli routing service provider adds every attribute route first, across every
-        // provider, and then every manual route, so a manual route wins a name collision even
-        // when the provider that declares it is read before the controller's provider.
+        // The routing service provider adds every attribute route first, across every provider,
+        // so a manual route wins a name collision whichever provider declares it.
         $contents = $this->generateCliDataContents([
             ManualRouteProviderFixture::class,
             TestRouteProviderFixture::class,
@@ -716,9 +715,8 @@ final class GenerateDataFromAstTest extends TestCase
 
     public function testGenerateHttpDataSkipsAManualBuilderChainRoute(): void
     {
-        // A builder chain is not a bare construction, and an HTTP route's path, name and
-        // request methods each have a builder that changes them, so the chain cannot be keyed
-        // from the construction it starts from.
+        // An HTTP route's path, name and request methods each have a builder that changes them,
+        // so a chain cannot be keyed from the construction it starts from.
         $contents = $this->generateHttpDataContents([HttpUnsupportedRouteProviderClass::class]);
 
         self::assertStringNotContainsString('manual.chained', $contents);
@@ -791,9 +789,8 @@ final class GenerateDataFromAstTest extends TestCase
 
     public function testGetManualRouteRequestMethodsRejectsADynamicCaseName(): void
     {
-        // `RequestMethod::{$case}` never reaches here through the reader, because the qualifier
-        // drops a construction whose constant name is not an identifier. Each guard below stays
-        // for a caller that builds the expression itself.
+        // The qualifier drops such a construction, so each guard below stays only for a caller
+        // that builds the expression itself.
         self::assertNull($this->readRequestMethods(
             new ClassConstFetch(new FullyQualified(RequestMethod::class), new Variable('case')),
         ));

@@ -478,9 +478,7 @@ abstract class GenerateDataFromAst
         foreach ($value->items as $item) {
             $case = $item?->value;
 
-            // Anything but a literal case of this enum keys a path by a name no request
-            // carries: a constant of another class can hold a case, `::class` is no case at
-            // all, and a call reads as the method it is named after.
+            // Anything but a literal case of this enum keys a path by a name no request carries.
             if (! $case instanceof ClassConstFetch
                 || ! $case->class instanceof Name
                 || $case->class->toString() !== RequestMethod::class

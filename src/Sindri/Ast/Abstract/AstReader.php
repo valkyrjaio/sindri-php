@@ -109,9 +109,6 @@ abstract class AstReader
     /**
      * Build a map of alias/short-name → fully-qualified class name from use statements.
      *
-     * A group use statement contributes each of its items, prefixed. A function or constant
-     * import contributes nothing, because a class name never resolves through one.
-     *
      * @param Node[] $stmts
      *
      * @return array<string, string>
@@ -147,6 +144,7 @@ abstract class AstReader
         $map = [];
 
         foreach ($uses as $use) {
+            // A class name never resolves through a function or a constant import.
             if (($statementType | $use->type) !== Use_::TYPE_NORMAL) {
                 continue;
             }
