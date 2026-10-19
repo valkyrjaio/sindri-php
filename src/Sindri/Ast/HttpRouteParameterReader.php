@@ -14,6 +14,7 @@ namespace Sindri\Ast;
 
 use Override;
 use PhpParser\Node\Arg;
+use PhpParser\Node\ArgPlaceholder;
 use PhpParser\Node\ArrayItem;
 use PhpParser\Node\Expr;
 use PhpParser\Node\Expr\Array_;
@@ -180,8 +181,8 @@ class HttpRouteParameterReader extends AstReader implements HttpRouteParameterRe
     /**
      * Build an HttpParameterData from a #[Parameter] attribute argument list.
      *
-     * @param array<array-key, Arg|VariadicPlaceholder> $args
-     * @param array<string, string>                     $useMap
+     * @param array<array-key, Arg|ArgPlaceholder|VariadicPlaceholder> $args
+     * @param array<string, string>                                    $useMap
      */
     protected function buildParameterData(
         array $args,
