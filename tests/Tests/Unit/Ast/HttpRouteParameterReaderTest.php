@@ -13,6 +13,7 @@ declare(strict_types=1);
 namespace Sindri\Tests\Unit\Ast;
 
 use PhpParser\Node\Arg;
+use PhpParser\Node\ArgPlaceholder;
 use PhpParser\Node\ArrayItem;
 use PhpParser\Node\Attribute;
 use PhpParser\Node\AttributeGroup;
@@ -51,7 +52,7 @@ final class HttpRouteParameterReaderTest extends TestCase
                 return $this->collectInlineParameters($args, $useMap, $namespace, $currentClass);
             }
 
-            /** @param array<array-key, Arg|VariadicPlaceholder> $args */
+            /** @param array<array-key, Arg|ArgPlaceholder|VariadicPlaceholder> $args */
             public function callBuildParameterData(array $args, array $useMap, string $namespace, string $currentClass): HttpParameterData|null
             {
                 return $this->buildParameterData($args, $useMap, $namespace, $currentClass);
@@ -223,6 +224,21 @@ final class HttpRouteParameterReaderTest extends TestCase
 
         self::assertInstanceOf(HttpParameterData::class, $result);
         self::assertSame('id', $result->name);
+    }
+
+    public function testBuildParameterDataFiltersOutArgPlaceholders(): void
+    {
+        $args = [
+            new ArgPlaceholder(),
+            new Arg(value: new String_('id')),
+            new Arg(value: new String_('[0-9]+')),
+        ];
+
+        $result = $this->proxy->callBuildParameterData($args, [], 'Test', 'Test\\TestClass');
+
+        self::assertInstanceOf(HttpParameterData::class, $result);
+        self::assertSame('id', $result->name);
+        self::assertSame('[0-9]+', $result->regex);
     }
 
     // -------------------------------------------------------------------------
