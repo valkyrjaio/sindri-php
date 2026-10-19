@@ -230,8 +230,8 @@ final class HttpRouteParameterReaderTest extends TestCase
     {
         $args = [
             new ArgPlaceholder(),
-            new Arg(value: new String_('id'), name: new Identifier('name')),
-            new Arg(value: new String_('[0-9]+'), name: new Identifier('regex')),
+            new Arg(value: new String_('id')),
+            new Arg(value: new String_('[0-9]+')),
         ];
 
         $result = $this->proxy->callBuildParameterData($args, [], 'Test', 'Test\\TestClass');
