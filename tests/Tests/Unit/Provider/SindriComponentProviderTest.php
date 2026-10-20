@@ -71,4 +71,12 @@ final class SindriComponentProviderTest extends TestCase
 
         self::assertSame([], $result);
     }
+
+    public function testGetGrpcProvidersReturnsEmptyArray(): void
+    {
+        $app    = self::createStub(ApplicationContract::class);
+        $result = new SindriComponentProvider()->getGrpcProviders($app);
+
+        self::assertSame([], $result);
+    }
 }
