@@ -54,4 +54,9 @@ final class TestSecondComponentProviderFixture implements ComponentProviderContr
     {
         return [];
     }
+
+    public function getGrpcProviders(ApplicationContract $app): array
+    {
+        return [];
+    }
 }

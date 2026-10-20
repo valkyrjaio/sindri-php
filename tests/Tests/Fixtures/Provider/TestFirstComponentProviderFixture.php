@@ -54,4 +54,9 @@ final class TestFirstComponentProviderFixture implements ComponentProviderContra
     {
         return [];
     }
+
+    public function getGrpcProviders(ApplicationContract $app): array
+    {
+        return [];
+    }
 }
