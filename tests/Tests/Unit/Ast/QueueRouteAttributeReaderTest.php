@@ -101,7 +101,35 @@ final class QueueRouteAttributeReaderTest extends TestCase
     {
         $result = new QueueRouteAttributeReader()->readFile(self::$richFixtureFile);
 
-        self::assertCount(1, $result->routes);
+        self::assertArrayNotHasKey('', $result->routes);
+    }
+
+    public function testARouteMissingItsDescriptionIsSkipped(): void
+    {
+        // A route is keyed by both, so neither half may be empty
+        $result = new QueueRouteAttributeReader()->readFile(self::$richFixtureFile);
+
+        self::assertArrayNotHasKey('Undescribed', $result->routes);
+    }
+
+    public function testAnEmptyNameOverrideLeavesTheDeclaredName(): void
+    {
+        // The override only replaces a name it actually carries
+        $result = new QueueRouteAttributeReader()->readFile(self::$richFixtureFile);
+
+        self::assertArrayHasKey('KeptName', $result->routes);
+    }
+
+    public function testMiddlewareServingOneStageIsListedOnlyThere(): void
+    {
+        $result = new QueueRouteAttributeReader()->readFile(self::$richFixtureFile);
+        $php    = new Standard()->prettyPrintExpr($result->routes['SingleStage']);
+
+        self::assertStringContainsString('routeMatchedMiddleware:', $php);
+        self::assertStringNotContainsString('routeDispatchedMiddleware:', $php);
+        self::assertStringNotContainsString('throwableCaughtMiddleware:', $php);
+        self::assertStringNotContainsString('settlingResultMiddleware:', $php);
+        self::assertStringNotContainsString('resultSettledMiddleware:', $php);
     }
 
     public function testAnUnparsableFileYieldsNoRoutes(): void

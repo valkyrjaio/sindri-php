@@ -16,6 +16,7 @@ use PhpParser\Node\Scalar\String_;
 use Sindri\Generator\Ast\Queue\AstQueueDataFileGenerator;
 use Sindri\Generator\Enum\GenerateStatus;
 use Sindri\Tests\Unit\Abstract\TestCase;
+use Valkyrja\Queue\Routing\Data\QueueRoutingData;
 
 use function file_get_contents;
 use function sys_get_temp_dir;
@@ -27,7 +28,7 @@ final class AstQueueDataFileGeneratorTest extends TestCase
     {
         $contents = new AstQueueDataFileGenerator()->generateClassContents([]);
 
-        self::assertStringContainsString('Sindri\Queue\Data\QueueRoutingData', $contents);
+        self::assertStringContainsString(QueueRoutingData::class, $contents);
         self::assertStringContainsString('routes:', $contents);
     }
 

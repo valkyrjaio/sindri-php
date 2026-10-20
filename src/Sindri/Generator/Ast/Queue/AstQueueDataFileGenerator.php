@@ -48,7 +48,7 @@ class AstQueueDataFileGenerator extends AstFileGenerator implements QueueDataFil
     #[Override]
     public function generateClassContents(array $routes): string
     {
-        $dataNamespace = 'Sindri\Queue\Data\QueueRoutingData';
+        $dataNamespace = QueueRoutingData::class;
         $routesContent = $this->getRoutesAsContent($routes);
 
         // phpcs:disable

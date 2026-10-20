@@ -13,6 +13,7 @@ declare(strict_types=1);
 namespace Sindri\Tests\Fixtures\Queue\Controller;
 
 use Sindri\Tests\Fixtures\Queue\Middleware\TestQueueMiddlewareFixture;
+use Sindri\Tests\Fixtures\Queue\Middleware\TestSingleStageQueueMiddlewareFixture;
 use Valkyrja\Container\Manager\Contract\ContainerContract;
 use Valkyrja\Queue\Message\Enum\JobResult;
 use Valkyrja\Queue\Routing\Attribute\Route;
@@ -43,6 +44,31 @@ final class TestRichQueueControllerFixture
 
     #[Route(name: '', description: 'Missing a name so it is skipped')]
     public function unnamed(): JobResult
+    {
+        return JobResult::ACK;
+    }
+
+    // A route is keyed by both, so an empty description is skipped for the
+    // same reason an empty name is
+    #[Route(name: 'Undescribed', description: '')]
+    public function undescribed(): JobResult
+    {
+        return JobResult::ACK;
+    }
+
+    // An override that carries nothing leaves the name the route declared
+    #[Route(name: 'KeptName', description: 'The name attribute overrides nothing')]
+    /** @phpstan-ignore-next-line */
+    #[Name('')]
+    public function keptName(): JobResult
+    {
+        return JobResult::ACK;
+    }
+
+    // One stage and no other, so every list but that one stays empty
+    #[Route(name: 'SingleStage', description: 'Carries one middleware stage')]
+    #[Middleware(TestSingleStageQueueMiddlewareFixture::class)]
+    public function singleStage(): JobResult
     {
         return JobResult::ACK;
     }
