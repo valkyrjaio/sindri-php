@@ -72,4 +72,22 @@ final class TestRichQueueControllerFixture
     {
         return JobResult::ACK;
     }
+
+    // The reader works off the syntax tree and never instantiates an
+    // attribute, so an argument the signature forbids still reaches the guard
+    #[Route(name: 'NonStringName', description: 'The name override is not a string')]
+    /** @phpstan-ignore-next-line */
+    #[Name(42)]
+    public function nonStringName(): JobResult
+    {
+        return JobResult::ACK;
+    }
+
+    #[Route(name: 'NonStringMiddleware', description: 'The middleware name is not a string')]
+    /** @phpstan-ignore-next-line */
+    #[Middleware(42)]
+    public function nonStringMiddleware(): JobResult
+    {
+        return JobResult::ACK;
+    }
 }

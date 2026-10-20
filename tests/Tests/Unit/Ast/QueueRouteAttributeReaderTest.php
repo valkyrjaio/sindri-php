@@ -120,6 +120,23 @@ final class QueueRouteAttributeReaderTest extends TestCase
         self::assertArrayHasKey('KeptName', $result->routes);
     }
 
+    public function testANonStringNameOverrideLeavesTheDeclaredName(): void
+    {
+        // The reader never instantiates the attribute, so the value it reads
+        // off the tree can be any literal the signature would have refused
+        $result = new QueueRouteAttributeReader()->readFile(self::$richFixtureFile);
+
+        self::assertArrayHasKey('NonStringName', $result->routes);
+    }
+
+    public function testANonStringMiddlewareNameIsSkipped(): void
+    {
+        $result = new QueueRouteAttributeReader()->readFile(self::$richFixtureFile);
+        $php    = new Standard()->prettyPrintExpr($result->routes['NonStringMiddleware']);
+
+        self::assertStringNotContainsString('Middleware:', $php);
+    }
+
     public function testMiddlewareServingOneStageIsListedOnlyThere(): void
     {
         $result = new QueueRouteAttributeReader()->readFile(self::$richFixtureFile);
