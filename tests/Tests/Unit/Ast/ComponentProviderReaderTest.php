@@ -70,6 +70,13 @@ final class ComponentProviderReaderTest extends TestCase
         self::assertSame([], $result->httpRouteProviders);
     }
 
+    public function testReadFileExtractsEmptyQueueRouteProviders(): void
+    {
+        $result = new ComponentProviderReader()->readFile(self::$fixtureFile);
+
+        self::assertSame([], $result->queueRouteProviders);
+    }
+
     public function testReadFileReturnsEmptyResultForFileWithNoClass(): void
     {
         $tmpFile = tempnam(sys_get_temp_dir(), 'sindri_test') . '.php';
@@ -84,5 +91,6 @@ final class ComponentProviderReaderTest extends TestCase
         self::assertSame([], $result->listenerProviders);
         self::assertSame([], $result->cliRouteProviders);
         self::assertSame([], $result->httpRouteProviders);
+        self::assertSame([], $result->queueRouteProviders);
     }
 }
