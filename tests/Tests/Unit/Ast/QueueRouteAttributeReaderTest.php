@@ -12,7 +12,9 @@ declare(strict_types=1);
 
 namespace Sindri\Tests\Unit\Ast;
 
+use PhpParser\Node\Expr;
 use PhpParser\PrettyPrinter\Standard;
+use Sindri\Ast\Data\QueueRouteData;
 use Sindri\Ast\Data\Result\QueueRouteAttributeResult;
 use Sindri\Ast\QueueRouteAttributeReader;
 use Sindri\Tests\Unit\Abstract\TestCase;
@@ -161,5 +163,23 @@ final class QueueRouteAttributeReaderTest extends TestCase
 
         self::assertInstanceOf(QueueRouteAttributeResult::class, $result);
         self::assertSame([], $result->routes);
+    }
+
+    public function testBuildRouteExprOmitsTheHandlerWhenThereIsNone(): void
+    {
+        // A read route always carries a handler, so the omission is reachable
+        // only by building the data directly
+        $reader = new class extends QueueRouteAttributeReader {
+            public function callBuildRouteExpr(QueueRouteData $data): Expr
+            {
+                return $this->buildRouteExpr($data);
+            }
+        };
+
+        $expr = $reader->callBuildRouteExpr(
+            new QueueRouteData(name: 'NoHandler', description: 'Carries no handler')
+        );
+
+        self::assertStringNotContainsString('handler:', new Standard()->prettyPrintExpr($expr));
     }
 }

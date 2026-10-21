@@ -41,6 +41,7 @@ use Sindri\Tests\Fixtures\Http\Provider\TestMissingControllerProviderFixture as 
 use Sindri\Tests\Fixtures\Http\Provider\TestRouteProviderFixture as HttpTestRouteProviderClass;
 use Sindri\Tests\Fixtures\Http\Provider\UnsupportedRouteProviderFixture as HttpUnsupportedRouteProviderClass;
 use Sindri\Tests\Fixtures\Provider\Sub\TestServiceProviderFixture;
+use Sindri\Tests\Fixtures\Queue\Provider\ManualQueueRouteProviderFixture;
 use Sindri\Tests\Fixtures\Queue\Provider\TestMissingControllerProviderFixture as QueueMissingControllerProviderFixture;
 use Sindri\Tests\Fixtures\Queue\Provider\TestQueueRouteProviderFixture;
 use Sindri\Tests\Unit\Abstract\TestCase;
@@ -547,6 +548,47 @@ final class GenerateDataFromAstTest extends TestCase
 
         self::assertInstanceOf(OutputContract::class, $result);
         // The provider's handler class was walked and its attributed job collected
+        self::assertStringContainsString("'SendWelcomeEmail'", $generated);
+    }
+
+    public function testGenerateQueueDataCachesTheManualProviderRoutes(): void
+    {
+        // A provider may declare a route by hand instead of by attribute, and
+        // the cache has to carry those too or the job never resolves
+        $tmpDir = sys_get_temp_dir() . '/' . $this->name();
+        mkdir($tmpDir);
+
+        $output        = $this->buildChainableOutputStub();
+        $outputFactory = self::createStub(OutputFactoryContract::class);
+        $walker        = $this->makeWalker($outputFactory);
+
+        /** @var non-empty-string $queueDir */
+        $queueDir = realpath(__DIR__ . '/../../Fixtures/Queue');
+
+        $config = new ConfigResult(
+            namespace: 'Sindri\\Tests\\Fixtures\\Queue',
+            dir: $queueDir,
+            dataPath: $tmpDir,
+            dataNamespace: 'Sindri\\Tests\\Fixtures\\Queue\\Data',
+        );
+
+        $walker->callGenerateQueueData(
+            [ManualQueueRouteProviderFixture::class],
+            $config,
+            $output,
+        );
+
+        $generated = (string) file_get_contents($tmpDir . '/AppQueueRoutingData.php');
+
+        foreach (glob($tmpDir . '/*.php') ?: [] as $f) {
+            @unlink($f);
+        }
+
+        @rmdir($tmpDir);
+
+        self::assertStringContainsString("'manual:named' => static fn ()", $generated);
+        self::assertStringContainsString("'manual:positional' => static fn ()", $generated);
+        // The attribute route from the same provider's controller survives too
         self::assertStringContainsString("'SendWelcomeEmail'", $generated);
     }
 

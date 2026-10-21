@@ -369,7 +369,8 @@ abstract class GenerateDataFromAst
             new Message('Generating Queue Routes Data...................'),
         )->writeMessages();
 
-        $allRoutes = [];
+        $allRoutes    = [];
+        $manualRoutes = [];
 
         foreach ($queueRouteProviders as $providerClass) {
             $filePath = $this->fqnToFilePath($providerClass, $config->namespace, $config->dir);
@@ -379,6 +380,7 @@ abstract class GenerateDataFromAst
             }
 
             $providerResult = $this->routeProviderReader->readFile($filePath);
+            $manualRoutes   = [...$manualRoutes, ...$providerResult->routes];
 
             foreach ($providerResult->controllerClasses as $controllerClass) {
                 $controllerPath = $this->fqnToFilePath($controllerClass, $config->namespace, $config->dir);
@@ -390,6 +392,19 @@ abstract class GenerateDataFromAst
                 $attrResult = $this->queueRouteAttributeReader->readFile($controllerPath);
                 $allRoutes  = [...$allRoutes, ...$attrResult->routes];
             }
+        }
+
+        // Applied after every attribute route, the way QueueRoutingServiceProvider adds them, so
+        // a name collision resolves the same way.
+        foreach ($manualRoutes as $routeExpr) {
+            $className = $this->getManualRouteClassName($routeExpr);
+            $name      = $this->getManualRouteStringArg($routeExpr, 'name', 0);
+
+            if ($className === null || $name === null) {
+                continue;
+            }
+
+            $allRoutes[$name] = $routeExpr;
         }
 
         $status = $this->queueGenerator->generateFile(
