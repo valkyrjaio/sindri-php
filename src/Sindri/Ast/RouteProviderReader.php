@@ -23,9 +23,9 @@ use Sindri\Ast\Contract\RouteProviderReaderContract;
 use Sindri\Ast\Data\Result\RouteProviderResult;
 
 /**
- * Reads a single CliRouteProviderContract or HttpRouteProviderContract source file
- * and extracts route data. Both provider types share this reader because their
- * contracts are structurally identical.
+ * Reads a single route provider source file and extracts route data. Every
+ * protocol's route provider contract shares this reader, because the contracts
+ * are structurally identical.
  *
  * Two sources of routes are read:
  *
