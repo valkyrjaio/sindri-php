@@ -18,7 +18,7 @@ readonly class GrpcRouteData implements GrpcRouteDataContract
 {
     /**
      * @param string            $method                    The fully-qualified method, `/package.Service/Method`
-     * @param HandlerData|null  $handler                   Resolved handler (the attributed method, or a #[MethodHandler] override)
+     * @param HandlerData       $handler                   Resolved handler (the attributed method, or a #[MethodHandler] override)
      * @param class-string|null $requestType               The generated protobuf request message type
      * @param class-string|null $responseType              The generated protobuf response message type
      * @param class-string[]    $routeMatchedMiddleware
@@ -29,7 +29,7 @@ readonly class GrpcRouteData implements GrpcRouteDataContract
      */
     public function __construct(
         public string $method,
-        public HandlerData|null $handler = null,
+        public HandlerData $handler,
         public string|null $requestType = null,
         public string|null $responseType = null,
         public bool $clientStreaming = false,

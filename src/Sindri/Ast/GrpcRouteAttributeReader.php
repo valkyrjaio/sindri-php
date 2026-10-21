@@ -294,9 +294,7 @@ class GrpcRouteAttributeReader extends RouteAttributeReader implements GrpcRoute
             $this->buildNamedArg('method', $this->buildStringExpr($data->method)),
         ];
 
-        if ($data->handler !== null) {
-            $args[] = $this->buildNamedArg('handler', $this->buildHandlerExpr($data->handler));
-        }
+        $args[] = $this->buildNamedArg('handler', $this->buildHandlerExpr($data->handler));
 
         if ($data->requestType !== null) {
             $args[] = $this->buildNamedArg('requestType', $this->buildClassConstExpr($data->requestType));
