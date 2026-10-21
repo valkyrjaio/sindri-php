@@ -1,6 +1,14 @@
 # Release Notes for 26.x
 
-## [Unreleased](https://github.com/valkyrjaio/sindri/compare/v26.7.1...26.x)
+## [Unreleased](https://github.com/valkyrjaio/sindri/compare/v26.8.0...26.x)
+
+## [v26.8.0](https://github.com/valkyrjaio/sindri/compare/v26.7.1...v26.8.0) - 2026-10-21
+
+* [Queue] feat: Generate the queue routing data cache by [@MelechMizrachi](https://github.com/MelechMizrachi) in https://github.com/valkyrjaio/sindri-php/pull/192
+* [Cli] fix: Emit the real routing data class from the generator by [@MelechMizrachi](https://github.com/MelechMizrachi) in https://github.com/valkyrjaio/sindri-php/pull/354
+* [Ast] feat: Generate gRPC routing data from attributes by [@MelechMizrachi](https://github.com/MelechMizrachi) in https://github.com/valkyrjaio/sindri-php/pull/193
+* [Dependency] build: Update composer dependencies by [@valkyrja-volundr](https://github.com/valkyrja-volundr)[bot] in https://github.com/valkyrjaio/sindri-php/pull/355
+* [Dependency] build: Update composer dependencies by [@valkyrja-volundr](https://github.com/valkyrja-volundr)[bot] in https://github.com/valkyrjaio/sindri-php/pull/356
 
 ## [v26.7.1](https://github.com/valkyrjaio/sindri/compare/v26.7.0...v26.7.1) - 2026-10-20
 
