@@ -36,6 +36,7 @@ class ComponentProviderReader extends AstReader implements ComponentProviderRead
     protected const string METHOD_CLI       = 'getCliProviders';
     protected const string METHOD_HTTP      = 'getHttpProviders';
     protected const string METHOD_QUEUE     = 'getQueueProviders';
+    protected const string METHOD_GRPC      = 'getGrpcProviders';
 
     /**
      * @inheritDoc
@@ -63,6 +64,7 @@ class ComponentProviderReader extends AstReader implements ComponentProviderRead
             cliRouteProviders: $this->extractClassListFromValues($methods[self::METHOD_CLI] ?? null, $useMap, $namespace),
             httpRouteProviders: $this->extractClassListFromValues($methods[self::METHOD_HTTP] ?? null, $useMap, $namespace),
             queueRouteProviders: $this->extractClassListFromValues($methods[self::METHOD_QUEUE] ?? null, $useMap, $namespace),
+            grpcRouteProviders: $this->extractClassListFromValues($methods[self::METHOD_GRPC] ?? null, $useMap, $namespace),
         );
     }
 }
