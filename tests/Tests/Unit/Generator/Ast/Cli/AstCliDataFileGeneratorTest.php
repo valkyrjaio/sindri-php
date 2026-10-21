@@ -16,6 +16,7 @@ use PhpParser\Node\Scalar\String_;
 use Sindri\Generator\Ast\Cli\AstCliDataFileGenerator;
 use Sindri\Generator\Enum\GenerateStatus;
 use Sindri\Tests\Unit\Abstract\TestCase;
+use Valkyrja\Cli\Routing\Data\CliRoutingData;
 
 use function sys_get_temp_dir;
 use function unlink;
@@ -27,7 +28,7 @@ final class AstCliDataFileGeneratorTest extends TestCase
         $generator = new AstCliDataFileGenerator();
         $contents  = $generator->generateClassContents([]);
 
-        self::assertStringContainsString('Sindri\Cli\Data\CliRoutingData', $contents);
+        self::assertStringContainsString(CliRoutingData::class, $contents);
     }
 
     public function testGenerateClassContentsWithEmptyRoutesContainsEmptyRoutesArray(): void
