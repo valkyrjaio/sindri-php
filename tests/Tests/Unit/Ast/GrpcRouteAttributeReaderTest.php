@@ -285,6 +285,74 @@ final class GrpcRouteAttributeReaderTest extends TestCase
         self::assertStringContainsString('responseType: \Valkyrja\Grpc\Routing\Data\Route::class', $printed);
     }
 
+    public function testAnEmptyRequestTypeIsDropped(): void
+    {
+        $file = tempnam(sys_get_temp_dir(), 'sindri-grpc');
+
+        self::assertNotFalse($file);
+
+        file_put_contents($file, <<<'PHP'
+            <?php
+
+            namespace Sindri\Tests\Tmp;
+
+            use Valkyrja\Grpc\Routing\Attribute\Method;
+            use Valkyrja\Grpc\Routing\Attribute\Service;
+
+            #[Service(service: 'pkg.Empty')]
+            final class TmpController
+            {
+                #[Method(name: 'DoThing', requestType: '', responseType: '')]
+                public static function doThing(): void
+                {
+                }
+            }
+            PHP);
+
+        $result = new GrpcRouteAttributeReader()->readFile($file);
+
+        unlink($file);
+
+        $printed = self::print($result->routes['/pkg.Empty/DoThing']);
+
+        self::assertStringNotContainsString('requestType:', $printed);
+        self::assertStringNotContainsString('responseType:', $printed);
+    }
+
+    public function testAnEmptyMiddlewareNameIsSkipped(): void
+    {
+        $file = tempnam(sys_get_temp_dir(), 'sindri-grpc');
+
+        self::assertNotFalse($file);
+
+        file_put_contents($file, <<<'PHP'
+            <?php
+
+            namespace Sindri\Tests\Tmp;
+
+            use Valkyrja\Grpc\Routing\Attribute\Method;
+            use Valkyrja\Grpc\Routing\Attribute\Method\Middleware;
+            use Valkyrja\Grpc\Routing\Attribute\Service;
+
+            #[Service(service: 'pkg.EmptyMw')]
+            final class TmpController
+            {
+                #[Method(name: 'DoThing')]
+                #[Middleware(name: '')]
+                public static function doThing(): void
+                {
+                }
+            }
+            PHP);
+
+        $result = new GrpcRouteAttributeReader()->readFile($file);
+
+        unlink($file);
+
+        self::assertArrayHasKey('/pkg.EmptyMw/DoThing', $result->routes);
+        self::assertStringNotContainsString('Middleware:', self::print($result->routes['/pkg.EmptyMw/DoThing']));
+    }
+
     public function testAnExplicitHandlerAttributeWins(): void
     {
         $file = tempnam(sys_get_temp_dir(), 'sindri-grpc');
