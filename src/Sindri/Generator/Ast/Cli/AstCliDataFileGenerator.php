@@ -54,7 +54,7 @@ class AstCliDataFileGenerator extends AstFileGenerator implements CliDataFileGen
     #[Override]
     public function generateClassContents(array $routes): string
     {
-        $dataNamespace = 'Sindri\Cli\Data\CliRoutingData';
+        $dataNamespace = CliRoutingData::class;
         $routesContent = $this->getRoutesAsContent($routes);
 
         // phpcs:disable
