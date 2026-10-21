@@ -44,6 +44,7 @@ use Sindri\Tests\Fixtures\Provider\Sub\TestServiceProviderFixture;
 use Sindri\Tests\Fixtures\Queue\Provider\ManualQueueRouteProviderFixture;
 use Sindri\Tests\Fixtures\Queue\Provider\TestMissingControllerProviderFixture as QueueMissingControllerProviderFixture;
 use Sindri\Tests\Fixtures\Queue\Provider\TestQueueRouteProviderFixture;
+use Sindri\Tests\Fixtures\Queue\Provider\UnsupportedQueueRouteProviderFixture;
 use Sindri\Tests\Unit\Abstract\TestCase;
 use Valkyrja\Cli\Interaction\Output\Contract\OutputContract;
 use Valkyrja\Cli\Interaction\Output\Factory\Contract\OutputFactoryContract;
@@ -590,6 +591,45 @@ final class GenerateDataFromAstTest extends TestCase
         self::assertStringContainsString("'manual:positional' => static fn ()", $generated);
         // The attribute route from the same provider's controller survives too
         self::assertStringContainsString("'SendWelcomeEmail'", $generated);
+    }
+
+    public function testGenerateQueueDataSkipsTheManualRoutesItCannotKey(): void
+    {
+        // A construction the cache cannot name is left out rather than guessed
+        $tmpDir = sys_get_temp_dir() . '/' . $this->name();
+        mkdir($tmpDir);
+
+        $output        = $this->buildChainableOutputStub();
+        $outputFactory = self::createStub(OutputFactoryContract::class);
+        $walker        = $this->makeWalker($outputFactory);
+
+        /** @var non-empty-string $queueDir */
+        $queueDir = realpath(__DIR__ . '/../../Fixtures/Queue');
+
+        $config = new ConfigResult(
+            namespace: 'Sindri\\Tests\\Fixtures\\Queue',
+            dir: $queueDir,
+            dataPath: $tmpDir,
+            dataNamespace: 'Sindri\\Tests\\Fixtures\\Queue\\Data',
+        );
+
+        $walker->callGenerateQueueData(
+            [UnsupportedQueueRouteProviderFixture::class],
+            $config,
+            $output,
+        );
+
+        $generated = (string) file_get_contents($tmpDir . '/AppQueueRoutingData.php');
+
+        foreach (glob($tmpDir . '/*.php') ?: [] as $f) {
+            @unlink($f);
+        }
+
+        @rmdir($tmpDir);
+
+        self::assertStringNotContainsString('manual:expression-class', $generated);
+        self::assertStringNotContainsString('The name argument is absent', $generated);
+        self::assertStringNotContainsString('manual:builder', $generated);
     }
 
     public function testGenerateQueueDataWithMissingProviderFileSkips(): void
