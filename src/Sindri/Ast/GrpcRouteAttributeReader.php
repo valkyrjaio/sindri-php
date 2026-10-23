@@ -207,12 +207,10 @@ class GrpcRouteAttributeReader extends RouteAttributeReader implements GrpcRoute
         string $namespace,
         string $currentClass,
     ): HandlerData {
-        foreach ($this->findAttributesOnNode($method, $this->getRouteHandlerAttributeClass(), $useMap, $namespace) as $attr) {
-            $attributed = $this->extractExprValue($this->getAttrArg($attr->args, 'handler', 0), $useMap, $namespace, $currentClass);
+        $attributed = $this->getAttributedHandler($method, $useMap, $namespace, $currentClass);
 
-            if ($attributed instanceof HandlerData) {
-                return $attributed;
-            }
+        if ($attributed instanceof HandlerData) {
+            return $attributed;
         }
 
         $declared = $this->extractExprValue($this->getAttrArg($args, 'handler', 1), $useMap, $namespace, $currentClass);

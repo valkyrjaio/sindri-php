@@ -35,6 +35,25 @@ abstract class RouteAttributeReader extends AstReader
         string $namespace,
         string $currentClass,
     ): HandlerData {
+        /** @var class-string $currentClass */
+        return $this->getAttributedHandler($method, $useMap, $namespace, $currentClass)
+            ?? new HandlerData(class: $currentClass, method: $method->name->toString());
+    }
+
+    /**
+     * Resolve the handler a #[Route\RouteHandler] names, or null when the method carries none.
+     *
+     * A handler the reader cannot resolve to a class and a method name counts as none, because the
+     * generated route holds the pair rather than the expression.
+     *
+     * @param array<string, string> $useMap
+     */
+    protected function getAttributedHandler(
+        ClassMethod $method,
+        array $useMap,
+        string $namespace,
+        string $currentClass,
+    ): HandlerData|null {
         foreach ($this->findAttributesOnNode($method, $this->getRouteHandlerAttributeClass(), $useMap, $namespace) as $attr) {
             $raw = $this->extractExprValue($this->getAttrArg($attr->args, 'handler', 0), $useMap, $namespace, $currentClass);
 
@@ -43,8 +62,7 @@ abstract class RouteAttributeReader extends AstReader
             }
         }
 
-        /** @var class-string $currentClass */
-        return new HandlerData(class: $currentClass, method: $method->name->toString());
+        return null;
     }
 
     /**
