@@ -1,6 +1,12 @@
 # Release Notes for 26.x
 
-## [Unreleased](https://github.com/valkyrjaio/sindri/compare/v26.8.1...26.x)
+## [Unreleased](https://github.com/valkyrjaio/sindri/compare/v26.9.0...26.x)
+
+## [v26.9.0](https://github.com/valkyrjaio/sindri/compare/v26.8.1...v26.9.0) - 2026-10-22
+
+* [Dependency] build: Require PHP 8.4.27 or later by [@MelechMizrachi](https://github.com/MelechMizrachi) in https://github.com/valkyrjaio/sindri-php/pull/359
+* [Dependency] docs: State the PHP 8.4.27 floor in the support table by [@MelechMizrachi](https://github.com/MelechMizrachi) in https://github.com/valkyrjaio/sindri-php/pull/360
+* [Ast] feat!: Read the renamed gRPC route attribute and its whole field set by [@MelechMizrachi](https://github.com/MelechMizrachi) in https://github.com/valkyrjaio/sindri-php/pull/361
 
 ## [v26.8.1](https://github.com/valkyrjaio/sindri/compare/v26.8.0...v26.8.1) - 2026-10-22
 
