@@ -18,7 +18,7 @@ readonly class GrpcRouteData implements GrpcRouteDataContract
 {
     /**
      * @param string            $method                    The fully-qualified method, `/package.Service/Method`
-     * @param HandlerData       $handler                   Resolved handler (the attributed method, or a #[MethodHandler] override)
+     * @param HandlerData       $handler                   Resolved handler (a #[RouteHandler], or the route attribute's own argument)
      * @param class-string|null $requestType               The generated protobuf request message type
      * @param class-string|null $responseType              The generated protobuf response message type
      * @param class-string[]    $routeMatchedMiddleware

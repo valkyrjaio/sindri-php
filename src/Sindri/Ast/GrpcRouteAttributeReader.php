@@ -20,15 +20,17 @@ use PhpParser\Node\Stmt\ClassMethod;
 use Sindri\Ast\Abstract\RouteAttributeReader;
 use Sindri\Ast\Contract\GrpcRouteAttributeReaderContract;
 use Sindri\Ast\Data\GrpcRouteData;
+use Sindri\Ast\Data\HandlerData;
 use Sindri\Ast\Data\Result\GrpcRouteAttributeResult;
+use Sindri\Ast\Throwable\Exception\AstNoRouteHandlerException;
 use Valkyrja\Grpc\Middleware\Contract\ResponseSentMiddlewareContract;
 use Valkyrja\Grpc\Middleware\Contract\RouteDispatchedMiddlewareContract;
 use Valkyrja\Grpc\Middleware\Contract\RouteMatchedMiddlewareContract;
 use Valkyrja\Grpc\Middleware\Contract\SendingResponseMiddlewareContract;
 use Valkyrja\Grpc\Middleware\Contract\ThrowableCaughtMiddlewareContract;
-use Valkyrja\Grpc\Routing\Attribute\Method;
-use Valkyrja\Grpc\Routing\Attribute\Method\MethodHandler;
-use Valkyrja\Grpc\Routing\Attribute\Method\Middleware;
+use Valkyrja\Grpc\Routing\Attribute\Route as Attribute;
+use Valkyrja\Grpc\Routing\Attribute\Route\Middleware;
+use Valkyrja\Grpc\Routing\Attribute\Route\RouteHandler;
 use Valkyrja\Grpc\Routing\Attribute\Service;
 use Valkyrja\Grpc\Routing\Data\Route;
 
@@ -37,7 +39,7 @@ use function is_a;
 use function is_string;
 
 /**
- * Scans a gRPC service controller class file for #[Service], #[Method] and its sub-attributes and
+ * Scans a gRPC service controller class file for #[Service], #[Route] and its sub-attributes and
  * returns PHP-Parser Expr nodes ready for the data cache generator.
  *
  * Mirrors the logic of the framework's runtime attribute collector but operates entirely on AST
@@ -63,7 +65,7 @@ class GrpcRouteAttributeReader extends RouteAttributeReader implements GrpcRoute
         $service = $this->readServiceName($class, $useMap, $namespace, $currentClass);
 
         // A class without a #[Service] attribute contributes no routes, even when its methods carry
-        // #[Method] attributes: the service name is what keys them.
+        // #[Route] attributes: the service name is what keys them.
         if ($service === null) {
             return new GrpcRouteAttributeResult();
         }
@@ -71,7 +73,7 @@ class GrpcRouteAttributeReader extends RouteAttributeReader implements GrpcRoute
         $routes = [];
 
         foreach ($class->getMethods() as $method) {
-            foreach ($this->findAttributesOnNode($method, Method::class, $useMap, $namespace) as $attr) {
+            foreach ($this->findAttributesOnNode($method, Attribute::class, $useMap, $namespace) as $attr) {
                 $data = $this->buildRouteData($service, $attr->args, $method, $useMap, $namespace, $currentClass);
 
                 if ($data !== null) {
@@ -89,7 +91,7 @@ class GrpcRouteAttributeReader extends RouteAttributeReader implements GrpcRoute
     #[Override]
     protected function getRouteHandlerAttributeClass(): string
     {
-        return MethodHandler::class;
+        return RouteHandler::class;
     }
 
     /**
@@ -115,10 +117,12 @@ class GrpcRouteAttributeReader extends RouteAttributeReader implements GrpcRoute
     }
 
     /**
-     * Collect all attribute arguments for a #[Method] and its companions into a GrpcRouteData.
+     * Collect all attribute arguments for a #[Route] and its companions into a GrpcRouteData.
      *
      * @param Arg[]                 $args
      * @param array<string, string> $useMap
+     *
+     * @throws AstNoRouteHandlerException
      */
     protected function buildRouteData(
         string $service,
@@ -140,15 +144,15 @@ class GrpcRouteAttributeReader extends RouteAttributeReader implements GrpcRoute
             $throwableCaughtMiddleware,
             $sendingResponseMiddleware,
             $responseSentMiddleware,
-        ] = $this->updateMiddleware($method, $useMap, $namespace, $currentClass);
+        ] = $this->updateMiddleware($args, $method, $useMap, $namespace, $currentClass);
 
         return new GrpcRouteData(
             method: "/$service/$name",
-            handler: $this->updateHandler($method, $useMap, $namespace, $currentClass),
-            requestType: $this->extractClassArg($args, 'requestType', 3, $useMap, $namespace, $currentClass),
-            responseType: $this->extractClassArg($args, 'responseType', 4, $useMap, $namespace, $currentClass),
-            clientStreaming: $this->extractBoolArg($args, 'clientStreaming', 1, $useMap, $namespace, $currentClass),
-            serverStreaming: $this->extractBoolArg($args, 'serverStreaming', 2, $useMap, $namespace, $currentClass),
+            handler: $this->getHandler($args, $method, $useMap, $namespace, $currentClass),
+            requestType: $this->extractClassArg($args, 'requestType', 2, $useMap, $namespace, $currentClass),
+            responseType: $this->extractClassArg($args, 'responseType', 3, $useMap, $namespace, $currentClass),
+            clientStreaming: $this->extractBoolArg($args, 'clientStreaming', 4, $useMap, $namespace, $currentClass),
+            serverStreaming: $this->extractBoolArg($args, 'serverStreaming', 5, $useMap, $namespace, $currentClass),
             routeMatchedMiddleware: $routeMatchedMiddleware,
             routeDispatchedMiddleware: $routeDispatchedMiddleware,
             throwableCaughtMiddleware: $throwableCaughtMiddleware,
@@ -184,23 +188,63 @@ class GrpcRouteAttributeReader extends RouteAttributeReader implements GrpcRoute
     }
 
     /**
-     * Collect and classify #[Method\Middleware] attributes into the five stage lists.
+     * Resolve the handler a #[RouteHandler] or the route attribute's own argument names.
      *
+     * The handler attribute wins, as it does in the framework's collector. A route that names
+     * neither is rejected here, because the runtime scan rejects it too. A handler the reader
+     * cannot resolve to a class and a method name counts as unnamed, because the generated route
+     * holds the pair rather than the expression.
+     *
+     * @param Arg[]                 $args
+     * @param array<string, string> $useMap
+     *
+     * @throws AstNoRouteHandlerException
+     */
+    protected function getHandler(
+        array $args,
+        ClassMethod $method,
+        array $useMap,
+        string $namespace,
+        string $currentClass,
+    ): HandlerData {
+        $attributed = $this->getAttributedHandler($method, $useMap, $namespace, $currentClass);
+
+        if ($attributed instanceof HandlerData) {
+            return $attributed;
+        }
+
+        $declared = $this->extractExprValue($this->getAttrArg($args, 'handler', 1), $useMap, $namespace, $currentClass);
+
+        if ($declared instanceof HandlerData) {
+            return $declared;
+        }
+
+        throw new AstNoRouteHandlerException(
+            'Route on ' . $currentClass . '::' . $method->name->toString() . ' names no handler'
+        );
+    }
+
+    /**
+     * Collect the five stage lists from the route attribute, then classify each #[Middleware] into
+     * every stage list whose contract it implements.
+     *
+     * @param Arg[]                 $args
      * @param array<string, string> $useMap
      *
      * @return array{class-string[], class-string[], class-string[], class-string[], class-string[]}
      */
     protected function updateMiddleware(
+        array $args,
         ClassMethod $method,
         array $useMap,
         string $namespace,
         string $currentClass,
     ): array {
-        $routeMatchedMiddleware    = [];
-        $routeDispatchedMiddleware = [];
-        $throwableCaughtMiddleware = [];
-        $sendingResponseMiddleware = [];
-        $responseSentMiddleware    = [];
+        $routeMatchedMiddleware    = $this->extractClassListArg($args, 'routeMatchedMiddleware', 6, $useMap, $namespace, $currentClass);
+        $routeDispatchedMiddleware = $this->extractClassListArg($args, 'routeDispatchedMiddleware', 7, $useMap, $namespace, $currentClass);
+        $throwableCaughtMiddleware = $this->extractClassListArg($args, 'throwableCaughtMiddleware', 8, $useMap, $namespace, $currentClass);
+        $sendingResponseMiddleware = $this->extractClassListArg($args, 'sendingResponseMiddleware', 9, $useMap, $namespace, $currentClass);
+        $responseSentMiddleware    = $this->extractClassListArg($args, 'responseSentMiddleware', 10, $useMap, $namespace, $currentClass);
 
         foreach ($this->findAttributesOnNode($method, Middleware::class, $useMap, $namespace) as $attr) {
             $mwFqn = $this->extractExprValue($this->getAttrArg($attr->args, 'name', 0), $useMap, $namespace, $currentClass);

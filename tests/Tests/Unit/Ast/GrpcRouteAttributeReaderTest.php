@@ -14,9 +14,14 @@ namespace Sindri\Tests\Unit\Ast;
 
 use PhpParser\PrettyPrinter\Standard;
 use Sindri\Ast\GrpcRouteAttributeReader;
+use Sindri\Ast\Throwable\Exception\AstNoRouteHandlerException;
 use Sindri\Tests\Fixtures\Grpc\Controller\TestGrpcControllerFixture;
 use Sindri\Tests\Fixtures\Grpc\Middleware\TestGrpcMiddlewareFixture;
+use Sindri\Tests\Fixtures\Grpc\Middleware\TestGrpcResponseSentOnlyMiddlewareFixture;
+use Sindri\Tests\Fixtures\Grpc\Middleware\TestGrpcRouteDispatchedOnlyMiddlewareFixture;
 use Sindri\Tests\Fixtures\Grpc\Middleware\TestGrpcRouteMatchedOnlyMiddlewareFixture;
+use Sindri\Tests\Fixtures\Grpc\Middleware\TestGrpcSendingResponseOnlyMiddlewareFixture;
+use Sindri\Tests\Fixtures\Grpc\Middleware\TestGrpcThrowableCaughtOnlyMiddlewareFixture;
 use Sindri\Tests\Unit\Abstract\TestCase;
 
 use function file_put_contents;
@@ -72,7 +77,7 @@ final class GrpcRouteAttributeReaderTest extends TestCase
         self::assertSame([], $result->routes);
     }
 
-    public function testEmitsTheAttributedMethodAsTheHandler(): void
+    public function testEmitsTheHandlerTheRouteAttributeNames(): void
     {
         $result = new GrpcRouteAttributeReader()->readFile(self::$fixtureFile);
 
@@ -139,7 +144,7 @@ final class GrpcRouteAttributeReaderTest extends TestCase
         self::assertStringNotContainsString('Middleware:', $printed);
     }
 
-    public function testAnUnparseableFileYieldsNoRoutes(): void
+    public function testAFileWithNoClassYieldsNoRoutes(): void
     {
         $file = tempnam(sys_get_temp_dir(), 'sindri-grpc');
 
@@ -154,7 +159,7 @@ final class GrpcRouteAttributeReaderTest extends TestCase
         self::assertSame([], $result->routes);
     }
 
-    public function testAMethodAttributeWithoutANameIsSkipped(): void
+    public function testARouteAttributeWithoutANameIsSkipped(): void
     {
         $file = tempnam(sys_get_temp_dir(), 'sindri-grpc');
 
@@ -165,13 +170,13 @@ final class GrpcRouteAttributeReaderTest extends TestCase
 
             namespace Sindri\Tests\Tmp;
 
-            use Valkyrja\Grpc\Routing\Attribute\Method;
+            use Valkyrja\Grpc\Routing\Attribute\Route;
             use Valkyrja\Grpc\Routing\Attribute\Service;
 
             #[Service(service: 'pkg.Empty')]
             final class TmpController
             {
-                #[Method(name: '')]
+                #[Route(name: '')]
                 public static function nameless(): void
                 {
                 }
@@ -196,13 +201,13 @@ final class GrpcRouteAttributeReaderTest extends TestCase
 
             namespace Sindri\Tests\Tmp;
 
-            use Valkyrja\Grpc\Routing\Attribute\Method;
+            use Valkyrja\Grpc\Routing\Attribute\Route;
             use Valkyrja\Grpc\Routing\Attribute\Service;
 
             #[Service(service: '')]
             final class TmpController
             {
-                #[Method(name: 'DoThing')]
+                #[Route(name: 'DoThing')]
                 public static function doThing(): void
                 {
                 }
@@ -227,14 +232,14 @@ final class GrpcRouteAttributeReaderTest extends TestCase
 
             namespace Sindri\Tests\Tmp;
 
-            use Valkyrja\Grpc\Routing\Attribute\Method;
-            use Valkyrja\Grpc\Routing\Attribute\Method\Middleware;
+            use Valkyrja\Grpc\Routing\Attribute\Route;
+            use Valkyrja\Grpc\Routing\Attribute\Route\Middleware;
             use Valkyrja\Grpc\Routing\Attribute\Service;
 
             #[Service(service: 'pkg.Loose')]
             final class TmpController
             {
-                #[Method(name: 'DoThing')]
+                #[Route(name: 'DoThing', handler: [self::class, 'doThing'])]
                 #[Middleware(name: 123)]
                 public static function doThing(): void
                 {
@@ -261,14 +266,19 @@ final class GrpcRouteAttributeReaderTest extends TestCase
 
             namespace Sindri\Tests\Tmp;
 
-            use Valkyrja\Grpc\Routing\Attribute\Method;
+            use Valkyrja\Grpc\Routing\Attribute\Route;
             use Valkyrja\Grpc\Routing\Attribute\Service;
-            use Valkyrja\Grpc\Routing\Data\Route;
+            use Valkyrja\Grpc\Routing\Data\Route as DataRoute;
 
             #[Service(service: 'pkg.Typed')]
             final class TmpController
             {
-                #[Method(name: 'DoThing', requestType: Route::class, responseType: Route::class)]
+                #[Route(
+                    name: 'DoThing',
+                    handler: [self::class, 'doThing'],
+                    requestType: DataRoute::class,
+                    responseType: Service::class,
+                )]
                 public static function doThing(): void
                 {
                 }
@@ -281,8 +291,9 @@ final class GrpcRouteAttributeReaderTest extends TestCase
 
         $printed = self::print($result->routes['/pkg.Typed/DoThing']);
 
+        // The two name their own class, so a reader that crossed the two names fails here.
         self::assertStringContainsString('requestType: \Valkyrja\Grpc\Routing\Data\Route::class', $printed);
-        self::assertStringContainsString('responseType: \Valkyrja\Grpc\Routing\Data\Route::class', $printed);
+        self::assertStringContainsString('responseType: \Valkyrja\Grpc\Routing\Attribute\Service::class', $printed);
     }
 
     public function testAnEmptyRequestTypeIsDropped(): void
@@ -296,13 +307,13 @@ final class GrpcRouteAttributeReaderTest extends TestCase
 
             namespace Sindri\Tests\Tmp;
 
-            use Valkyrja\Grpc\Routing\Attribute\Method;
+            use Valkyrja\Grpc\Routing\Attribute\Route;
             use Valkyrja\Grpc\Routing\Attribute\Service;
 
             #[Service(service: 'pkg.Empty')]
             final class TmpController
             {
-                #[Method(name: 'DoThing', requestType: '', responseType: '')]
+                #[Route(name: 'DoThing', handler: [self::class, 'doThing'], requestType: '', responseType: '')]
                 public static function doThing(): void
                 {
                 }
@@ -330,14 +341,14 @@ final class GrpcRouteAttributeReaderTest extends TestCase
 
             namespace Sindri\Tests\Tmp;
 
-            use Valkyrja\Grpc\Routing\Attribute\Method;
-            use Valkyrja\Grpc\Routing\Attribute\Method\Middleware;
+            use Valkyrja\Grpc\Routing\Attribute\Route;
+            use Valkyrja\Grpc\Routing\Attribute\Route\Middleware;
             use Valkyrja\Grpc\Routing\Attribute\Service;
 
             #[Service(service: 'pkg.EmptyMw')]
             final class TmpController
             {
-                #[Method(name: 'DoThing')]
+                #[Route(name: 'DoThing', handler: [self::class, 'doThing'])]
                 #[Middleware(name: '')]
                 public static function doThing(): void
                 {
@@ -364,8 +375,8 @@ final class GrpcRouteAttributeReaderTest extends TestCase
 
             namespace Sindri\Tests\Tmp;
 
-            use Valkyrja\Grpc\Routing\Attribute\Method;
-            use Valkyrja\Grpc\Routing\Attribute\Method\MethodHandler;
+            use Valkyrja\Grpc\Routing\Attribute\Route;
+            use Valkyrja\Grpc\Routing\Attribute\Route\RouteHandler;
             use Valkyrja\Grpc\Routing\Attribute\Service;
 
             #[Service(service: 'pkg.Overridden')]
@@ -375,8 +386,8 @@ final class GrpcRouteAttributeReaderTest extends TestCase
                 {
                 }
 
-                #[Method(name: 'DoThing')]
-                #[MethodHandler([self::class, 'actualHandler'])]
+                #[Route(name: 'DoThing', handler: [self::class, 'doThing'])]
+                #[RouteHandler([self::class, 'actualHandler'])]
                 public static function doThing(): void
                 {
                 }
@@ -391,5 +402,491 @@ final class GrpcRouteAttributeReaderTest extends TestCase
             'actualHandler',
             self::print($result->routes['/pkg.Overridden/DoThing'])
         );
+    }
+
+    public function testARouteThatNamesNoHandlerIsRejected(): void
+    {
+        $file = tempnam(sys_get_temp_dir(), 'sindri-grpc');
+
+        self::assertNotFalse($file);
+
+        file_put_contents($file, <<<'PHP'
+            <?php
+
+            namespace Sindri\Tests\Tmp;
+
+            use Valkyrja\Grpc\Routing\Attribute\Route;
+            use Valkyrja\Grpc\Routing\Attribute\Service;
+
+            #[Service(service: 'pkg.NoHandler')]
+            final class TmpController
+            {
+                #[Route(name: 'DoThing')]
+                public static function doThing(): void
+                {
+                }
+            }
+            PHP);
+
+        try {
+            $this->expectException(AstNoRouteHandlerException::class);
+            $this->expectExceptionMessage('Route on Sindri\Tests\Tmp\TmpController::doThing names no handler');
+
+            new GrpcRouteAttributeReader()->readFile($file);
+        } finally {
+            unlink($file);
+        }
+    }
+
+    public function testEmitsEveryMiddlewareStageListTheRouteAttributeNames(): void
+    {
+        $file = tempnam(sys_get_temp_dir(), 'sindri-grpc');
+
+        self::assertNotFalse($file);
+
+        file_put_contents($file, <<<'PHP'
+            <?php
+
+            namespace Sindri\Tests\Tmp;
+
+            use Sindri\Tests\Fixtures\Grpc\Middleware\TestGrpcResponseSentOnlyMiddlewareFixture;
+            use Sindri\Tests\Fixtures\Grpc\Middleware\TestGrpcRouteDispatchedOnlyMiddlewareFixture;
+            use Sindri\Tests\Fixtures\Grpc\Middleware\TestGrpcRouteMatchedOnlyMiddlewareFixture;
+            use Sindri\Tests\Fixtures\Grpc\Middleware\TestGrpcSendingResponseOnlyMiddlewareFixture;
+            use Sindri\Tests\Fixtures\Grpc\Middleware\TestGrpcThrowableCaughtOnlyMiddlewareFixture;
+            use Valkyrja\Grpc\Routing\Attribute\Route;
+            use Valkyrja\Grpc\Routing\Attribute\Service;
+
+            #[Service(service: 'pkg.Declared')]
+            final class TmpController
+            {
+                #[Route(
+                    name: 'DoThing',
+                    handler: [self::class, 'doThing'],
+                    routeMatchedMiddleware: [TestGrpcRouteMatchedOnlyMiddlewareFixture::class],
+                    routeDispatchedMiddleware: [TestGrpcRouteDispatchedOnlyMiddlewareFixture::class],
+                    throwableCaughtMiddleware: [TestGrpcThrowableCaughtOnlyMiddlewareFixture::class],
+                    sendingResponseMiddleware: [TestGrpcSendingResponseOnlyMiddlewareFixture::class],
+                    responseSentMiddleware: [TestGrpcResponseSentOnlyMiddlewareFixture::class],
+                )]
+                public static function doThing(): void
+                {
+                }
+            }
+            PHP);
+
+        $result = new GrpcRouteAttributeReader()->readFile($file);
+
+        unlink($file);
+
+        $printed = self::print($result->routes['/pkg.Declared/DoThing']);
+
+        // Each stage names its own class, so an argument read into the wrong field fails here.
+        self::assertStringContainsString(
+            'routeMatchedMiddleware: [\\' . TestGrpcRouteMatchedOnlyMiddlewareFixture::class . '::class]',
+            $printed
+        );
+        self::assertStringContainsString(
+            'routeDispatchedMiddleware: [\\' . TestGrpcRouteDispatchedOnlyMiddlewareFixture::class . '::class]',
+            $printed
+        );
+        self::assertStringContainsString(
+            'throwableCaughtMiddleware: [\\' . TestGrpcThrowableCaughtOnlyMiddlewareFixture::class . '::class]',
+            $printed
+        );
+        self::assertStringContainsString(
+            'sendingResponseMiddleware: [\\' . TestGrpcSendingResponseOnlyMiddlewareFixture::class . '::class]',
+            $printed
+        );
+        self::assertStringContainsString(
+            'responseSentMiddleware: [\\' . TestGrpcResponseSentOnlyMiddlewareFixture::class . '::class]',
+            $printed
+        );
+    }
+
+    public function testAMiddlewareAttributeAppendsToTheStageListTheRouteAttributeNames(): void
+    {
+        $file = tempnam(sys_get_temp_dir(), 'sindri-grpc');
+
+        self::assertNotFalse($file);
+
+        file_put_contents($file, <<<'PHP'
+            <?php
+
+            namespace Sindri\Tests\Tmp;
+
+            use Sindri\Tests\Fixtures\Grpc\Middleware\TestGrpcMiddlewareFixture;
+            use Sindri\Tests\Fixtures\Grpc\Middleware\TestGrpcRouteMatchedOnlyMiddlewareFixture;
+            use Valkyrja\Grpc\Routing\Attribute\Route;
+            use Valkyrja\Grpc\Routing\Attribute\Route\Middleware;
+            use Valkyrja\Grpc\Routing\Attribute\Service;
+
+            #[Service(service: 'pkg.Appended')]
+            final class TmpController
+            {
+                #[Route(
+                    name: 'DoThing',
+                    handler: [self::class, 'doThing'],
+                    routeMatchedMiddleware: [TestGrpcRouteMatchedOnlyMiddlewareFixture::class],
+                )]
+                #[Middleware(name: TestGrpcMiddlewareFixture::class)]
+                public static function doThing(): void
+                {
+                }
+            }
+            PHP);
+
+        $result = new GrpcRouteAttributeReader()->readFile($file);
+
+        unlink($file);
+
+        $printed  = self::print($result->routes['/pkg.Appended/DoThing']);
+        $declared = '\\' . TestGrpcRouteMatchedOnlyMiddlewareFixture::class;
+        $appended = '\\' . TestGrpcMiddlewareFixture::class;
+
+        self::assertStringContainsString(
+            "routeMatchedMiddleware: [$declared::class, $appended::class]",
+            $printed
+        );
+        self::assertStringContainsString("responseSentMiddleware: [$appended::class]", $printed);
+    }
+
+    public function testAnUnreadableHandlerAttributeLeavesTheRouteAttributesOwnHandler(): void
+    {
+        $file = tempnam(sys_get_temp_dir(), 'sindri-grpc');
+
+        self::assertNotFalse($file);
+
+        file_put_contents($file, <<<'PHP'
+            <?php
+
+            namespace Sindri\Tests\Tmp;
+
+            use Valkyrja\Grpc\Routing\Attribute\Route;
+            use Valkyrja\Grpc\Routing\Attribute\Route\RouteHandler;
+            use Valkyrja\Grpc\Routing\Attribute\Service;
+
+            #[Service(service: 'pkg.LooseHandler')]
+            final class TmpController
+            {
+                #[Route(name: 'DoThing', handler: [self::class, 'doThing'])]
+                #[RouteHandler(123)]
+                public static function doThing(): void
+                {
+                }
+            }
+            PHP);
+
+        $result = new GrpcRouteAttributeReader()->readFile($file);
+
+        unlink($file);
+
+        self::assertStringContainsString(
+            '\\Sindri\\Tests\\Tmp\\TmpController::class, \'doThing\'',
+            self::print($result->routes['/pkg.LooseHandler/DoThing'])
+        );
+    }
+
+    public function testEmitsTheHandlerTheRouteAttributeNamesRatherThanTheAttributedMethod(): void
+    {
+        $file = tempnam(sys_get_temp_dir(), 'sindri-grpc');
+
+        self::assertNotFalse($file);
+
+        file_put_contents($file, <<<'PHP'
+            <?php
+
+            namespace Sindri\Tests\Tmp;
+
+            use Valkyrja\Grpc\Routing\Attribute\Route;
+            use Valkyrja\Grpc\Routing\Attribute\Service;
+
+            #[Service(service: 'pkg.Declared')]
+            final class TmpController
+            {
+                #[Route(name: 'DoThing', handler: [self::class, 'declaredHandler'])]
+                public static function doThing(): void
+                {
+                }
+
+                public static function declaredHandler(): void
+                {
+                }
+            }
+            PHP);
+
+        $result = new GrpcRouteAttributeReader()->readFile($file);
+
+        unlink($file);
+
+        $printed = self::print($result->routes['/pkg.Declared/DoThing']);
+
+        // The attributed method is not the handler, so a reader that derived one from the method
+        // fails here.
+        self::assertStringContainsString('\'declaredHandler\'', $printed);
+        self::assertStringNotContainsString('\'doThing\'', $printed);
+    }
+
+    public function testReadsEveryRouteArgumentDeclaredPositionally(): void
+    {
+        $file = tempnam(sys_get_temp_dir(), 'sindri-grpc');
+
+        self::assertNotFalse($file);
+
+        file_put_contents($file, <<<'PHP'
+            <?php
+
+            namespace Sindri\Tests\Tmp;
+
+            use Sindri\Tests\Fixtures\Grpc\Middleware\TestGrpcResponseSentOnlyMiddlewareFixture;
+            use Sindri\Tests\Fixtures\Grpc\Middleware\TestGrpcRouteDispatchedOnlyMiddlewareFixture;
+            use Sindri\Tests\Fixtures\Grpc\Middleware\TestGrpcRouteMatchedOnlyMiddlewareFixture;
+            use Sindri\Tests\Fixtures\Grpc\Middleware\TestGrpcSendingResponseOnlyMiddlewareFixture;
+            use Sindri\Tests\Fixtures\Grpc\Middleware\TestGrpcThrowableCaughtOnlyMiddlewareFixture;
+            use Valkyrja\Grpc\Routing\Attribute\Route;
+            use Valkyrja\Grpc\Routing\Attribute\Service;
+            use Valkyrja\Grpc\Routing\Data\Route as DataRoute;
+
+            #[Service(service: 'pkg.Positional')]
+            final class TmpController
+            {
+                #[Route(
+                    'DoThing',
+                    [self::class, 'declaredHandler'],
+                    DataRoute::class,
+                    Service::class,
+                    false,
+                    true,
+                    [TestGrpcRouteMatchedOnlyMiddlewareFixture::class],
+                    [TestGrpcRouteDispatchedOnlyMiddlewareFixture::class],
+                    [TestGrpcThrowableCaughtOnlyMiddlewareFixture::class],
+                    [TestGrpcSendingResponseOnlyMiddlewareFixture::class],
+                    [TestGrpcResponseSentOnlyMiddlewareFixture::class],
+                )]
+                public static function doThing(): void
+                {
+                }
+
+                #[Route(
+                    'DoOther',
+                    [self::class, 'declaredHandler'],
+                    DataRoute::class,
+                    Service::class,
+                    true,
+                    false,
+                )]
+                public static function doOther(): void
+                {
+                }
+
+                public static function declaredHandler(): void
+                {
+                }
+            }
+            PHP);
+
+        $result = new GrpcRouteAttributeReader()->readFile($file);
+
+        unlink($file);
+
+        $printed = self::print($result->routes['/pkg.Positional/DoThing']);
+
+        // Each slot holds its own value, so an argument read from the wrong position fails here.
+        self::assertStringContainsString('\'declaredHandler\'', $printed);
+        self::assertStringContainsString('requestType: \Valkyrja\Grpc\Routing\Data\Route::class', $printed);
+        self::assertStringContainsString('responseType: \Valkyrja\Grpc\Routing\Attribute\Service::class', $printed);
+        self::assertStringNotContainsString('clientStreaming', $printed);
+        self::assertStringContainsString('serverStreaming: true', $printed);
+        self::assertStringContainsString(
+            'routeMatchedMiddleware: [\\' . TestGrpcRouteMatchedOnlyMiddlewareFixture::class . '::class]',
+            $printed
+        );
+        self::assertStringContainsString(
+            'routeDispatchedMiddleware: [\\' . TestGrpcRouteDispatchedOnlyMiddlewareFixture::class . '::class]',
+            $printed
+        );
+        self::assertStringContainsString(
+            'throwableCaughtMiddleware: [\\' . TestGrpcThrowableCaughtOnlyMiddlewareFixture::class . '::class]',
+            $printed
+        );
+        self::assertStringContainsString(
+            'sendingResponseMiddleware: [\\' . TestGrpcSendingResponseOnlyMiddlewareFixture::class . '::class]',
+            $printed
+        );
+        self::assertStringContainsString(
+            'responseSentMiddleware: [\\' . TestGrpcResponseSentOnlyMiddlewareFixture::class . '::class]',
+            $printed
+        );
+
+        // A flag read from a slot that holds no bool reads false, which is what this route declares
+        // for `clientStreaming`, so a second route reverses the pair and pins both positions.
+        $other = self::print($result->routes['/pkg.Positional/DoOther']);
+
+        self::assertStringContainsString('clientStreaming: true', $other);
+        self::assertStringNotContainsString('serverStreaming', $other);
+    }
+
+    public function testReadsOneStreamingFlagWithoutTheOther(): void
+    {
+        $file = tempnam(sys_get_temp_dir(), 'sindri-grpc');
+
+        self::assertNotFalse($file);
+
+        file_put_contents($file, <<<'PHP'
+            <?php
+
+            namespace Sindri\Tests\Tmp;
+
+            use Valkyrja\Grpc\Routing\Attribute\Route;
+            use Valkyrja\Grpc\Routing\Attribute\Service;
+
+            #[Service(service: 'pkg.ClientOnly')]
+            final class TmpController
+            {
+                #[Route(
+                    name: 'DoThing',
+                    handler: [self::class, 'doThing'],
+                    clientStreaming: true,
+                    serverStreaming: false,
+                )]
+                public static function doThing(): void
+                {
+                }
+            }
+            PHP);
+
+        $result = new GrpcRouteAttributeReader()->readFile($file);
+
+        unlink($file);
+
+        $printed = self::print($result->routes['/pkg.ClientOnly/DoThing']);
+
+        // Only one flag is set, so a reader that crossed the two names fails here.
+        self::assertStringContainsString('clientStreaming: true', $printed);
+        self::assertStringNotContainsString('serverStreaming', $printed);
+    }
+
+    public function testAStageListTheReaderCannotResolveIsDropped(): void
+    {
+        $file = tempnam(sys_get_temp_dir(), 'sindri-grpc');
+
+        self::assertNotFalse($file);
+
+        file_put_contents($file, <<<'PHP'
+            <?php
+
+            namespace Sindri\Tests\Tmp;
+
+            use Sindri\Tests\Fixtures\Grpc\Middleware\TestGrpcRouteMatchedOnlyMiddlewareFixture;
+            use Valkyrja\Grpc\Routing\Attribute\Route;
+            use Valkyrja\Grpc\Routing\Attribute\Service;
+
+            #[Service(service: 'pkg.LooseList')]
+            final class TmpController
+            {
+                public const array MIDDLEWARE = [TestGrpcRouteMatchedOnlyMiddlewareFixture::class];
+
+                #[Route(
+                    name: 'DoThing',
+                    handler: [self::class, 'doThing'],
+                    routeMatchedMiddleware: [123],
+                    responseSentMiddleware: self::MIDDLEWARE,
+                )]
+                public static function doThing(): void
+                {
+                }
+            }
+            PHP);
+
+        $result = new GrpcRouteAttributeReader()->readFile($file);
+
+        unlink($file);
+
+        $printed = self::print($result->routes['/pkg.LooseList/DoThing']);
+
+        // The generated route holds class names, so the reader leaves out a list item that is no
+        // class name and a list that is no literal, rather than writing either into the cache.
+        self::assertStringNotContainsString('routeMatchedMiddleware:', $printed);
+        self::assertStringNotContainsString('responseSentMiddleware:', $printed);
+    }
+
+    public function testARepeatedRouteAttributeEmitsARouteForEachName(): void
+    {
+        $file = tempnam(sys_get_temp_dir(), 'sindri-grpc');
+
+        self::assertNotFalse($file);
+
+        file_put_contents($file, <<<'PHP'
+            <?php
+
+            namespace Sindri\Tests\Tmp;
+
+            use Sindri\Tests\Fixtures\Grpc\Middleware\TestGrpcResponseSentOnlyMiddlewareFixture;
+            use Sindri\Tests\Fixtures\Grpc\Middleware\TestGrpcRouteMatchedOnlyMiddlewareFixture;
+            use Valkyrja\Grpc\Routing\Attribute\Route;
+            use Valkyrja\Grpc\Routing\Attribute\Service;
+            use Valkyrja\Grpc\Routing\Data\Route as DataRoute;
+
+            #[Service(service: 'pkg.Aliased')]
+            final class TmpController
+            {
+                #[Route(
+                    name: 'SayHello',
+                    handler: [self::class, 'sayHello'],
+                    requestType: DataRoute::class,
+                    clientStreaming: true,
+                    routeMatchedMiddleware: [TestGrpcRouteMatchedOnlyMiddlewareFixture::class],
+                )]
+                #[Route(
+                    name: 'Greet',
+                    handler: [self::class, 'greet'],
+                    responseType: Service::class,
+                    serverStreaming: true,
+                    responseSentMiddleware: [TestGrpcResponseSentOnlyMiddlewareFixture::class],
+                )]
+                public static function sayHello(): void
+                {
+                }
+
+                public static function greet(): void
+                {
+                }
+            }
+            PHP);
+
+        $result = new GrpcRouteAttributeReader()->readFile($file);
+
+        unlink($file);
+
+        self::assertCount(2, $result->routes);
+
+        $first  = self::print($result->routes['/pkg.Aliased/SayHello']);
+        $second = self::print($result->routes['/pkg.Aliased/Greet']);
+
+        // The two attributes differ in every field, so a field resolved once for the method rather
+        // than once for each attribute fails here, and so does a value that leaks between them.
+        self::assertStringContainsString('\'sayHello\'', $first);
+        self::assertStringContainsString('requestType: \Valkyrja\Grpc\Routing\Data\Route::class', $first);
+        self::assertStringContainsString('clientStreaming: true', $first);
+        self::assertStringContainsString(
+            'routeMatchedMiddleware: [\\' . TestGrpcRouteMatchedOnlyMiddlewareFixture::class . '::class]',
+            $first
+        );
+        self::assertStringNotContainsString('\'greet\'', $first);
+        self::assertStringNotContainsString('responseType', $first);
+        self::assertStringNotContainsString('serverStreaming', $first);
+        self::assertStringNotContainsString('responseSentMiddleware', $first);
+
+        self::assertStringContainsString('\'greet\'', $second);
+        self::assertStringContainsString('responseType: \Valkyrja\Grpc\Routing\Attribute\Service::class', $second);
+        self::assertStringContainsString('serverStreaming: true', $second);
+        self::assertStringContainsString(
+            'responseSentMiddleware: [\\' . TestGrpcResponseSentOnlyMiddlewareFixture::class . '::class]',
+            $second
+        );
+        self::assertStringNotContainsString('\'sayHello\'', $second);
+        self::assertStringNotContainsString('requestType', $second);
+        self::assertStringNotContainsString('clientStreaming', $second);
+        self::assertStringNotContainsString('routeMatchedMiddleware', $second);
     }
 }
