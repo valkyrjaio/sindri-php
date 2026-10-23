@@ -15,13 +15,6 @@ namespace Sindri\Ast\Abstract;
 use PhpParser\Node\Stmt\ClassMethod;
 use Sindri\Ast\Data\HandlerData;
 
-/**
- * Base for route attribute readers — provides shared handler resolution logic.
- *
- * Concrete subclasses supply the FQN of their specific #[RouteHandler] attribute
- * via getRouteHandlerAttributeClass(), and this class implements the common
- * updateHandler() that uses it.
- */
 abstract class RouteAttributeReader extends AstReader
 {
     /**
