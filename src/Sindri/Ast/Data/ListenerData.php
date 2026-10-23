@@ -16,7 +16,7 @@ use Sindri\Ast\Data\Contract\ListenerDataContract;
 
 /**
  * Portable intermediate representation of a single listener extracted from
- * #[Listener] and #[ListenerHandler] attributes.
+ * #[Listener] and #[Handler] attributes.
  *
  * Mirrors the shape of Valkyrja\Event\Data\Listener without requiring the
  * framework data class to be instantiated.

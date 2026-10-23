@@ -26,13 +26,13 @@ use PhpParser\Node\Stmt\ClassMethod;
 use Sindri\Ast\Abstract\RouteAttributeReader;
 use Sindri\Ast\Data\HandlerData;
 use Sindri\Tests\Unit\Abstract\TestCase;
-use Valkyrja\Cli\Routing\Attribute\Route\RouteHandler;
+use Valkyrja\Cli\Routing\Attribute\Route\Handler;
 
 final class RouteAttributeReaderTest extends TestCase
 {
     /**
-     * A concrete RouteAttributeReader that resolves its #[RouteHandler] attribute to
-     * Valkyrja\Cli\Routing\Attribute\Route\RouteHandler and exposes the protected
+     * A concrete RouteAttributeReader that resolves its #[Handler] attribute to
+     * Valkyrja\Cli\Routing\Attribute\Route\Handler and exposes the protected
      * updateHandler() for direct testing.
      */
     private RouteAttributeReader $reader;
@@ -42,7 +42,7 @@ final class RouteAttributeReaderTest extends TestCase
         $this->reader = new class extends RouteAttributeReader {
             protected function getRouteHandlerAttributeClass(): string
             {
-                return RouteHandler::class;
+                return Handler::class;
             }
 
             public function callUpdateHandler(
@@ -57,7 +57,7 @@ final class RouteAttributeReaderTest extends TestCase
     }
 
     // -------------------------------------------------------------------------
-    // updateHandler — no #[RouteHandler] attribute falls back to [class, method]
+    // updateHandler — no #[Handler] attribute falls back to [class, method]
     // -------------------------------------------------------------------------
 
     public function testUpdateHandlerFallsBackToCurrentClassAndMethodWhenNoAttribute(): void
@@ -72,7 +72,7 @@ final class RouteAttributeReaderTest extends TestCase
     }
 
     // -------------------------------------------------------------------------
-    // updateHandler — #[RouteHandler([Class::class, 'method'])] returns that handler
+    // updateHandler — #[Handler([Class::class, 'method'])] returns that handler
     // -------------------------------------------------------------------------
 
     public function testUpdateHandlerReturnsHandlerFromAttributeArray(): void
@@ -107,12 +107,12 @@ final class RouteAttributeReaderTest extends TestCase
     }
 
     /**
-     * Build a ClassMethod named "myAction" carrying a single #[RouteHandler] attribute
+     * Build a ClassMethod named "myAction" carrying a single #[Handler] attribute
      * whose first argument is the given expression.
      */
     private function methodWithRouteHandlerArg(Expr $argExpr): ClassMethod
     {
-        $attribute = new Attribute(new FullyQualified(RouteHandler::class), [new Arg($argExpr)]);
+        $attribute = new Attribute(new FullyQualified(Handler::class), [new Arg($argExpr)]);
 
         return new ClassMethod(
             new Identifier('myAction'),

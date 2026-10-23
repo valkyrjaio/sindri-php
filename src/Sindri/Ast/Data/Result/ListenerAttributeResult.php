@@ -15,7 +15,7 @@ namespace Sindri\Ast\Data\Result;
 use PhpParser\Node\Expr;
 
 /**
- * Result of scanning a listener class file for #[Listener] / #[ListenerHandler] attributes.
+ * Result of scanning a listener class file for #[Listener] / #[Handler] attributes.
  *
  * Each element of $listeners is a PHP-Parser Expr node (typically Expr\New_)
  * ready to be embedded verbatim in the data cache file by the generator.

@@ -304,7 +304,7 @@ final class HttpRouteAttributeReaderTest extends TestCase
     }
 
     // -----------------------------------------------------------------------
-    // Rich fixture tests — RouteHandler attribute (lines 330-333)
+    // Rich fixture tests — Handler attribute (lines 330-333)
     // -----------------------------------------------------------------------
 
     public function testReadRichFileExtractsCustomHandlerFromRouteHandlerAttr(): void

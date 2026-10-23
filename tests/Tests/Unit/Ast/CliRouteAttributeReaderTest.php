@@ -132,7 +132,7 @@ final class CliRouteAttributeReaderTest extends TestCase
     }
 
     // -----------------------------------------------------------------------
-    // Rich fixture tests — custom RouteHandler
+    // Rich fixture tests — custom Handler
     // -----------------------------------------------------------------------
 
     public function testReadRichFileExtractsCustomRouteHandler(): void
