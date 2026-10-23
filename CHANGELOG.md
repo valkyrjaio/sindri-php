@@ -1,6 +1,12 @@
 # Release Notes for 26.x
 
-## [Unreleased](https://github.com/valkyrjaio/sindri/compare/v26.9.0...26.x)
+## [Unreleased](https://github.com/valkyrjaio/sindri/compare/v26.9.1...26.x)
+
+## [v26.9.1](https://github.com/valkyrjaio/sindri/compare/v26.9.0...v26.9.1) - 2026-10-23
+
+* [Ast] docs: Drop the route attribute reader class doc comment by [@MelechMizrachi](https://github.com/MelechMizrachi) in https://github.com/valkyrjaio/sindri-php/pull/363
+* [Workflow] ci: Update .github workflow refs to v26.26.3 by [@valkyrja-volundr](https://github.com/valkyrja-volundr)[bot] in https://github.com/valkyrjaio/sindri-php/pull/364
+* [Dependency] build: Update composer dependencies by [@valkyrja-volundr](https://github.com/valkyrja-volundr)[bot] in https://github.com/valkyrjaio/sindri-php/pull/366
 
 ## [v26.9.0](https://github.com/valkyrjaio/sindri/compare/v26.8.1...v26.9.0) - 2026-10-22
 
