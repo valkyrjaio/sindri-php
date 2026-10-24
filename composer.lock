@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "8cfd23b914e95161c925a6c9b280d0c7",
+    "content-hash": "f2dc79e4eff44761371f5d58be654d27",
     "packages": [
         {
             "name": "nikic/php-parser",
@@ -327,16 +327,16 @@
         },
         {
             "name": "valkyrja/valkyrja",
-            "version": "v26.23.1",
+            "version": "v26.24.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/valkyrjaio/valkyrja-php.git",
-                "reference": "de4aea6229e4104d93aecd59ad5361eaf778651b"
+                "reference": "948691c335e6fe1c073824584634a15165a6892a"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/valkyrjaio/valkyrja-php/zipball/de4aea6229e4104d93aecd59ad5361eaf778651b",
-                "reference": "de4aea6229e4104d93aecd59ad5361eaf778651b",
+                "url": "https://api.github.com/repos/valkyrjaio/valkyrja-php/zipball/948691c335e6fe1c073824584634a15165a6892a",
+                "reference": "948691c335e6fe1c073824584634a15165a6892a",
                 "shasum": ""
             },
             "require": {
@@ -432,9 +432,9 @@
             ],
             "support": {
                 "issues": "https://github.com/valkyrjaio/valkyrja-php/issues",
-                "source": "https://github.com/valkyrjaio/valkyrja-php/tree/v26.23.1"
+                "source": "https://github.com/valkyrjaio/valkyrja-php/tree/v26.24.0"
             },
-            "time": "2026-10-23T16:57:47+00:00"
+            "time": "2026-10-23T23:49:51+00:00"
         }
     ],
     "packages-dev": [],
