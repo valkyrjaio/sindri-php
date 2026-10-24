@@ -376,7 +376,7 @@ final class GrpcRouteAttributeReaderTest extends TestCase
             namespace Sindri\Tests\Tmp;
 
             use Valkyrja\Grpc\Routing\Attribute\Route;
-            use Valkyrja\Grpc\Routing\Attribute\Route\RouteHandler;
+            use Valkyrja\Grpc\Routing\Attribute\Route\Handler;
             use Valkyrja\Grpc\Routing\Attribute\Service;
 
             #[Service(service: 'pkg.Overridden')]
@@ -387,7 +387,7 @@ final class GrpcRouteAttributeReaderTest extends TestCase
                 }
 
                 #[Route(name: 'DoThing', handler: [self::class, 'doThing'])]
-                #[RouteHandler([self::class, 'actualHandler'])]
+                #[Handler([self::class, 'actualHandler'])]
                 public static function doThing(): void
                 {
                 }
@@ -563,14 +563,14 @@ final class GrpcRouteAttributeReaderTest extends TestCase
             namespace Sindri\Tests\Tmp;
 
             use Valkyrja\Grpc\Routing\Attribute\Route;
-            use Valkyrja\Grpc\Routing\Attribute\Route\RouteHandler;
+            use Valkyrja\Grpc\Routing\Attribute\Route\Handler;
             use Valkyrja\Grpc\Routing\Attribute\Service;
 
             #[Service(service: 'pkg.LooseHandler')]
             final class TmpController
             {
                 #[Route(name: 'DoThing', handler: [self::class, 'doThing'])]
-                #[RouteHandler(123)]
+                #[Handler(123)]
                 public static function doThing(): void
                 {
                 }

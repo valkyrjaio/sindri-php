@@ -26,9 +26,9 @@ use Valkyrja\Queue\Middleware\Contract\RouteMatchedMiddlewareContract;
 use Valkyrja\Queue\Middleware\Contract\SettlingResultMiddlewareContract;
 use Valkyrja\Queue\Middleware\Contract\ThrowableCaughtMiddlewareContract;
 use Valkyrja\Queue\Routing\Attribute\Route;
+use Valkyrja\Queue\Routing\Attribute\Route\Handler;
 use Valkyrja\Queue\Routing\Attribute\Route\Middleware;
 use Valkyrja\Queue\Routing\Attribute\Route\Name;
-use Valkyrja\Queue\Routing\Attribute\Route\RouteHandler;
 use Valkyrja\Queue\Routing\Data\Route as RouteModel;
 
 use function array_push;
@@ -72,7 +72,7 @@ class QueueRouteAttributeReader extends RouteAttributeReader implements QueueRou
     #[Override]
     protected function getRouteHandlerAttributeClass(): string
     {
-        return RouteHandler::class;
+        return Handler::class;
     }
 
     /**

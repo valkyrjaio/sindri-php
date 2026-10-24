@@ -50,7 +50,7 @@ use Valkyrja\Cli\Interaction\Output\Contract\OutputContract;
 use Valkyrja\Cli\Interaction\Output\Factory\Contract\OutputFactoryContract;
 use Valkyrja\Cli\Routing\Attribute\ArgumentParameter;
 use Valkyrja\Cli\Routing\Attribute\Route;
-use Valkyrja\Cli\Routing\Attribute\Route\RouteHandler;
+use Valkyrja\Cli\Routing\Attribute\Route\Handler;
 use Valkyrja\Cli\Routing\Data\Contract\RouteContract;
 use Valkyrja\Cli\Routing\Enum\ArgumentMode;
 
@@ -108,7 +108,7 @@ class GenerateDataFromConfigCommand extends GenerateDataFromAst
         description: 'Generate data for the cli component',
         helpText: [self::class, 'help'],
     )]
-    #[RouteHandler([SindriCliRouteProvider::class, 'cliGenerateDataHandler'])]
+    #[Handler([SindriCliRouteProvider::class, 'cliGenerateDataHandler'])]
     #[ArgumentParameter(
         name: 'config',
         description: 'The path to the application config file',

@@ -13,11 +13,11 @@ declare(strict_types=1);
 namespace Sindri\Tests\Fixtures\Event;
 
 use Valkyrja\Event\Attribute\Listener;
-use Valkyrja\Event\Attribute\ListenerHandler;
+use Valkyrja\Event\Attribute\Listener\Handler;
 
-// Listener with an explicit #[ListenerHandler] attribute on the class level
+// Listener with an explicit #[Handler] attribute on the class level
 #[Listener(eventId: TestEventFixture::class, name: 'handler-class-listener')]
-#[ListenerHandler([TestListenerFixture::class, 'handle'])]
+#[Handler([TestListenerFixture::class, 'handle'])]
 final class TestRichListenerFixture
 {
     // Method-level listener with an inline handler array directly in #[Listener]

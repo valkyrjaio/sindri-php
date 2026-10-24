@@ -16,9 +16,9 @@ use Sindri\Tests\Fixtures\Cli\Middleware\TestCliMiddlewareFixture;
 use Valkyrja\Cli\Routing\Attribute\ArgumentParameter;
 use Valkyrja\Cli\Routing\Attribute\OptionParameter;
 use Valkyrja\Cli\Routing\Attribute\Route;
+use Valkyrja\Cli\Routing\Attribute\Route\Handler;
 use Valkyrja\Cli\Routing\Attribute\Route\Middleware;
 use Valkyrja\Cli\Routing\Attribute\Route\Name;
-use Valkyrja\Cli\Routing\Attribute\Route\RouteHandler;
 use Valkyrja\Cli\Routing\Enum\ArgumentMode;
 
 final class TestRichCliControllerFixture
@@ -71,9 +71,9 @@ final class TestRichCliControllerFixture
     {
     }
 
-    // Route with #[RouteHandler] attribute (covers updateHandler lines 204–207)
+    // Route with #[Handler] attribute (covers updateHandler lines 204–207)
     #[Route(name: 'rich:custom-handler', description: 'Route with custom handler')]
-    #[RouteHandler([TestCliControllerFixture::class, 'testAction'])]
+    #[Handler([TestCliControllerFixture::class, 'testAction'])]
     public function customHandlerAction(): void
     {
     }

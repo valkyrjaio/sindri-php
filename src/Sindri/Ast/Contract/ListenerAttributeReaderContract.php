@@ -15,7 +15,7 @@ namespace Sindri\Ast\Contract;
 use Sindri\Ast\Data\Result\ListenerAttributeResult;
 
 /**
- * Reads #[Listener] and #[ListenerHandler] attributes from a listener class file.
+ * Reads #[Listener] and #[Handler] attributes from a listener class file.
  */
 interface ListenerAttributeReaderContract
 {

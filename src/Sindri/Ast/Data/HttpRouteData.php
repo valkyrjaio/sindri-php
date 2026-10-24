@@ -31,7 +31,7 @@ readonly class HttpRouteData implements HttpRouteDataContract
     /**
      * @param string              $path                      Route path
      * @param string              $name                      Route name
-     * @param HandlerData|null    $handler                   Resolved handler (from #[RouteHandler])
+     * @param HandlerData|null    $handler                   Resolved handler (from #[Handler])
      * @param string[]            $requestMethods            "FQN::CASE" strings for RequestMethod enum values
      * @param class-string[]      $routeMatchedMiddleware
      * @param class-string[]      $routeDispatchedMiddleware

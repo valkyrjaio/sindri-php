@@ -19,7 +19,7 @@ readonly class QueueRouteData implements QueueRouteDataContract
     /**
      * @param string           $name                      Job name — the router map key
      * @param string           $description               Route description
-     * @param HandlerData|null $handler                   Resolved handler (from #[RouteHandler])
+     * @param HandlerData|null $handler                   Resolved handler (from #[Handler])
      * @param class-string[]   $routeMatchedMiddleware
      * @param class-string[]   $routeDispatchedMiddleware
      * @param class-string[]   $throwableCaughtMiddleware
