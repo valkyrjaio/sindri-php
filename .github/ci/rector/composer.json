@@ -3,7 +3,7 @@
     "php" : ">=8.4.27"
   },
   "require-dev"       : {
-    "valkyrja/ci-rector" : "^26.3.77",
+    "valkyrja/ci-rector" : "^26.3.78",
     "phpstan/phpstan" : "^2.3.2"
   },
   "scripts"           : {
