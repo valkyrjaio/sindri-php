@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "d782479f709d2a8ccf7b06c3a8793e33",
+    "content-hash": "2c18f5f40ded52aa99b83fae1af12006",
     "packages": [
         {
             "name": "nikic/php-parser",
