@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "68a9321f538fdd261abe105de73a77fd",
+    "content-hash": "0507ec3bd3181893870ce33e70b0433c",
     "packages": [],
     "packages-dev": [
         {
@@ -1874,16 +1874,16 @@
         },
         {
             "name": "phpstan/phpdoc-parser",
-            "version": "2.3.6",
+            "version": "2.3.9",
             "source": {
                 "type": "git",
                 "url": "https://github.com/phpstan/phpdoc-parser.git",
-                "reference": "1427af4647235b4a73b13940b1f1258d3584f36e"
+                "reference": "2c122d2f890ae4b9e6ede898a9ac36b2c07e2a17"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/phpstan/phpdoc-parser/zipball/1427af4647235b4a73b13940b1f1258d3584f36e",
-                "reference": "1427af4647235b4a73b13940b1f1258d3584f36e",
+                "url": "https://api.github.com/repos/phpstan/phpdoc-parser/zipball/2c122d2f890ae4b9e6ede898a9ac36b2c07e2a17",
+                "reference": "2c122d2f890ae4b9e6ede898a9ac36b2c07e2a17",
                 "shasum": ""
             },
             "require": {
@@ -1915,9 +1915,9 @@
             "description": "PHPDoc parser with support for nullable, intersection and generic types",
             "support": {
                 "issues": "https://github.com/phpstan/phpdoc-parser/issues",
-                "source": "https://github.com/phpstan/phpdoc-parser/tree/2.3.6"
+                "source": "https://github.com/phpstan/phpdoc-parser/tree/2.3.9"
             },
-            "time": "2026-09-27T20:07:45+00:00"
+            "time": "2026-10-27T22:32:31+00:00"
         },
         {
             "name": "psr/container",
@@ -3265,21 +3265,21 @@
         },
         {
             "name": "valkyrja/ci-psalm",
-            "version": "v26.3.78",
+            "version": "v26.3.82",
             "source": {
                 "type": "git",
                 "url": "https://github.com/valkyrjaio/ci-psalm-php.git",
-                "reference": "04924d71c5c43e04e9a69265ab1008c466c18c59"
+                "reference": "73f34fb97df537384c08301c68d76004d63b8467"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/valkyrjaio/ci-psalm-php/zipball/04924d71c5c43e04e9a69265ab1008c466c18c59",
-                "reference": "04924d71c5c43e04e9a69265ab1008c466c18c59",
+                "url": "https://api.github.com/repos/valkyrjaio/ci-psalm-php/zipball/73f34fb97df537384c08301c68d76004d63b8467",
+                "reference": "73f34fb97df537384c08301c68d76004d63b8467",
                 "shasum": ""
             },
             "require": {
                 "php": ">=8.4.27",
-                "vimeo/psalm": "^6.20.1"
+                "vimeo/psalm": "^6.20.2"
             },
             "type": "project",
             "autoload": {
@@ -3306,22 +3306,22 @@
             ],
             "support": {
                 "issues": "https://github.com/valkyrjaio/ci-psalm-php/issues",
-                "source": "https://github.com/valkyrjaio/ci-psalm-php/tree/v26.3.78"
+                "source": "https://github.com/valkyrjaio/ci-psalm-php/tree/v26.3.82"
             },
-            "time": "2026-10-23T15:38:17+00:00"
+            "time": "2026-10-27T16:12:55+00:00"
         },
         {
             "name": "vimeo/psalm",
-            "version": "6.20.1",
+            "version": "6.20.3",
             "source": {
                 "type": "git",
                 "url": "https://github.com/vimeo/psalm.git",
-                "reference": "376425b8e67b79773add388e16b4f6be5693dc87"
+                "reference": "23d217da099cc4a9a3bd03b644c1adf520022375"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/vimeo/psalm/zipball/376425b8e67b79773add388e16b4f6be5693dc87",
-                "reference": "376425b8e67b79773add388e16b4f6be5693dc87",
+                "url": "https://api.github.com/repos/vimeo/psalm/zipball/23d217da099cc4a9a3bd03b644c1adf520022375",
+                "reference": "23d217da099cc4a9a3bd03b644c1adf520022375",
                 "shasum": ""
             },
             "require": {
@@ -3426,7 +3426,7 @@
                 "issues": "https://github.com/vimeo/psalm/issues",
                 "source": "https://github.com/vimeo/psalm"
             },
-            "time": "2026-10-20T11:18:42+00:00"
+            "time": "2026-10-27T17:55:32+00:00"
         },
         {
             "name": "webmozart/assert",
