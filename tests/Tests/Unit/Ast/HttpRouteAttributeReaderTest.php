@@ -307,7 +307,7 @@ final class HttpRouteAttributeReaderTest extends TestCase
     // Rich fixture tests — Handler attribute (lines 330-333)
     // -----------------------------------------------------------------------
 
-    public function testReadRichFileExtractsCustomHandlerFromRouteHandlerAttr(): void
+    public function testReadRichFileExtractsCustomHandlerFromHandlerAttr(): void
     {
         $result = new HttpRouteAttributeReader()->readFile(self::$richFixtureFile);
 

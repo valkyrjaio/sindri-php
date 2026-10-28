@@ -82,7 +82,7 @@ final class RouteAttributeReaderTest extends TestCase
             new ArrayItem(new String_('handle')),
         ]);
 
-        $method = $this->methodWithRouteHandlerArg($handlerExpr);
+        $method = $this->methodWithHandlerArg($handlerExpr);
 
         $result = $this->reader->callUpdateHandler($method, [], 'App\\Controller', 'App\\Controller\\HomeController');
 
@@ -97,7 +97,7 @@ final class RouteAttributeReaderTest extends TestCase
 
     public function testUpdateHandlerFallsBackWhenAttributeArgIsNotHandlerData(): void
     {
-        $method = $this->methodWithRouteHandlerArg(new String_('not-a-handler'));
+        $method = $this->methodWithHandlerArg(new String_('not-a-handler'));
 
         $result = $this->reader->callUpdateHandler($method, [], 'App\\Controller', 'App\\Controller\\HomeController');
 
@@ -110,7 +110,7 @@ final class RouteAttributeReaderTest extends TestCase
      * Build a ClassMethod named "myAction" carrying a single #[Handler] attribute
      * whose first argument is the given expression.
      */
-    private function methodWithRouteHandlerArg(Expr $argExpr): ClassMethod
+    private function methodWithHandlerArg(Expr $argExpr): ClassMethod
     {
         $attribute = new Attribute(new FullyQualified(Handler::class), [new Arg($argExpr)]);
 

@@ -69,7 +69,7 @@ final class QueueRouteAttributeReaderTest extends TestCase
         self::assertArrayNotHasKey('ChargeCard', $result->routes);
     }
 
-    public function testARouteHandlerAttributeIsUsedAsTheHandler(): void
+    public function testAHandlerAttributeIsUsedAsTheHandler(): void
     {
         $result = new QueueRouteAttributeReader()->readFile(self::$richFixtureFile);
         $php    = new Standard()->prettyPrintExpr($result->routes['ChargeCard.v2']);

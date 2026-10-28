@@ -119,7 +119,7 @@ final class ListenerAttributeReaderTest extends TestCase
     // Rich fixture — Handler attribute resolves handler
     // -----------------------------------------------------------------------
 
-    public function testReadRichFileExtractsListenerWithHandlerFromListenerHandlerAttr(): void
+    public function testReadRichFileExtractsListenerWithHandlerFromHandlerAttr(): void
     {
         $result = new ListenerAttributeReader()->readFile(self::$richFixtureFile);
 
@@ -161,7 +161,7 @@ final class ListenerAttributeReaderTest extends TestCase
         self::assertSame('handle', $captured['inline-handler-method-listener']->handler?->method ?? null);
     }
 
-    public function testReadRichFileResolvesHandlerClassFromListenerHandlerAttr(): void
+    public function testReadRichFileResolvesHandlerClassFromHandlerAttr(): void
     {
         /** @var array<string, ListenerData> $captured */
         $captured = [];
