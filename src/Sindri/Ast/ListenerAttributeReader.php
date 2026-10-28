@@ -25,13 +25,13 @@ use Sindri\Ast\Data\HandlerData;
 use Sindri\Ast\Data\ListenerData;
 use Sindri\Ast\Data\Result\ListenerAttributeResult;
 use Valkyrja\Event\Attribute\Listener;
-use Valkyrja\Event\Attribute\ListenerHandler;
+use Valkyrja\Event\Attribute\Listener\Handler;
 use Valkyrja\Event\Data\Listener as ListenerModel;
 
 use function is_string;
 
 /**
- * Scans a listener class file for #[Listener] and #[ListenerHandler] attributes
+ * Scans a listener class file for #[Listener] and #[Handler] attributes
  * and returns PHP-Parser Expr nodes ready for the data cache generator.
  *
  * Mirrors the logic of the framework's runtime attribute collector but operates
@@ -115,7 +115,7 @@ class ListenerAttributeReader extends AstReader implements ListenerAttributeRead
     }
 
     /**
-     * Resolve the handler from a #[ListenerHandler] sibling attribute, the method name,
+     * Resolve the handler from a #[Handler] sibling attribute, the method name,
      * or the class default ('handle').
      *
      * @param array<string, string> $useMap
@@ -129,7 +129,7 @@ class ListenerAttributeReader extends AstReader implements ListenerAttributeRead
     ): HandlerData {
         $node = $method ?? $class;
 
-        foreach ($this->findAttributesOnNode($node, ListenerHandler::class, $useMap, $namespace) as $attr) {
+        foreach ($this->findAttributesOnNode($node, Handler::class, $useMap, $namespace) as $attr) {
             $handlerRaw = $this->extractExprValue($this->getAttrArg($attr->args, 'handler', 0), $useMap, $namespace, $currentClass);
 
             if ($handlerRaw instanceof HandlerData) {

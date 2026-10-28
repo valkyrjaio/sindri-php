@@ -28,7 +28,7 @@ readonly class CliRouteData implements CliRouteDataContract
     /**
      * @param string                     $name                      Route name
      * @param string                     $description               Route description
-     * @param HandlerData|null           $handler                   Resolved handler (from #[RouteHandler])
+     * @param HandlerData|null           $handler                   Resolved handler (from #[Handler])
      * @param HandlerData|null           $helpText                  Help text callable (from route attribute helpText arg)
      * @param class-string[]             $routeMatchedMiddleware
      * @param class-string[]             $routeDispatchedMiddleware

@@ -17,13 +17,13 @@ use Valkyrja\Http\Message\Enum\RequestMethod;
 use Valkyrja\Http\Routing\Attribute\DynamicRoute;
 use Valkyrja\Http\Routing\Attribute\Parameter;
 use Valkyrja\Http\Routing\Attribute\Route;
+use Valkyrja\Http\Routing\Attribute\Route\Handler;
 use Valkyrja\Http\Routing\Attribute\Route\Middleware;
 use Valkyrja\Http\Routing\Attribute\Route\Name;
 use Valkyrja\Http\Routing\Attribute\Route\Path;
 use Valkyrja\Http\Routing\Attribute\Route\RequestMethod as RouteRequestMethod;
 use Valkyrja\Http\Routing\Attribute\Route\RequestStruct;
 use Valkyrja\Http\Routing\Attribute\Route\ResponseStruct;
-use Valkyrja\Http\Routing\Attribute\Route\RouteHandler;
 
 #[Path('/api')]
 #[Name('api')]
@@ -85,9 +85,9 @@ final class TestRichHttpControllerFixture
     {
     }
 
-    // Route with #[RouteHandler] attribute (covers updateHandler lines 330-333)
+    // Route with #[Handler] attribute (covers updateHandler lines 330-333)
     #[Route(path: '/custom/handler', name: 'custom.handler')]
-    #[RouteHandler([TestHttpControllerFixture::class, 'staticAction'])]
+    #[Handler([TestHttpControllerFixture::class, 'staticAction'])]
     public function customHandlerAction(): void
     {
     }

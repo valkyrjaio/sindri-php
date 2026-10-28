@@ -26,7 +26,7 @@ use Sindri\Ast\Data\ListenerData;
 use Sindri\Ast\ListenerAttributeReader;
 use Sindri\Tests\Fixtures\Event\TestListenerFixture;
 use Sindri\Tests\Unit\Abstract\TestCase;
-use Valkyrja\Event\Attribute\ListenerHandler;
+use Valkyrja\Event\Attribute\Listener\Handler;
 
 use function file_put_contents;
 use function realpath;
@@ -116,10 +116,10 @@ final class ListenerAttributeReaderTest extends TestCase
     }
 
     // -----------------------------------------------------------------------
-    // Rich fixture — ListenerHandler attribute resolves handler
+    // Rich fixture — Handler attribute resolves handler
     // -----------------------------------------------------------------------
 
-    public function testReadRichFileExtractsListenerWithHandlerFromListenerHandlerAttr(): void
+    public function testReadRichFileExtractsListenerWithHandlerFromHandlerAttr(): void
     {
         $result = new ListenerAttributeReader()->readFile(self::$richFixtureFile);
 
@@ -161,7 +161,7 @@ final class ListenerAttributeReaderTest extends TestCase
         self::assertSame('handle', $captured['inline-handler-method-listener']->handler?->method ?? null);
     }
 
-    public function testReadRichFileResolvesHandlerClassFromListenerHandlerAttr(): void
+    public function testReadRichFileResolvesHandlerClassFromHandlerAttr(): void
     {
         /** @var array<string, ListenerData> $captured */
         $captured = [];
@@ -182,7 +182,7 @@ final class ListenerAttributeReaderTest extends TestCase
 
         $reader->readFile(self::$richFixtureFile);
 
-        // The #[ListenerHandler([TestListenerFixture::class, 'handle'])] provides the handler
+        // The #[Handler([TestListenerFixture::class, 'handle'])] provides the handler
         self::assertArrayHasKey('handler-class-listener', $captured);
         self::assertSame(TestListenerFixture::class, $captured['handler-class-listener']->handler?->class ?? null);
         self::assertSame('handle', $captured['handler-class-listener']->handler?->method ?? null);
@@ -229,10 +229,10 @@ final class ListenerAttributeReaderTest extends TestCase
             }
         };
 
-        // #[ListenerHandler('not-a-handler')] — value resolves to a string, not a HandlerData,
+        // #[Handler('not-a-handler')] — value resolves to a string, not a HandlerData,
         // so the foreach iterates, the `instanceof` is false, and resolution falls through
         // to the method-name handler.
-        $attr   = new Attribute(new FullyQualified(ListenerHandler::class), [
+        $attr   = new Attribute(new FullyQualified(Handler::class), [
             new Arg(value: new String_('not-a-handler'), name: new Identifier('handler')),
         ]);
         $method = new ClassMethod(new Identifier('onEvent'), ['attrGroups' => [new AttributeGroup([$attr])]]);

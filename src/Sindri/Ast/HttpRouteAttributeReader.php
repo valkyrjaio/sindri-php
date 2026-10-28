@@ -26,9 +26,9 @@ use Sindri\Ast\Data\HttpRouteData;
 use Sindri\Ast\Data\Result\HttpRouteAttributeResult;
 use Valkyrja\Http\Routing\Attribute\DynamicRoute;
 use Valkyrja\Http\Routing\Attribute\Route;
+use Valkyrja\Http\Routing\Attribute\Route\Handler;
 use Valkyrja\Http\Routing\Attribute\Route\Name;
 use Valkyrja\Http\Routing\Attribute\Route\Path;
-use Valkyrja\Http\Routing\Attribute\Route\RouteHandler;
 use Valkyrja\Http\Routing\Data\DynamicRoute as DynamicRouteModel;
 use Valkyrja\Http\Routing\Data\Route as RouteModel;
 
@@ -73,7 +73,7 @@ class HttpRouteAttributeReader extends RouteAttributeReader implements HttpRoute
     #[Override]
     protected function getRouteHandlerAttributeClass(): string
     {
-        return RouteHandler::class;
+        return Handler::class;
     }
 
     /**

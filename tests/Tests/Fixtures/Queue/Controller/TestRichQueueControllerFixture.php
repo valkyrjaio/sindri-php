@@ -17,9 +17,9 @@ use Sindri\Tests\Fixtures\Queue\Middleware\TestSingleStageQueueMiddlewareFixture
 use Valkyrja\Container\Manager\Contract\ContainerContract;
 use Valkyrja\Queue\Message\Enum\JobResult;
 use Valkyrja\Queue\Routing\Attribute\Route;
+use Valkyrja\Queue\Routing\Attribute\Route\Handler;
 use Valkyrja\Queue\Routing\Attribute\Route\Middleware;
 use Valkyrja\Queue\Routing\Attribute\Route\Name;
-use Valkyrja\Queue\Routing\Attribute\Route\RouteHandler;
 use Valkyrja\Queue\Routing\Data\Contract\RouteContract;
 
 final class TestRichQueueControllerFixture
@@ -31,7 +31,7 @@ final class TestRichQueueControllerFixture
 
     #[Route(name: 'ChargeCard', description: 'Charge the card')]
     #[Name('ChargeCard.v2')]
-    #[RouteHandler([self::class, 'handle'])]
+    #[Handler([self::class, 'handle'])]
     #[Middleware(TestQueueMiddlewareFixture::class)]
     // An empty name is skipped rather than classified, so the reader must
     // tolerate one without emitting an unusable middleware entry

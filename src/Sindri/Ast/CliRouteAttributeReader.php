@@ -26,9 +26,9 @@ use Valkyrja\Cli\Middleware\Contract\RouteDispatchedMiddlewareContract;
 use Valkyrja\Cli\Middleware\Contract\RouteMatchedMiddlewareContract;
 use Valkyrja\Cli\Middleware\Contract\ThrowableCaughtMiddlewareContract;
 use Valkyrja\Cli\Routing\Attribute\Route;
+use Valkyrja\Cli\Routing\Attribute\Route\Handler;
 use Valkyrja\Cli\Routing\Attribute\Route\Middleware;
 use Valkyrja\Cli\Routing\Attribute\Route\Name;
-use Valkyrja\Cli\Routing\Attribute\Route\RouteHandler;
 use Valkyrja\Cli\Routing\Data\Route as RouteModel;
 
 use function array_push;
@@ -78,7 +78,7 @@ class CliRouteAttributeReader extends RouteAttributeReader implements CliRouteAt
     #[Override]
     protected function getRouteHandlerAttributeClass(): string
     {
-        return RouteHandler::class;
+        return Handler::class;
     }
 
     /**

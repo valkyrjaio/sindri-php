@@ -18,7 +18,7 @@ use Sindri\Ast\Data\HandlerData;
 abstract class RouteAttributeReader extends AstReader
 {
     /**
-     * Resolve the handler from #[Route\RouteHandler] or fall back to [CurrentClass::class, methodName].
+     * Resolve the handler from #[Route\Handler] or fall back to [CurrentClass::class, methodName].
      *
      * @param array<string, string> $useMap
      */
@@ -34,7 +34,7 @@ abstract class RouteAttributeReader extends AstReader
     }
 
     /**
-     * Resolve the handler a #[Route\RouteHandler] names, or null when the method carries none.
+     * Resolve the handler a #[Route\Handler] names, or null when the method carries none.
      *
      * A handler the reader cannot resolve to a class and a method name counts as none, because the
      * generated route holds the pair rather than the expression.
@@ -59,7 +59,7 @@ abstract class RouteAttributeReader extends AstReader
     }
 
     /**
-     * Return the fully-qualified class name of the #[RouteHandler] attribute used by this reader.
+     * Return the fully-qualified class name of the #[Handler] attribute used by this reader.
      *
      * @return class-string
      */

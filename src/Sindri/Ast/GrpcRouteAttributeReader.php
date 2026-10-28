@@ -29,8 +29,8 @@ use Valkyrja\Grpc\Middleware\Contract\RouteMatchedMiddlewareContract;
 use Valkyrja\Grpc\Middleware\Contract\SendingResponseMiddlewareContract;
 use Valkyrja\Grpc\Middleware\Contract\ThrowableCaughtMiddlewareContract;
 use Valkyrja\Grpc\Routing\Attribute\Route as Attribute;
+use Valkyrja\Grpc\Routing\Attribute\Route\Handler;
 use Valkyrja\Grpc\Routing\Attribute\Route\Middleware;
-use Valkyrja\Grpc\Routing\Attribute\Route\RouteHandler;
 use Valkyrja\Grpc\Routing\Attribute\Service;
 use Valkyrja\Grpc\Routing\Data\Route;
 
@@ -91,7 +91,7 @@ class GrpcRouteAttributeReader extends RouteAttributeReader implements GrpcRoute
     #[Override]
     protected function getRouteHandlerAttributeClass(): string
     {
-        return RouteHandler::class;
+        return Handler::class;
     }
 
     /**
@@ -188,7 +188,7 @@ class GrpcRouteAttributeReader extends RouteAttributeReader implements GrpcRoute
     }
 
     /**
-     * Resolve the handler a #[RouteHandler] or the route attribute's own argument names.
+     * Resolve the handler a #[Handler] or the route attribute's own argument names.
      *
      * The handler attribute wins, as it does in the framework's collector. A route that names
      * neither is rejected here, because the runtime scan rejects it too. A handler the reader
