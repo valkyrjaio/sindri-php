@@ -19,14 +19,14 @@ final class SindriInfo
      *
      * @var non-empty-string
      */
-    public const string VERSION = '26.10.17';
+    public const string VERSION = '26.10.18';
 
     /**
      * The Sindri package version build datetime.
      *
      * @var non-empty-string
      */
-    public const string VERSION_BUILD_DATE_TIME = 'November 14 2026 11:39:33 MST';
+    public const string VERSION_BUILD_DATE_TIME = 'November 15 2026 12:15:31 MST';
 
     /**
      * The CLI banner icon (Mjölnir).
