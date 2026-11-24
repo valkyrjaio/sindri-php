@@ -26,7 +26,7 @@ final class SindriInfo
      *
      * @var non-empty-string
      */
-    public const string VERSION_BUILD_DATE_TIME = 'November 22 2026 13:10:05 MST';
+    public const string VERSION_BUILD_DATE_TIME = 'November 23 2026 17:36:43 MST';
 
     /**
      * The CLI banner icon (Mjölnir).
